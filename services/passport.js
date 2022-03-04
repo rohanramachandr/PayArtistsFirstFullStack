@@ -22,18 +22,18 @@ passport.use(
         clientSecret: keys.spotifyClientSecret,
         callbackURL: '/auth/spotify/callback',
         proxy: true
-    }, (accessToken, refreshToken, profile, done) => {
-        User.findOne({ spotifyId: profile.id }).then(existingUser => {
+    }, async (accessToken, refreshToken, profile, done) => {
+            const existingUser = await User.findOne({ spotifyId: profile.id })
+    
             if (existingUser) {
                 done(null, existingUser);
 
             }
             else {
-                new User({ spotifyId: profile.id, name: profile.displayName })
-                    .save()
-                    .then(user => done(null, user));
+                const user = await new User({ spotifyId: profile.id, name: profile.displayName }).save();
+                done(null, user);
             }
-        });
+    
     }
     )
 );
