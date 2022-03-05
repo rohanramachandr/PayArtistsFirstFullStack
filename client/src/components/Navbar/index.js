@@ -20,7 +20,8 @@ const Navbar = ({ toggle }) => {
   }
 
   useEffect(() => {
-    window.addEventListener('scroll', changeNav)
+    window.addEventListener('scroll', changeNav);
+    window.removeEventListener('scroll', changeNav);
   }, []);
 
   const toggleHome = () => {

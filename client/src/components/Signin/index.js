@@ -6,11 +6,11 @@ import {
   FormContent,
   Form,
   FormH1,
-  FormLabel,
-  FormInput,
   FormButton,
-  Text
+  SpotifyIcon
 } from './SigninElements';
+
+import spotify from '../../images/Spotify_Icon_RGB_Green.png'
 
 const SignIn = () => {
   return (
@@ -19,15 +19,15 @@ const SignIn = () => {
         <FormWrap>
           <Icon to='/'>PayArtistsFirst</Icon>
           <FormContent>
-            <Form action='#'>
+            <Form>
               <FormH1>Sign in to your account</FormH1>
-              <FormLabel htmlFor='for'>Email</FormLabel>
-              <FormInput type='email' required />
-              <FormLabel htmlFor='for'>Password</FormLabel>
-              <FormInput type='password' required />
-              <FormButton type='submit'>Continue</FormButton>
-              <a href="/auth/spotify">Sign In With Spotify</a>
-              <Text>Forgot password</Text>
+
+              <SpotifyIcon src={spotify}></SpotifyIcon>
+         
+     
+              <FormButton primary="true" dark="true">Continue With Spotify</FormButton>
+              {/* <a href="/auth/spotify">Sign In With Spotify</a> */}
+
             </Form>
           </FormContent>
         </FormWrap>

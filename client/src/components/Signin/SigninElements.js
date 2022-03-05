@@ -43,6 +43,7 @@ export const FormContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items:center;
 
   @media screen and (max-width: 480px) {
     padding: 10px;
@@ -74,6 +75,17 @@ export const FormH1 = styled.h1`
   text-align: center;
 `;
 
+export const SpotifyIcon = styled.img`
+    height: auto;
+    width: 81px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 33px;
+  
+`;
+
+
 export const FormLabel = styled.label`
   margin-bottom: 8px;
   font-size: 14px;
@@ -91,7 +103,7 @@ export const FormButton = styled.button`
   padding: 16px 0;
   border: none;
   border-radius: 4px;
-  color: #fff;
+  color: #000;
   font-size: 20px;
   cursor: pointer;
 `;
