@@ -1,6 +1,9 @@
-import React from 'react'
+import React from 'react';
+import { connect } from 'react-redux'; 
 
-const Dashboard = () => {
+const Dashboard = (props) => {
+
+    console.log(props);
   return (
     <div>
 
@@ -10,4 +13,8 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+function mapStateToProps({ auth }) {
+    return { auth };
+}
+
+export default connect(mapStateToProps)(Dashboard);
