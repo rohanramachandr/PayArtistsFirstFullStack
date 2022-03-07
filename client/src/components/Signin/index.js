@@ -24,8 +24,10 @@ const SignIn = () => {
 
               <SpotifyIcon src={spotify}></SpotifyIcon>
          
-     
-              <FormButton primary="true" dark="true">Continue With Spotify</FormButton>
+             
+              <FormButton href="/auth/spotify" primary="true" dark="true">Continue With Spotify</FormButton>
+              
+              
               {/* <a href="/auth/spotify">Sign In With Spotify</a> */}
 
             </Form>

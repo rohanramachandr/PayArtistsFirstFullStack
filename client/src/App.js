@@ -3,9 +3,9 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from './actions';
-import Home from './pages/Home';
-import SignInPage from './pages/Signin';
-import Dashboard from './pages/Dashboard';
+import Home from './pages/HomePage';
+import SignInPage from './pages/SigninPage';
+import Dashboard from './pages/DashboardPage';
 
 
 class App extends Component {
