@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'; 
+import { BsShuffle } from 'react-icons/bs'; 
+import './DashboardPage.css';
 
 const Dashboard = (props) => {
 
@@ -20,13 +22,38 @@ const Dashboard = (props) => {
 
     
   return (
-    <div>
+    <>
 
-        <h1>Welcome  To The Dashboard {props.auth ? props.auth.name : ""}</h1>
-        <ul>{renderContent()}</ul>
+         <div id="nowPlayingBarContainer">
+             <div id="nowPlayingBar">
+
+                 <div id="nowPlayingLeft">
+
+                 </div>
+
+                 <div id="nowPlayingCenter">
+                    <div className="content playerControls">
+                        <div className="buttons">
+                            <button className="controlButton shuffle" title="Shuffle Button">
+                                <BsShuffle color="pink" size={30} alt="shuffle"/>
+                            </button>
+                        </div>
+
+                    </div>
+
+                 </div>
+
+                 <div id="nowPlayingRight">
+
+                 </div>
+
+             </div>
+
+         </div>
+       
 
       
-    </div>
+    </>
   );
 };
 
