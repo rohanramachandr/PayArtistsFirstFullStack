@@ -6,6 +6,7 @@ import * as actions from './actions';
 import Home from './pages/HomePage';
 import SignInPage from './pages/SigninPage';
 import Dashboard from './pages/DashboardPage';
+import RootGaurd from './guards/RootGuard';
 
 
 class App extends Component {
@@ -18,12 +19,13 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/signin" element={<SignInPage />}/>
-          <Route exact path="/dashboard" element={<Dashboard />}/>
-        </Routes>
-
+        <RootGaurd>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/signin" element={<SignInPage />} />
+            <Route exact path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </RootGaurd>
       </Router>
     );
 

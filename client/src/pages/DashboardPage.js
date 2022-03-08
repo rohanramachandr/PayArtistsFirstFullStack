@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 const Dashboard = (props) => {
 
-    console.log(props);
-
     const renderContent = () => {
         switch (props.auth) {
             case null:
@@ -16,12 +14,8 @@ const Dashboard = (props) => {
                     <a href="/api/logout">Log Out</a>
                 );
 
-
-
         }
   
-
-
     };
 
     
