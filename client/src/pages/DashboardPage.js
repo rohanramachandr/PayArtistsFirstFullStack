@@ -1,7 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux'; 
-import { BsShuffle } from 'react-icons/bs'; 
-import './DashboardPage.css';
+import { connect } from 'react-redux';
+import NowPlayingBar from '../components/Dashboard/NowPlayingBar';
+
 
 const Dashboard = (props) => {
 
@@ -17,44 +17,21 @@ const Dashboard = (props) => {
                 );
 
         }
-  
+
     };
 
-    
-  return (
-    <>
 
-         <div id="nowPlayingBarContainer">
-             <div id="nowPlayingBar">
+    return (
+        <>
+            
 
-                 <div id="nowPlayingLeft">
+            
+           <NowPlayingBar />
 
-                 </div>
 
-                 <div id="nowPlayingCenter">
-                    <div className="content playerControls">
-                        <div className="buttons">
-                            <button className="controlButton shuffle" title="Shuffle Button">
-                                <BsShuffle color="pink" size={30} alt="shuffle"/>
-                            </button>
-                        </div>
 
-                    </div>
-
-                 </div>
-
-                 <div id="nowPlayingRight">
-
-                 </div>
-
-             </div>
-
-         </div>
-       
-
-      
-    </>
-  );
+        </>
+    );
 };
 
 function mapStateToProps({ auth }) {
