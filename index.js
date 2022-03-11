@@ -4,6 +4,10 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const keys = require('./config/keys');
 require('./models/User');
+require('./models/Artist');
+require('./models/Genre');
+require('./models/Album');
+require('./models/Song');
 require('./services/passport');
 mongoose.connect(keys.mongoURI);
 
