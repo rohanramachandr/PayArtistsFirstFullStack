@@ -16,7 +16,7 @@ const NowPlayingBar = (props) => {
                     <div id="nowPlayingLeft">
                         <div className="content">
 
-                            <span class="albumLink">
+                            <span className="albumLink">
                                 <img className="albumArtwork" alt="Album Art" src="https://play-lh.googleusercontent.com/IeNJWoKYx1waOhfWF6TiuSiWBLfqLb18lmZYXSgsH1fvb8v1IYiZr5aYWe0Gxu-pVZX3" />
 
                             </span>
@@ -82,7 +82,7 @@ const NowPlayingBar = (props) => {
                     </div>
                     <div id="nowPlayingRight">
                         <div className="volumeBar">
-                            <button class="controlButton volume" title="Volume button">
+                            <button className="controlButton volume" title="Volume button">
 
                                 <Volume color="#ec148c" size={30} alt="Volume" />
                             </button>

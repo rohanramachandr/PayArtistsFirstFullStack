@@ -21,6 +21,7 @@ const Dashboard = (props) => {
     //     }
 
     // };
+    console.log("user", props.auth);
 
 
     return (
@@ -31,6 +32,19 @@ const Dashboard = (props) => {
 
             <div id="topContainer">
                 <DashboardNav />
+
+                <div id="mainViewContainer">
+                    <div id="mainContent">
+
+                        <h1 className="pageHeadingBig">You Might Also Like</h1>
+                        <div className="gridViewContainer">
+
+                        </div>
+
+                    </div>
+
+
+                </div>
             
 
             </div>
