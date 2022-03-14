@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import { fetchAlbums } from '../actions';
 import NowPlayingBar from '../components/Dashboard/NowPlayingBar/NowPlayingBar';
 import DashboardNav from '../components/Dashboard/DashboardNav/DashboardNav';
+import { Link } from 'react-router-dom';
 import './DashboardPage.css';
 
 
 
 
 
-const Dashboard = (props) => {
+const DashboardPage = (props) => {
 
     // const renderContent = () => {
     //     switch (props.auth) {
@@ -44,7 +45,7 @@ const Dashboard = (props) => {
             return props.albums.map(({_id, albumTitle, artworkPath}) => {    
          
                 return (
-                    <div key={_id} className="gridViewItem">
+                    <Link to={`/album/${_id}`} key={_id} className="gridViewItem">
                         <img src={artworkPath} alt={albumTitle}/>
 
                         <div className="gridViewInfo">
@@ -52,7 +53,7 @@ const Dashboard = (props) => {
 
                         </div>
 
-                    </div>
+                    </Link>
 
                 );
         });
@@ -109,4 +110,4 @@ function mapStateToProps({ auth, albums }) {
     return { auth, albums };
 }
 
-export default connect(mapStateToProps, {fetchAlbums})(Dashboard);
+export default connect(mapStateToProps, {fetchAlbums})(DashboardPage);

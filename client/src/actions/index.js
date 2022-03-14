@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER } from './types';
+import { FETCH_ALBUMS, FETCH_USER, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS } from './types';
 
 export const fetchUser = () => async dispatch => {
 
@@ -16,4 +16,39 @@ export const fetchAlbums = () => async dispatch => {
     dispatch({ type: FETCH_ALBUMS, payload: res.data });
 
 };
+
+export const fetchAlbum = (albumId) => async dispatch => {
+
+    const res = await axios.get(`/api/albums/${albumId}`);
+
+    dispatch({ type: FETCH_ALBUM, payload: res.data });
+
+};
+
+export const fetchAlbumGenre = (albumId) => async dispatch => {
+
+    const res = await axios.get(`/api/albums/${albumId}/genre`);
+
+    dispatch({ type: FETCH_ALBUM_GENRE, payload: res.data });
+
+};
+
+export const fetchAlbumArtist = (albumId) => async dispatch => {
+
+    const res = await axios.get(`/api/albums/${albumId}/artist`);
+
+    dispatch({ type: FETCH_ALBUM_ARTIST, payload: res.data });
+
+};
+
+export const fetchAlbumSongs = (albumId) => async dispatch => {
+
+    const res = await axios.get(`/api/albums/${albumId}/songs`);
+
+    dispatch({ type: FETCH_ALBUM_SONGS, payload: res.data });
+
+};
+
+
+
 

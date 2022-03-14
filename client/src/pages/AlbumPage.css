@@ -1,0 +1,28 @@
+#topContainer {
+    min-height: 100%;
+    width: 100%;
+    color: #fff;
+}
+
+body {
+    background-color: #181818;
+    font-size: 14px;
+    min-width: 720px;
+}
+
+
+#mainViewContainer {
+    margin-left: 220px;
+    padding-bottom: 90px;
+    width: calc(100% -220px);
+}
+
+#mainContent {
+    padding: 0 20px;
+}
+
+.pageHeadingBig {
+    padding: 20px;
+    text-align: center;
+
+}
