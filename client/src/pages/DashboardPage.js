@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { fetchAlbums } from '../actions';
 import NowPlayingBar from '../components/Dashboard/NowPlayingBar/NowPlayingBar';
 import DashboardNav from '../components/Dashboard/DashboardNav/DashboardNav';
 import './DashboardPage.css';
+
+
+
 
 
 const Dashboard = (props) => {
@@ -23,6 +27,37 @@ const Dashboard = (props) => {
     // };
     console.log("user", props.auth);
 
+    useEffect(() => {
+         props.fetchAlbums();
+  
+
+
+    }, [props]);
+
+
+    const renderAlbums = () => {
+        console.log("inside render albums", props.albums);
+      
+   
+            return props.albums.map(({_id, albumTitle, artworkPath}) => {
+            const pathArt = String(artworkPath);
+            const url = '../' + artworkPath;
+         
+            return (
+                <div key={_id} className="gridViewItem">
+                    <img src={require(url).default} alt={albumTitle}/>
+
+                </div>
+
+            );
+        });
+        
+
+       
+        
+
+    };
+
 
     return (
 
@@ -38,6 +73,7 @@ const Dashboard = (props) => {
 
                         <h1 className="pageHeadingBig">You Might Also Like</h1>
                         <div className="gridViewContainer">
+                            {props.albums.length > 0 && renderAlbums()}
 
                         </div>
 
@@ -64,8 +100,8 @@ const Dashboard = (props) => {
     );
 };
 
-function mapStateToProps({ auth }) {
-    return { auth };
+function mapStateToProps({ auth, albums }) {
+    return { auth, albums };
 }
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps, {fetchAlbums})(Dashboard);

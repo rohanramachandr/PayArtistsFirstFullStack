@@ -25,6 +25,7 @@ app.use(passport.session());
 
 
 require('./routes/authRoutes')(app);
+require('./routes/musicRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
     // Express will serve up production assets
