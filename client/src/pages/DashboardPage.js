@@ -25,31 +25,36 @@ const Dashboard = (props) => {
     //     }
 
     // };
-    console.log("user", props.auth);
+
+    const { fetchAlbums } = props;
+ 
 
     useEffect(() => {
-         props.fetchAlbums();
+         fetchAlbums();
   
 
 
-    }, [props]);
+    }, [fetchAlbums]);
 
 
     const renderAlbums = () => {
         console.log("inside render albums", props.albums);
       
    
-            return props.albums.map(({_id, albumTitle, artworkPath}) => {
-            const pathArt = String(artworkPath);
-            const url = '../' + artworkPath;
+            return props.albums.map(({_id, albumTitle, artworkPath}) => {    
          
-            return (
-                <div key={_id} className="gridViewItem">
-                    <img src={require(url).default} alt={albumTitle}/>
+                return (
+                    <div key={_id} className="gridViewItem">
+                        <img src={artworkPath} alt={albumTitle}/>
 
-                </div>
+                        <div className="gridViewInfo">
+                            {albumTitle}
 
-            );
+                        </div>
+
+                    </div>
+
+                );
         });
         
 
