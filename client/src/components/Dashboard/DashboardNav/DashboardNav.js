@@ -1,5 +1,6 @@
 import React from 'react';
 import { BsSearch as Search } from 'react-icons/bs';
+import {Link} from 'react-router-dom';
 import "./DashboardNav.css";
 
 const DashboardNav = () => {
@@ -25,7 +26,7 @@ const DashboardNav = () => {
 
                     <div className="navItem">
 
-                        <a href="/browse" className="navItemLink">Browse</a>
+                        <Link to="/dashboard" className="navItemLink">Browse</Link>
 
                     </div>
 

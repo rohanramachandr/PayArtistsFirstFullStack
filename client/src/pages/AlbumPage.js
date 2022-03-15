@@ -5,8 +5,8 @@ import './AlbumPage.css';
 import * as actions from "../actions";
 import { connect } from 'react-redux';
 import { useEffect } from "react";
-
-const AlbumPage = ({album, fetchAlbum, fetchAlbumGenre, fetchAlbumArtist, fetchAlbumSongs}) => {
+import { BsFillPlayFill, BsThreeDots } from 'react-icons/bs'
+const AlbumPage = ({ album, fetchAlbum, fetchAlbumGenre, fetchAlbumArtist, fetchAlbumSongs }) => {
 
     const { albumId } = useParams();
 
@@ -16,7 +16,61 @@ const AlbumPage = ({album, fetchAlbum, fetchAlbumGenre, fetchAlbumArtist, fetchA
         fetchAlbumArtist(albumId);
         fetchAlbumSongs(albumId);
 
-    }, []);
+    }, [albumId, fetchAlbum, fetchAlbumGenre, fetchAlbumArtist, fetchAlbumSongs]);
+
+    const renderArtwork = () => {
+        return album.album ? <img src={album.album.artworkPath} alt="album art"/> : null;
+    };
+
+    const renderAlbumTitle = () => {
+        return album.album ? <h2>{album.album.albumTitle}</h2> : null;
+    };
+
+    const renderArtistName = () => {
+        return album.artist ? <span>{`By ${album.artist}`}</span> : null;
+    };
+
+    const renderNumSongs = () => {
+        return album.songs ? <span>{`${album.songs.length} songs`}</span> : null;
+    }
+
+    const renderSongs = () => {//TODO perhaps change to get artist name from song instead of album
+        return album.songs.map((song) => {
+            return (
+                <li className="tracklistRow" key={song._id} >
+                    <div className="trackCount">
+                        <div className="playIcon">
+                           <BsFillPlayFill size={20}/> 
+                        </div>
+                        
+                        <span className="trackNumber">{song.albumOrder}</span>
+                    </div>
+                    <div className="trackInfo">
+                        <span className="trackName">{song.songTitle}</span>
+                        <span className="artistName">{album.artist}</span>
+
+
+                    </div>
+                    <div className='trackOptions'>
+                            <div className="optionsIcon">
+                                <BsThreeDots size={20}/>
+                            </div>
+                            
+                    </div>
+                    <div className="trackDuration"> 
+                        <span className="duration">{song.duration}</span>
+
+                    </div>
+
+
+                    
+                </li>
+            );
+
+        }
+        );
+    }
+
 
 
     return (
@@ -24,32 +78,46 @@ const AlbumPage = ({album, fetchAlbum, fetchAlbumGenre, fetchAlbumArtist, fetchA
         <div id="mainContainer">
 
 
-        <div id="topContainer">
-            <DashboardNav />
+            <div id="topContainer">
+                <DashboardNav />
 
-            <div id="mainViewContainer">
-                <div id="mainContent">
+                <div id="mainViewContainer">
+                    <div id="mainContent">
 
-                    <h1 className="pageHeadingBig">Album Page For id {albumId}</h1>
-                    {/* <div className="gridViewContainer">
-                        {props.albums.length > 0 && renderAlbums()}
+                        <div className="entityInfo">
+                            <div className="leftSection">
+                                {renderArtwork()}
 
-                    </div> */}
-                    {console.log(album)}
-                    
+                            </div>
+                            <div className="rightSection">
+                                {renderAlbumTitle()}
+                                <p>{renderArtistName()}</p>
+                                <p>{renderNumSongs()}</p>
+
+                            </div>
+
+                        </div>
+
+                        <div className="trackListContainer">
+                            <ul className="tracklist">
+                                {renderSongs()}
+                            </ul>
+
+                        </div>
+
+
+                    </div>
+
 
                 </div>
 
 
             </div>
-        
+
+            <NowPlayingBar />
+
 
         </div>
-
-        <NowPlayingBar />
-
-
-    </div>
 
 
     );
@@ -59,4 +127,4 @@ function mapStateToProps({ album }) {
     return { album };
 }
 
-export default connect(mapStateToProps, actions )(AlbumPage);
+export default connect(mapStateToProps, actions)(AlbumPage);
