@@ -1,14 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BsShuffle as Shuffle, BsFillSkipStartFill as Prev, BsFillSkipEndFill as Next, BsPlayCircle as Play, BsArrowRepeat as Repeat, BsPauseCircle as Pause, BsVolumeUpFill as Volume, BsVolumeMuteFill as Mute } from 'react-icons/bs';
 import './NowPlayingBar.css';
 
 const NowPlayingBar = (props) => {
+
+    const [currentlyPlaying, setCurrentlyPlaying] = useState("");
+
+    const audioRef = useRef();
+
+
+
+
+
+
+
+
+    const playTrack = () => {
+
+        console.log("playing track");
+        audioRef.current.pause();
+        audioRef.current.load()
+        audioRef.current.play();
+    };
+
+    const setTrack = (trackId, newPlaylist, play) => {
+
+    };
+
+
+
+
+
+
 
 
 
 
     return (
         <>
+
 
             <div id="nowPlayingBarContainer">
                 <div id="nowPlayingBar">
@@ -49,7 +79,7 @@ const NowPlayingBar = (props) => {
                                     <Prev color="#ec148c" size={30} alt="Previous" />
                                 </button>
 
-                                <button className="controlButton play" title="Play Button">
+                                <button className="controlButton play" title="Play Button" onClick={() => { setCurrentlyPlaying("https://github.com/rohanramachandr/PAFAssets/blob/main/assets/music/bensound-betterdays.mp3?raw=true"); playTrack() }}>
                                     <Play color="#ec148c" size={45} alt="Play" />
                                 </button>
 
@@ -88,10 +118,10 @@ const NowPlayingBar = (props) => {
                             </button>
 
                             <div className="progressBar">
-                                    <div className="progressBarBg">
-                                        <div className="progress"></div>
-                                    </div>
+                                <div className="progressBarBg">
+                                    <div className="progress"></div>
                                 </div>
+                            </div>
 
                         </div>
 
@@ -102,6 +132,9 @@ const NowPlayingBar = (props) => {
                 </div>
 
             </div>
+            <audio ref={audioRef}>
+                <source src={currentlyPlaying} type="audio/mpeg" />
+            </audio>
 
 
 
