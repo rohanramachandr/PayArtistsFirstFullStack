@@ -1,29 +1,65 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 import { BsShuffle as Shuffle, BsFillSkipStartFill as Prev, BsFillSkipEndFill as Next, BsPlayCircle as Play, BsArrowRepeat as Repeat, BsPauseCircle as Pause, BsVolumeUpFill as Volume, BsVolumeMuteFill as Mute } from 'react-icons/bs';
 import './NowPlayingBar.css';
+import { fetchSongDetails } from '../../../actions/index';
 
-const NowPlayingBar = (props) => {
+const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails}) => {
 
-    const [currentlyPlaying, setCurrentlyPlaying] = useState("");
-
-    const audioRef = useRef();
-
+    const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
 
 
+    const audioRef = useRef(null);
+    const pauseRef = useRef(null);
+    const playRef = useRef(null);
+    console.log("NowPlayingBar playlist", currentPlaylist);
+    console.log("songDetails", currentSong);
 
+    useEffect(() => {
+        if (currentPlaylist.length > 0) {
+            fetchSongDetails(currentPlaylist[0]._id);
+            setTrack(currentPlaylist[0], currentPlaylist, false);
+            pauseRef.current.style.display = "none";
+        }
+       
+       
+    }, [currentPlaylist, currentlyPlaying]);
 
-
-
-
-    const playTrack = () => {
-
-        console.log("playing track");
+    const pauseSong = () => {
         audioRef.current.pause();
-        audioRef.current.load()
+        
+        pauseRef.current.style.display = "none";
+        playRef.current.style.display = "unset";
+
+    }
+
+
+
+
+
+
+
+
+    const playSong = () => {
+        playRef.current.style.display = "none";
+        pauseRef.current.style.display = "unset";
+        console.log("playing track");
+       
         audioRef.current.play();
     };
 
-    const setTrack = (trackId, newPlaylist, play) => {
+    const setTrack = (track, newPlaylist, play) => {
+        if(track) {
+          
+            setCurrentlyPlaying(track);
+            audioRef.current.pause();
+            audioRef.current.load()
+
+             if (play) {
+                 playSong();
+             }
+        }
+       
 
     };
 
@@ -79,11 +115,11 @@ const NowPlayingBar = (props) => {
                                     <Prev color="#ec148c" size={30} alt="Previous" />
                                 </button>
 
-                                <button className="controlButton play" title="Play Button" onClick={() => { setCurrentlyPlaying("https://github.com/rohanramachandr/PAFAssets/blob/main/assets/music/bensound-betterdays.mp3?raw=true"); playTrack() }}>
+                                <button ref={playRef} className="controlButton play" title="Play Button" onClick={() => {  playSong() }}>
                                     <Play color="#ec148c" size={45} alt="Play" />
                                 </button>
 
-                                <button className="controlButton pause" title="Pause Button" style={{ display: "none" }}>
+                                <button ref={pauseRef} className="controlButton pause" title="Pause Button"  style={{display: "none"}} onClick={() => { pauseSong();}}>
                                     <Pause color="#ec148c" size={45} alt="Pause" />
                                 </button>
 
@@ -133,7 +169,7 @@ const NowPlayingBar = (props) => {
 
             </div>
             <audio ref={audioRef}>
-                <source src={currentlyPlaying} type="audio/mpeg" />
+                <source src={currentlyPlaying ? currentlyPlaying.songPath : ""} type="audio/mpeg" />
             </audio>
 
 
@@ -142,5 +178,11 @@ const NowPlayingBar = (props) => {
     );
 };
 
+function mapStateToProps({ album, song }) {
+    return { currentPlaylist: album.songs, currentSong: song.songDetails };
+}
 
-export default NowPlayingBar;
+export default connect(mapStateToProps, {fetchSongDetails})(NowPlayingBar);
+
+
+
