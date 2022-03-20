@@ -20,7 +20,7 @@ const NowPlayingBar = ({ currentPlaylist, currentSong, fetchSongDetails, updateS
     const audioRef = useRef(new Audio());
     const pauseRef = useRef(null);
     const playRef = useRef(null);
-     console.log("NowPlayingBar playlist", currentPlaylist);
+    //  console.log("NowPlayingBar playlist", currentPlaylist);
     // console.log("songDetails", currentSong);
 
     useEffect(() => {
