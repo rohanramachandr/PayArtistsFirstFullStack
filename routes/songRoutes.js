@@ -35,7 +35,7 @@ module.exports = app => {
 
 
         try {
-            console.log("trying query");
+           
             Song.updateOne(
                 { _id: req.params.songId }, 
                 {

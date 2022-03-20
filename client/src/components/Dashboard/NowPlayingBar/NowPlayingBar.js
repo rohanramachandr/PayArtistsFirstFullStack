@@ -5,12 +5,13 @@ import { BsShuffle as Shuffle, BsFillSkipStartFill as Prev, BsFillSkipEndFill as
 import './NowPlayingBar.css';
 import * as actions from '../../../actions/index';
 
-const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSongPlays}) => {
+const NowPlayingBar = ({ currentPlaylist, currentSong, fetchSongDetails, updateSongPlays }) => {
 
     const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
+    var mouseDown = false;
     const [curTime, setCurTime] = useState("0.00");
     const [remTime, setRemTime] = useState("0.00");
-
+    const progressBarRef = useRef(null);
     const progressRef = useRef(null);
     const audioRef = useRef(new Audio());
     const pauseRef = useRef(null);
@@ -24,19 +25,67 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSo
             setTrack(currentPlaylist[0], currentPlaylist, false);
             pauseRef.current.style.display = "none";
         }
+
+        progressBarRef.current.addEventListener('mousedown', () => {
+            
+            mouseDown = true;
+        });
+
+        progressBarRef.current.addEventListener('mousemove', (e) => {
+            
+            if (mouseDown) {
+                //set time of song depending on position of mouse
+                timeFromOffset(e, progressBarRef);
+            }
+        });
+
+        progressBarRef.current.addEventListener('mouseup', (e) => {
+
+            //set time of song depending on position of mouse
+            
+            timeFromOffset(e, progressBarRef);
+
+        });
+
+        audioRef.current.addEventListener("timeupdate", () => {
+            if (audioRef.current.duration) {
+                updateTimeProgressBar();
+            }
+
+
+        });
+        
+        document.addEventListener('mouseup',() => {
+            mouseDown = false;
+
+        });
+
+
+    }, [currentPlaylist, currentlyPlaying, progressBarRef, audioRef]);
+
+    const setTime = (seconds) => {
        
-       
-    }, [currentPlaylist, currentlyPlaying]);
+        audioRef.current.currentTime = seconds;
+    }
+
+
+    const timeFromOffset = (mouse, ref) => {
+    
+        var percent = mouse.offsetX / ref.current.offsetWidth * 100;
+      
+        var seconds = audioRef.current.duration * (percent / 100);
+        setTime(seconds);
+    };
 
     const pauseSong = () => {
         audioRef.current.pause();
-        
+
         pauseRef.current.style.display = "none";
         playRef.current.style.display = "unset";
 
     }
 
-    const  updateTimeProgressBar = () => {
+    const updateTimeProgressBar = () => {
         setCurTime(formatTime(audioRef.current.currentTime));
         setRemTime(formatTime(audioRef.current.duration - audioRef.current.currentTime));
 
@@ -44,41 +93,35 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSo
         progressRef.current.style.width = progress + "%";
     };
 
-    audioRef.current.addEventListener("timeupdate", () => {
-        if (audioRef.current.duration) {
-            updateTimeProgressBar();
-        }
 
-        
-    });
 
 
 
     const playSong = () => {
 
-        if (audioRef.current.currentTime === 0){
+        if (audioRef.current.currentTime === 0) {
             console.log("updating plays");
             updateSongPlays(currentlyPlaying._id);
         }
         playRef.current.style.display = "none";
         pauseRef.current.style.display = "unset";
         console.log("playing track");
-       
+
         audioRef.current.play();
     };
 
     const setTrack = (track, newPlaylist, play) => {
-        if(track) {
-          
+        if (track) {
+
             setCurrentlyPlaying(track);
             audioRef.current.pause();
             audioRef.current.load();
 
-             if (play) {
-                 playSong();
-             }
+            if (play) {
+                playSong();
+            }
         }
-       
+
 
     };
 
@@ -143,11 +186,11 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSo
                                     <Prev color="#ec148c" size={30} alt="Previous" />
                                 </button>
 
-                                <button ref={playRef} className="controlButton play" title="Play Button" onClick={() => {  playSong() }}>
+                                <button ref={playRef} className="controlButton play" title="Play Button" onClick={() => { playSong() }}>
                                     <Play color="#ec148c" size={45} alt="Play" />
                                 </button>
 
-                                <button ref={pauseRef} className="controlButton pause" title="Pause Button"  style={{display: "none"}} onClick={() => { pauseSong();}}>
+                                <button ref={pauseRef} className="controlButton pause" title="Pause Button" style={{ display: "none" }} onClick={() => { pauseSong(); }}>
                                     <Pause color="#ec148c" size={45} alt="Pause" />
                                 </button>
 
@@ -162,7 +205,7 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSo
 
                             <div className="playbackBar">
                                 <span className="progressTime current">{curTime}</span>
-                                <div className="progressBar">
+                                <div ref={progressBarRef} className="progressBar">
                                     <div className="progressBarBg">
                                         <div ref={progressRef} className="progress"></div>
                                     </div>
