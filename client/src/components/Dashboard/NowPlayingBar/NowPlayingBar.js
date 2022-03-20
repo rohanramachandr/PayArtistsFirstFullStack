@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
+import loadingArtwork from '../../../images/loadingArtwork.jpg';
 import { BsShuffle as Shuffle, BsFillSkipStartFill as Prev, BsFillSkipEndFill as Next, BsPlayCircle as Play, BsArrowRepeat as Repeat, BsPauseCircle as Pause, BsVolumeUpFill as Volume, BsVolumeMuteFill as Mute } from 'react-icons/bs';
 import './NowPlayingBar.css';
-import { fetchSongDetails } from '../../../actions/index';
+import * as actions from '../../../actions/index';
 
-const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails}) => {
+const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSongPlays}) => {
 
     const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
 
 
-    const audioRef = useRef(null);
+    const audioRef = useRef(new Audio());
     const pauseRef = useRef(null);
     const playRef = useRef(null);
     console.log("NowPlayingBar playlist", currentPlaylist);
@@ -41,6 +42,11 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails}) => {
 
 
     const playSong = () => {
+
+        if (audioRef.current.currentTime === 0){
+            console.log("updating plays");
+            updateSongPlays(currentlyPlaying._id);
+        }
         playRef.current.style.display = "none";
         pauseRef.current.style.display = "unset";
         console.log("playing track");
@@ -83,18 +89,18 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails}) => {
                         <div className="content">
 
                             <span className="albumLink">
-                                <img className="albumArtwork" alt="Album Art" src="https://play-lh.googleusercontent.com/IeNJWoKYx1waOhfWF6TiuSiWBLfqLb18lmZYXSgsH1fvb8v1IYiZr5aYWe0Gxu-pVZX3" />
+                                <img className="albumArtwork" alt="Album Art" src={currentSong ? currentSong.artworkPath : loadingArtwork} />
 
                             </span>
 
                             <div className="trackInfo">
 
                                 <span className="trackName">
-                                    <span>Happy Birthday</span>
+                                    <span>{currentSong ? currentSong.songTitle : "Unknown"}</span>
 
                                 </span>
                                 <span className="artistName">
-                                    <span>John Mayer</span>
+                                    <span>{currentSong ? currentSong.artistName : "Unknown"}</span>
 
                                 </span>
 
@@ -182,7 +188,7 @@ function mapStateToProps({ album, song }) {
     return { currentPlaylist: album.songs, currentSong: song.songDetails };
 }
 
-export default connect(mapStateToProps, {fetchSongDetails})(NowPlayingBar);
+export default connect(mapStateToProps, actions)(NowPlayingBar);
 
 
 

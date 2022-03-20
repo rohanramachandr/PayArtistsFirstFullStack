@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS } from './types';
+import { FETCH_ALBUMS, FETCH_USER, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS } from './types';
 
 export const fetchUser = () => async dispatch => {
 
@@ -51,9 +51,17 @@ export const fetchAlbumSongs = (albumId) => async dispatch => {
 
 export const fetchSongDetails = (songId) => async dispatch => {
 
-    const res = await axios.get(`/api/songdetails/${songId}`);
+    const res = await axios.get(`/api/song/details/${songId}`);
 
     dispatch({ type: FETCH_SONG_DETAILS, payload: res.data });
+
+};
+
+export const updateSongPlays = (songId) => async dispatch => {
+
+    const res = await axios.patch(`/api/song/update-plays/${songId}`);
+
+    dispatch({ type: UPDATE_SONG_PLAYS, payload: res.data });
 
 };
 

@@ -9,7 +9,7 @@ const Song = mongoose.model('songs');
 
 module.exports = app => {
 
-    app.get('/api/songdetails/:songId', requireLogin, async (req, res) => {
+    app.get('/api/song/details/:songId', requireLogin, async (req, res) => {
 
 
         try {
@@ -30,6 +30,31 @@ module.exports = app => {
         
 
     });
+
+    app.patch('/api/song/update-plays/:songId', requireLogin, (req, res) => {
+
+
+        try {
+            console.log("trying query");
+            Song.updateOne(
+                { _id: req.params.songId }, 
+                {
+                    $inc: { 'plays': 1 }
+
+                }
+            ).exec();
+
+            res.send({});
+            
+        }
+        catch(err) {
+            res.status(404).send(err);
+        }   
+        
+
+    });
+
+
 
 
 
