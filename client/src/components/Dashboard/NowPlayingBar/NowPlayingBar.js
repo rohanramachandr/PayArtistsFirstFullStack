@@ -8,13 +8,15 @@ import * as actions from '../../../actions/index';
 const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSongPlays}) => {
 
     const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
+    const [curTime, setCurTime] = useState("0.00");
+    const [remTime, setRemTime] = useState("0.00");
 
-
+    const progressRef = useRef(null);
     const audioRef = useRef(new Audio());
     const pauseRef = useRef(null);
     const playRef = useRef(null);
-    console.log("NowPlayingBar playlist", currentPlaylist);
-    console.log("songDetails", currentSong);
+    // console.log("NowPlayingBar playlist", currentPlaylist);
+    // console.log("songDetails", currentSong);
 
     useEffect(() => {
         if (currentPlaylist.length > 0) {
@@ -34,10 +36,21 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSo
 
     }
 
+    const  updateTimeProgressBar = () => {
+        setCurTime(formatTime(audioRef.current.currentTime));
+        setRemTime(formatTime(audioRef.current.duration - audioRef.current.currentTime));
 
+        var progress = audioRef.current.currentTime / audioRef.current.duration * 100;
+        progressRef.current.style.width = progress + "%";
+    };
 
+    audioRef.current.addEventListener("timeupdate", () => {
+        if (audioRef.current.duration) {
+            updateTimeProgressBar();
+        }
 
-
+        
+    });
 
 
 
@@ -59,7 +72,7 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSo
           
             setCurrentlyPlaying(track);
             audioRef.current.pause();
-            audioRef.current.load()
+            audioRef.current.load();
 
              if (play) {
                  playSong();
@@ -69,11 +82,20 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSo
 
     };
 
+    const formatTime = (seconds) => {
+        var time = Math.round(seconds);
+        var minutes = Math.floor(time / 60);
+        seconds = time - (minutes * 60);
 
+        var extraZero = "";
 
+        if (seconds < 10) {
+            extraZero = "0";
 
+        }
+        return minutes + ":" + extraZero + seconds;
 
-
+    };
 
 
 
@@ -139,13 +161,13 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSo
                             </div>
 
                             <div className="playbackBar">
-                                <span className="progressTime current">0.00</span>
+                                <span className="progressTime current">{curTime}</span>
                                 <div className="progressBar">
                                     <div className="progressBarBg">
-                                        <div className="progress"></div>
+                                        <div ref={progressRef} className="progress"></div>
                                     </div>
                                 </div>
-                                <span className="progressTime remaining">0.00</span>
+                                <span className="progressTime remaining">{remTime}</span>
 
                             </div>
 
@@ -168,7 +190,6 @@ const NowPlayingBar = ({currentPlaylist, currentSong, fetchSongDetails, updateSo
                         </div>
 
                     </div>
-
 
 
                 </div>
