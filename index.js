@@ -4,6 +4,10 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const keys = require('./config/keys');
 require('./models/User');
+require('./models/Artist');
+require('./models/Genre');
+require('./models/Album');
+require('./models/Song');
 require('./services/passport');
 mongoose.connect(keys.mongoURI);
 
@@ -21,6 +25,8 @@ app.use(passport.session());
 
 
 require('./routes/authRoutes')(app);
+require('./routes/albumRoutes')(app);
+require('./routes/songRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
     // Express will serve up production assets

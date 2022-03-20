@@ -5,8 +5,10 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import Home from './pages/HomePage';
 import SignInPage from './pages/SigninPage';
-import Dashboard from './pages/DashboardPage';
+import DashboardPage from './pages/DashboardPage';
+import AlbumPage from './pages/AlbumPage';
 import RootGaurd from './guards/RootGuard';
+
 
 
 class App extends Component {
@@ -23,7 +25,9 @@ class App extends Component {
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/signin" element={<SignInPage />} />
-            <Route exact path="/dashboard" element={<Dashboard />} />
+            <Route exact path="/dashboard" element={<DashboardPage />} />
+            <Route exact path="/album/:albumId" element={<AlbumPage />} />
+
           </Routes>
         </RootGaurd>
       </Router>

@@ -9,7 +9,7 @@ const AuthGuard = ({children, auth}) => {
     const location = useLocation();
     useEffect(() => { 
         
-        if (location.pathname === '/dashboard' && auth === false ) {
+        if ((location.pathname === '/dashboard' || String(location.pathname).includes('/album/')) && auth === false ) {
             navigate('/signin');
         }
   
