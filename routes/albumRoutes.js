@@ -63,6 +63,17 @@ module.exports = app => {
         }  
     });
 
+    // app.get('/api/albums/:albumId/songs', requireLogin, async (req, res) => { get current playlist
+    //     try {
+    //         const songIds = await Song.find({_album: req.params.albumId}, '_id');
+    //         res.send(songIds);
+    //     }
+        
+    //     catch(err) {
+    //         res.status(404).send(err);
+    //     }  
+    // });
+
    
 
 };

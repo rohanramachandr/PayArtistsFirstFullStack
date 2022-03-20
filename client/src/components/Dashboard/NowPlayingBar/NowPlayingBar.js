@@ -8,23 +8,43 @@ import * as actions from '../../../actions/index';
 const NowPlayingBar = ({ currentPlaylist, currentSong, fetchSongDetails, updateSongPlays }) => {
 
     const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
-    var mouseDown = false;
+    
+    var currentIndex = 0;
     const [curTime, setCurTime] = useState("0.00");
     const [remTime, setRemTime] = useState("0.00");
+    const nowPlayingBarContainerRef = useRef(null);
+    const volumeBarRef = useRef(null);
     const progressBarRef = useRef(null);
     const progressRef = useRef(null);
+    const volumeProgressRef = useRef(null);
     const audioRef = useRef(new Audio());
     const pauseRef = useRef(null);
     const playRef = useRef(null);
-    // console.log("NowPlayingBar playlist", currentPlaylist);
+     console.log("NowPlayingBar playlist", currentPlaylist);
     // console.log("songDetails", currentSong);
 
     useEffect(() => {
+        var mouseDown = false;
         if (currentPlaylist.length > 0) {
             fetchSongDetails(currentPlaylist[0]._id);
             setTrack(currentPlaylist[0], currentPlaylist, false);
             pauseRef.current.style.display = "none";
         }
+
+        updateVolumeProgressBar();
+        //prevents unwanted highlighting when changing volume and progress
+        nowPlayingBarContainerRef.current.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+        })
+        nowPlayingBarContainerRef.current.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+        })
+        nowPlayingBarContainerRef.current.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+        })
+        nowPlayingBarContainerRef.current.addEventListener("mousemove", (e) => {
+            e.preventDefault();
+        })
 
         progressBarRef.current.addEventListener('mousedown', () => {
             
@@ -47,6 +67,34 @@ const NowPlayingBar = ({ currentPlaylist, currentSong, fetchSongDetails, updateS
 
         });
 
+        volumeBarRef.current.addEventListener('mousedown', () => {
+            
+            mouseDown = true;
+        });
+
+        volumeBarRef.current.addEventListener('mousemove', (e) => {
+            
+            if (mouseDown) {
+           
+        
+               var percentage = e.offsetX / volumeBarRef.current.offsetWidth;
+               if (percentage >= 0 && percentage <=1){
+                   audioRef.current.volume = percentage;
+               }
+               
+            }
+        });
+
+        volumeBarRef.current.addEventListener('mouseup', (e) => {
+
+         
+            var percentage = e.offsetX / volumeBarRef.current.offsetWidth;
+            if (percentage >= 0 && percentage <=1){
+                audioRef.current.volume = percentage;
+            }
+
+        });
+
         audioRef.current.addEventListener("timeupdate", () => {
             if (audioRef.current.duration) {
                 updateTimeProgressBar();
@@ -54,6 +102,12 @@ const NowPlayingBar = ({ currentPlaylist, currentSong, fetchSongDetails, updateS
 
 
         });
+
+        audioRef.current.addEventListener("volumechange", () => {
+            updateVolumeProgressBar();
+        });
+
+      
         
         document.addEventListener('mouseup',() => {
             mouseDown = false;
@@ -91,6 +145,12 @@ const NowPlayingBar = ({ currentPlaylist, currentSong, fetchSongDetails, updateS
 
         var progress = audioRef.current.currentTime / audioRef.current.duration * 100;
         progressRef.current.style.width = progress + "%";
+    };
+
+    const updateVolumeProgressBar = () => {
+        var volume = audioRef.current.volume * 100;
+        volumeProgressRef.current.style.width = volume + "%";
+
     };
 
 
@@ -147,7 +207,7 @@ const NowPlayingBar = ({ currentPlaylist, currentSong, fetchSongDetails, updateS
         <>
 
 
-            <div id="nowPlayingBarContainer">
+            <div ref={nowPlayingBarContainerRef} id="nowPlayingBarContainer">
                 <div id="nowPlayingBar">
 
                     <div id="nowPlayingLeft">
@@ -224,9 +284,9 @@ const NowPlayingBar = ({ currentPlaylist, currentSong, fetchSongDetails, updateS
                                 <Volume color="#ec148c" size={30} alt="Volume" />
                             </button>
 
-                            <div className="progressBar">
+                            <div ref={volumeBarRef} className="progressBar">
                                 <div className="progressBarBg">
-                                    <div className="progress"></div>
+                                    <div ref={volumeProgressRef} className="progress"></div>
                                 </div>
                             </div>
 
