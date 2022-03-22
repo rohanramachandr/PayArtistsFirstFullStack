@@ -5,7 +5,11 @@ export default function songReducer(state={songDetails: null, playlist: []}, act
         case FETCH_SONG_DETAILS:
             return {...state, songDetails: action.payload};
         case FETCH_PLAYLIST:
-            return {...state, playlist: action.payload};
+            var tempArray = [];
+            action.payload.forEach((obj) => {
+                tempArray.push(obj._id);
+            })
+            return {...state, playlist: [...tempArray]};
             
         default:
             return state;

@@ -22,8 +22,9 @@ const NowPlayingBar = ({
   updateSongPlays,
 }) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [pause, setPause] = useState(true);
 
-  var currentIndex = 0;
   const [curTime, setCurTime] = useState("0.00");
   const [remTime, setRemTime] = useState("0.00");
   const nowPlayingBarContainerRef = useRef(null);
@@ -32,30 +33,12 @@ const NowPlayingBar = ({
   const progressRef = useRef(null);
   const volumeProgressRef = useRef(null);
   const audioRef = useRef(new Audio());
-  const pauseRef = useRef(null);
-  const playRef = useRef(null);
+  // const pauseRef = useRef(null);
+  // const playRef = useRef(null);
   //  console.log("NowPlayingBar playlist", currentPlaylist);
-  
 
   useEffect(() => {
-    console.log(currentPlaylist);
-    console.log("songDetails", currentSong);
     var mouseDown = false;
-    if (currentPlaylist.length > 0) {
-      if(!currentSong){
-        fetchSongDetails(currentPlaylist[0]._id);
-      }
-      else {
-        setTrack(currentSong, currentPlaylist, false);
-      
-      }
-      
-      
-    }
-    else {
-      fetchPlaylist();
-    }
-    pauseRef.current.style.display = "none";
     updateVolumeProgressBar();
     //prevents unwanted highlighting when changing volume and progress
     nowPlayingBarContainerRef.current.addEventListener("mousedown", (e) => {
@@ -121,7 +104,29 @@ const NowPlayingBar = ({
     document.addEventListener("mouseup", () => {
       mouseDown = false;
     });
-  }, [currentPlaylist, currentSong]);
+  }, []);
+
+  useEffect(() => {
+    setCurrentlyPlaying(currentSong);
+    audioRef.current.pause();
+    audioRef.current.load();
+    console.log("currentlyPlaying Use effect", currentlyPlaying);
+    if (currentlyPlaying) {
+     
+      pause ? pauseSong() : playSong();
+    }
+  }, [currentSong]);
+
+  useEffect(() => {
+    console.log(currentPlaylist);
+    console.log("songDetails", currentSong);
+
+    if (currentPlaylist.length > 0) {
+      setTrack(currentIndex, currentPlaylist, false);
+    } else {
+      fetchPlaylist();
+    }
+  }, [currentPlaylist, currentIndex]);
 
   const setTime = (seconds) => {
     audioRef.current.currentTime = seconds;
@@ -135,10 +140,20 @@ const NowPlayingBar = ({
   };
 
   const pauseSong = () => {
+    setPause(true);
     audioRef.current.pause();
+  };
 
-    pauseRef.current.style.display = "none";
-    playRef.current.style.display = "unset";
+  const playSong = () => {
+    setPause(false);
+    if (audioRef.current.currentTime === 0) {
+      console.log("updating plays");
+      updateSongPlays(currentSong._id);
+    }
+
+    console.log("playing track");
+
+    audioRef.current.play();
   };
 
   const updateTimeProgressBar = () => {
@@ -157,28 +172,24 @@ const NowPlayingBar = ({
     volumeProgressRef.current.style.width = volume + "%";
   };
 
-  const playSong = () => {
-    if (audioRef.current.currentTime === 0) {
-      console.log("updating plays");
-      updateSongPlays(currentSong._id);
+  const nextSong = async () => {
+    console.log("current Index next song", currentIndex);
+    if (currentIndex === currentPlaylist.length - 1) {
+      setCurrentIndex(0);
+    } else {
+      setCurrentIndex(currentIndex + 1);
     }
-    playRef.current.style.display = "none";
-    pauseRef.current.style.display = "unset";
-    console.log("playing track");
 
-    audioRef.current.play();
+    // setTrack(currentIndex, currentPlaylist, false);
   };
 
-  const setTrack = (track, newPlaylist, play) => {
-    if (track) {
-      setCurrentlyPlaying(track);
-      audioRef.current.pause();
-      audioRef.current.load();
+  const setTrack = async (index, newPlaylist, play) => {
+    console.log("index", index);
+    await fetchSongDetails(newPlaylist[index]);
 
-      if (play) {
-        playSong();
-      }
-    }
+    // if (play) {
+    //   playSong();
+    // }
   };
 
   const formatTime = (seconds) => {
@@ -194,6 +205,34 @@ const NowPlayingBar = ({
     return minutes + ":" + extraZero + seconds;
   };
 
+  const renderPlayOrPause = () => {
+    if (!pause) {
+      return (
+        <button
+          className="controlButton pause"
+          title="Pause Button"
+          onClick={() => {
+            pauseSong();
+          }}
+        >
+          <Pause color="#ec148c" size={45} alt="Pause" />
+        </button>
+      );
+    }
+
+    return (
+      <button
+        className="controlButton play"
+        title="Play Button"
+        onClick={() => {
+          playSong();
+        }}
+      >
+        <Play color="#ec148c" size={45} alt="Play" />
+      </button>
+    );
+  };
+
   return (
     <>
       <div ref={nowPlayingBarContainerRef} id="nowPlayingBarContainer">
@@ -204,17 +243,23 @@ const NowPlayingBar = ({
                 <img
                   className="albumArtwork"
                   alt="Album Art"
-                  src={currentSong ? currentSong.artworkPath : loadingArtwork}
+                  src={
+                    currentlyPlaying
+                      ? currentlyPlaying.artworkPath
+                      : loadingArtwork
+                  }
                 />
               </span>
 
               <div className="trackInfo">
                 <span className="trackName">
-                  <span>{currentSong ? currentSong.songTitle : "Unknown"}</span>
+                  <span>
+                    {currentlyPlaying ? currentlyPlaying.songTitle : "Unknown"}
+                  </span>
                 </span>
                 <span className="artistName">
                   <span>
-                    {currentSong ? currentSong.artistName : "Unknown"}
+                    {currentlyPlaying ? currentlyPlaying.artistName : "Unknown"}
                   </span>
                 </span>
               </div>
@@ -238,30 +283,13 @@ const NowPlayingBar = ({
                   <Prev color="#ec148c" size={30} alt="Previous" />
                 </button>
 
-                <button
-                  ref={playRef}
-                  className="controlButton play"
-                  title="Play Button"
-                  onClick={() => {
-                    playSong();
-                  }}
-                >
-                  <Play color="#ec148c" size={45} alt="Play" />
-                </button>
+                {renderPlayOrPause()}
 
                 <button
-                  ref={pauseRef}
-                  className="controlButton pause"
-                  title="Pause Button"
-                  style={{ display: "none" }}
-                  onClick={() => {
-                    pauseSong();
-                  }}
+                  className="controlButton next"
+                  title="Next Button"
+                  onClick={() => nextSong()}
                 >
-                  <Pause color="#ec148c" size={45} alt="Pause" />
-                </button>
-
-                <button className="controlButton next" title="Next Button">
                   <Next color="#ec148c" size={30} alt="Next" />
                 </button>
 
