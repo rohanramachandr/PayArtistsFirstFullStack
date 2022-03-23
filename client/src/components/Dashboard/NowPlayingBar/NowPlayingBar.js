@@ -15,7 +15,7 @@ import "./NowPlayingBar.css";
 import * as actions from "../../../actions/index";
 
 const NowPlayingBar = ({
-  currentPlaylist,
+  playlist,
   currentSong,
   fetchPlaylist,
   fetchSongDetails,
@@ -26,7 +26,9 @@ const NowPlayingBar = ({
   const [pause, setPause] = useState(true);
   const [repeat, setRepeat] = useState(false);
   const [mute, setMute] = useState(false);
-
+  const [shuffle, setShuffle] = useState(false);
+  const [currentPlaylist, setCurrentPlaylist] = useState(null);
+  var shuffledPlaylist = null;
   const [curTime, setCurTime] = useState("0.00");
   const [remTime, setRemTime] = useState("0.00");
   const nowPlayingBarContainerRef = useRef(null);
@@ -37,9 +39,9 @@ const NowPlayingBar = ({
   const audioRef = useRef(new Audio());
   // const pauseRef = useRef(null);
   // const playRef = useRef(null);
-  //  console.log("NowPlayingBar playlist", currentPlaylist);
+  //  console.log("NowPlayingBar playlist", playlist);
 
-  
+
 
   useEffect(() => {
     var mouseDown = false;
@@ -95,7 +97,7 @@ const NowPlayingBar = ({
       }
     });
 
- 
+
 
     document.addEventListener("mouseup", () => {
       mouseDown = false;
@@ -114,15 +116,24 @@ const NowPlayingBar = ({
   }, [currentSong]);
 
   useEffect(() => {
-    console.log(currentPlaylist);
-    console.log("songDetails", currentSong);
-
-    if (currentPlaylist.length > 0) {
+    // console.log(playlist);
+    // console.log("songDetails", currentSong);
+    console.log("currentplaylist before set track", currentPlaylist);
+    if (currentPlaylist && currentPlaylist.length > 0) {
       setTrack(currentIndex, currentPlaylist, false);
     } else {
       fetchPlaylist();
     }
   }, [currentPlaylist, currentIndex]);
+
+  useEffect(() => {
+    
+    
+    setCurrentPlaylist(playlist);
+    
+ 
+
+  }, [playlist]);
 
   const updateTime = () => {
     if (audioRef.current.duration) {
@@ -175,7 +186,7 @@ const NowPlayingBar = ({
   };
 
   const prevSong = () => {
-    if( audioRef.current.currentTime >= 3 || currentIndex === 0 ){
+    if (audioRef.current.currentTime >= 3 || currentIndex === 0) {
       setTime(0);
     }
     else {
@@ -191,11 +202,40 @@ const NowPlayingBar = ({
       playSong();
       return;
     }
+    if (shuffle && !shuffledPlaylist){
+      shuffledPlaylist = shuffleArray(playlist.slice());
+      console.log("SHUFFLING PLAYLIST!", shuffledPlaylist);
+    }
+    
     if (currentIndex === currentPlaylist.length - 1) {
-      console.log("setting current index to 0 playlist length: " ,currentPlaylist.length);
-      setCurrentIndex(0);
+      console.log("setting current index to 0 playlist length: ", currentPlaylist.length);
+      if (shuffle) {
+        
+       
+        setCurrentIndex(shuffledPlaylist.indexOf(currentPlaylist[0]));
+        setCurrentPlaylist(shuffledPlaylist);
+        
+      }
+      else {
+        setCurrentIndex(playlist.indexOf(currentPlaylist[0]));
+        setCurrentPlaylist(playlist);
+        
+      }
+      
     } else {
-      setCurrentIndex(currentIndex + 1);
+      if (shuffle) {
+        shuffledPlaylist = shuffleArray(playlist.slice());
+        console.log("shuffled playlist", shuffledPlaylist);
+       
+        setCurrentIndex(shuffledPlaylist.indexOf(currentPlaylist[currentIndex + 1]));
+        setCurrentPlaylist(shuffledPlaylist);
+        
+      }
+      else {
+        setCurrentIndex(playlist.indexOf(currentPlaylist[currentIndex + 1]));
+        setCurrentPlaylist(playlist);
+        
+      }
     }
 
 
@@ -238,8 +278,56 @@ const NowPlayingBar = ({
     )
   };
 
+  const renderShuffleButtons = () => {
+    if (!shuffle) {
+      return (
+        <button
+          className="controlButton shuffle"
+          title="Shuffle Button"
+          onClick={() => setShuffle(true)}
+        >
+          <Shuffle color="#ec148c" size={30} alt="Shuffle" />
+        </button>
+
+      );
+    }
+
+    return (
+      <button
+        className="controlButton shuffle"
+        title="Shuffle Button"
+        onClick={() => setShuffle(false)}
+      >
+        <Shuffle color="#fff" size={30} alt="Shuffle" />
+      </button>
+    );
+
+
+
+  };
+
+
+  const shuffleArray = (array) => {
+    let currentIndex = array.length, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (currentIndex !== 0) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+
+  }
+
   const renderVolumeButtons = () => {
-    if (mute){
+    if (mute) {
 
       return (
         <button className="controlButton volume" title="Volume button" onClick={
@@ -247,8 +335,8 @@ const NowPlayingBar = ({
             setMute(false);
             audioRef.current.muted = false;
           }
-          }>
-                <Mute color="#fff" size={30} alt="Volume" />
+        }>
+          <Mute color="#fff" size={30} alt="Volume" />
         </button>
       )
 
@@ -260,12 +348,12 @@ const NowPlayingBar = ({
           setMute(true);
           audioRef.current.muted = true;
         }
-        }>
-              <Volume color="#ec148c" size={30} alt="Volume" />
+      }>
+        <Volume color="#ec148c" size={30} alt="Volume" />
       </button>
     )
 
-    
+
   }
 
   const renderPlayOrPause = () => {
@@ -332,12 +420,7 @@ const NowPlayingBar = ({
           <div id="nowPlayingCenter">
             <div className="content playerControls">
               <div className="buttons">
-                <button
-                  className="controlButton shuffle"
-                  title="Shuffle Button"
-                >
-                  <Shuffle color="#ec148c" size={30} alt="Shuffle" />
-                </button>
+                {renderShuffleButtons()}
 
                 <button
                   className="controlButton previous"
@@ -395,7 +478,7 @@ const NowPlayingBar = ({
 };
 
 function mapStateToProps({ song }) {
-  return { currentPlaylist: song.playlist, currentSong: song.songDetails };
+  return { playlist: song.playlist, currentSong: song.songDetails };
 }
 
 export default connect(mapStateToProps, actions)(NowPlayingBar);
