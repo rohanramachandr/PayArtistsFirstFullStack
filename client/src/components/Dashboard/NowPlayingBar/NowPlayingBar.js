@@ -24,6 +24,8 @@ const NowPlayingBar = ({
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [pause, setPause] = useState(true);
+  const [repeat, setRepeat] = useState(false);
+  const [mute, setMute] = useState(false);
 
   const [curTime, setCurTime] = useState("0.00");
   const [remTime, setRemTime] = useState("0.00");
@@ -36,6 +38,8 @@ const NowPlayingBar = ({
   // const pauseRef = useRef(null);
   // const playRef = useRef(null);
   //  console.log("NowPlayingBar playlist", currentPlaylist);
+
+  
 
   useEffect(() => {
     var mouseDown = false;
@@ -91,15 +95,7 @@ const NowPlayingBar = ({
       }
     });
 
-    audioRef.current.addEventListener("timeupdate", () => {
-      if (audioRef.current.duration) {
-        updateTimeProgressBar();
-      }
-    });
-
-    audioRef.current.addEventListener("volumechange", () => {
-      updateVolumeProgressBar();
-    });
+ 
 
     document.addEventListener("mouseup", () => {
       mouseDown = false;
@@ -112,7 +108,7 @@ const NowPlayingBar = ({
     audioRef.current.load();
     console.log("currentlyPlaying Use effect", currentlyPlaying);
     if (currentlyPlaying) {
-     
+
       pause ? pauseSong() : playSong();
     }
   }, [currentSong]);
@@ -127,6 +123,12 @@ const NowPlayingBar = ({
       fetchPlaylist();
     }
   }, [currentPlaylist, currentIndex]);
+
+  const updateTime = () => {
+    if (audioRef.current.duration) {
+      updateTimeProgressBar();
+    }
+  }
 
   const setTime = (seconds) => {
     audioRef.current.currentTime = seconds;
@@ -172,24 +174,38 @@ const NowPlayingBar = ({
     volumeProgressRef.current.style.width = volume + "%";
   };
 
-  const nextSong = async () => {
+  const prevSong = () => {
+    if( audioRef.current.currentTime >= 3 || currentIndex === 0 ){
+      setTime(0);
+    }
+    else {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const nextSong = () => {
     console.log("current Index next song", currentIndex);
+
+    if (repeat) {
+      setTime(0);
+      playSong();
+      return;
+    }
     if (currentIndex === currentPlaylist.length - 1) {
+      console.log("setting current index to 0 playlist length: " ,currentPlaylist.length);
       setCurrentIndex(0);
     } else {
       setCurrentIndex(currentIndex + 1);
     }
 
-    // setTrack(currentIndex, currentPlaylist, false);
+
   };
 
   const setTrack = async (index, newPlaylist, play) => {
     console.log("index", index);
     await fetchSongDetails(newPlaylist[index]);
 
-    // if (play) {
-    //   playSong();
-    // }
+
   };
 
   const formatTime = (seconds) => {
@@ -204,6 +220,53 @@ const NowPlayingBar = ({
     }
     return minutes + ":" + extraZero + seconds;
   };
+
+  const renderRepeatButtons = () => {
+    if (!repeat) {
+      return (
+        <button className="controlButton repeat" title="Repeat Button" onClick={() => setRepeat(true)}>
+          <Repeat color="#ec148c" size={30} alt="Repeat" />
+        </button>
+
+      )
+    }
+
+    return (
+      <button className="controlButton repeat" title="Repeat Button" onClick={() => setRepeat(false)}>
+        <Repeat color="#fff" size={30} alt="Repeat" />
+      </button>
+    )
+  };
+
+  const renderVolumeButtons = () => {
+    if (mute){
+
+      return (
+        <button className="controlButton volume" title="Volume button" onClick={
+          () => {
+            setMute(false);
+            audioRef.current.muted = false;
+          }
+          }>
+                <Mute color="#fff" size={30} alt="Volume" />
+        </button>
+      )
+
+    }
+
+    return (
+      <button className="controlButton volume" title="Volume button" onClick={
+        () => {
+          setMute(true);
+          audioRef.current.muted = true;
+        }
+        }>
+              <Volume color="#ec148c" size={30} alt="Volume" />
+      </button>
+    )
+
+    
+  }
 
   const renderPlayOrPause = () => {
     if (!pause) {
@@ -279,6 +342,7 @@ const NowPlayingBar = ({
                 <button
                   className="controlButton previous"
                   title="Previous Button"
+                  onClick={() => prevSong()}
                 >
                   <Prev color="#ec148c" size={30} alt="Previous" />
                 </button>
@@ -293,9 +357,7 @@ const NowPlayingBar = ({
                   <Next color="#ec148c" size={30} alt="Next" />
                 </button>
 
-                <button className="controlButton repeat" title="Repeat Button">
-                  <Repeat color="#ec148c" size={30} alt="Repeat" />
-                </button>
+                {renderRepeatButtons()}
               </div>
 
               <div className="playbackBar">
@@ -311,9 +373,7 @@ const NowPlayingBar = ({
           </div>
           <div id="nowPlayingRight">
             <div className="volumeBar">
-              <button className="controlButton volume" title="Volume button">
-                <Volume color="#ec148c" size={30} alt="Volume" />
-              </button>
+              {renderVolumeButtons()}
 
               <div ref={volumeBarRef} className="progressBar">
                 <div className="progressBarBg">
@@ -324,7 +384,7 @@ const NowPlayingBar = ({
           </div>
         </div>
       </div>
-      <audio ref={audioRef}>
+      <audio ref={audioRef} onEnded={() => nextSong()} onVolumeChange={() => updateVolumeProgressBar()} onTimeUpdate={() => updateTime()}>
         <source
           src={currentlyPlaying ? currentlyPlaying.songPath : ""}
           type="audio/mpeg"
