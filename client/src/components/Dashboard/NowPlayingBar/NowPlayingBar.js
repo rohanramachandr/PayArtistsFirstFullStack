@@ -30,7 +30,7 @@ const NowPlayingBar = ({
   const [currentPlaylist, setCurrentPlaylist] = useState(null);
   const [shuffledPlaylist, setShuffledPlaylist] = useState([]);
   const [shuffleIndex, setShuffleIndex] = useState(null);
-  const [originalIndex, setOriginalIndex] = useState(null);
+  const [originalIndex, setOriginalIndex] = useState(0);
   // console.log("shuffledPlaylist being reinitialized", shuffledPlaylist.length === 0);
   const [curTime, setCurTime] = useState("0.00");
   const [remTime, setRemTime] = useState("0.00");
@@ -121,6 +121,7 @@ const NowPlayingBar = ({
   useEffect(() => {
     // console.log(playlist);
     // console.log("songDetails", currentSong);
+    setOriginalIndex(currentIndex);
     console.log("currentplaylist before set track", currentPlaylist);
     if (currentPlaylist && currentPlaylist.length > 0) {
       setTrack(currentIndex, currentPlaylist, false);
@@ -141,22 +142,23 @@ const NowPlayingBar = ({
 
     if(shuffle && shuffledPlaylist.length === 0) {
       console.log("SHUFFLING PLAYLIST!");
-      var newShuffledPlaylist = shuffleArray(playlist.slice());
-      setShuffleIndex(newShuffledPlaylist.indexOf(playlist[currentIndex]));
+      console.log("Current index Shuffling Playlis", currentIndex);
+      var playlistWithoutCurrentSongId = [...playlist];
+      var currentSongId = playlistWithoutCurrentSongId.splice(currentIndex, 1);
+      var newShuffledPlaylist = shuffleArray(playlistWithoutCurrentSongId);
+      newShuffledPlaylist = [currentSongId, ...newShuffledPlaylist];
+      setShuffleIndex(0);
       setShuffledPlaylist(newShuffledPlaylist);
       
     }
     else {
-      if(shuffleIndex){
-        setOriginalIndex(playlist.indexOf(shuffledPlaylist[currentIndex]))
-
-      }
-      else {
-        setOriginalIndex(currentIndex);
-      }
+     
+        setOriginalIndex(playlist.indexOf(shuffledPlaylist[currentIndex]));
+        setShuffledPlaylist([]);
+        setShuffleIndex(null);
       
-      setShuffledPlaylist([]);
-      setShuffleIndex(null);
+      
+      
     }
 
   }, [shuffle]);
@@ -212,8 +214,14 @@ const NowPlayingBar = ({
   };
 
   const prevSong = () => {
-    if (audioRef.current.currentTime >= 3 || currentIndex === 0) {
+    console.log("PREV SONG CURRENT INDEX AND SHuffle index", currentIndex, shuffleIndex);
+    if (currentIndex === 0 || shuffleIndex === 0) {
+      setTime(0)
+      return;
+    }
+    if (audioRef.current.currentTime >= 3) {
       setTime(0);
+      return;
     }
     else {
       // setCurrentIndex(currentIndex - 1);
@@ -240,21 +248,14 @@ const NowPlayingBar = ({
 
   const nextSong = () => {
     console.log("current Index next song", currentIndex);
-
+    console.log("orginalINdex", originalIndex);
     if (repeat) {
       setTime(0);
       playSong();
       return;
     }
    
-    // console.log("Next song song shuffle:", shuffle, "next song shuffledPlaylist", shuffledPlaylist);
-    // if (shuffle && currentPlaylist.length === 0){
-    //    newShuffledPlaylist = shuffleArray(playlist.slice());
-    //   console.log("SHUFFLING PLAYLIST!", newShuffledPlaylist);
-    // }
-    // else {
-    //   newShuffledPlaylist = shuffledPlaylist.slice();
-    // }
+    
 
     if (shuffle) {
 
