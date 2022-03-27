@@ -12,6 +12,8 @@ const AlbumPage = ({
   fetchAlbumGenre,
   fetchAlbumArtist,
   fetchAlbumSongs,
+  setPlaylist,
+  setPlaylistIndex
 }) => {
   const { albumId } = useParams();
 
@@ -42,11 +44,16 @@ const AlbumPage = ({
 
   const renderSongs = () => {
     //TODO perhaps change to get artist name from song instead of album
-    return album.songs.map((song) => {
+    var listOfSongIds = [];
+    album.songs.forEach((song) => {listOfSongIds.push(song._id)});
+    return album.songs.map((song, index) => {
       return (
         <li className="tracklistRow" key={song._id}>
           <div className="trackCount">
-            <div className="playIcon">
+            <div onClick={() => {
+              setPlaylist(listOfSongIds);
+              setPlaylistIndex(index);
+            }} className="playIcon">
               <BsFillPlayFill size={20} />
             </div>
 

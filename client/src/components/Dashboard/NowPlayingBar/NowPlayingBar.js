@@ -20,6 +20,7 @@ const NowPlayingBar = ({
   fetchPlaylist,
   fetchSongDetails,
   updateSongPlays,
+  index
 }) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -154,6 +155,7 @@ const NowPlayingBar = ({
     const setTrack = async (index, newPlaylist, play) => {
       
       await fetchSongDetails(newPlaylist[index]);
+      setPause(false);
   
   
     };
@@ -161,19 +163,24 @@ const NowPlayingBar = ({
     
     if (currentPlaylist && currentPlaylist.length > 0) {
       setTrack(currentIndex, currentPlaylist, false);
-    } else {
-      fetchPlaylist();
-    }
+      
+    } 
+
   }, [currentPlaylist, currentIndex, fetchPlaylist, fetchSongDetails]);
 
   useEffect(() => {
 
-    setCurrentPlaylist(playlist);
-    setCurrentIndex(0);
+    if (playlist.length > 0) {
+      setCurrentPlaylist(playlist);
+      setCurrentIndex(index);
+      setPause(false)
+    }
+
+    
 
 
 
-  }, [playlist]);
+  }, [playlist,index]);
 
 
   useEffect(() => {
@@ -565,7 +572,7 @@ const NowPlayingBar = ({
 };
 
 function mapStateToProps({ song }) {
-  return { playlist: song.playlist, currentSong: song.songDetails };
+  return { playlist: song.playlist, currentSong: song.songDetails, index: song.index };
 }
 
 export default connect(mapStateToProps, actions)(NowPlayingBar);
