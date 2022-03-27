@@ -20,7 +20,8 @@ const NowPlayingBar = ({
   fetchPlaylist,
   fetchSongDetails,
   updateSongPlays,
-  index
+  index,
+  setPlaylistIndex
 }) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -156,6 +157,7 @@ const NowPlayingBar = ({
       
       await fetchSongDetails(newPlaylist[index]);
       setPause(false);
+      
   
   
     };
@@ -167,6 +169,11 @@ const NowPlayingBar = ({
     } 
 
   }, [currentPlaylist, currentIndex, fetchPlaylist, fetchSongDetails]);
+
+  useEffect(() => {
+    setPlaylistIndex(currentIndex);
+
+  }, [currentIndex, setPlaylistIndex])
 
   useEffect(() => {
 

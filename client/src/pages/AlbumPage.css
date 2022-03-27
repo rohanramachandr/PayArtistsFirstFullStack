@@ -91,6 +91,12 @@ body {
  
 }
 
+.tracklistRow .trackCount .playingIcon {
+    width: 8%;
+    float: left;
+ 
+}
+
 .tracklistRow:hover .trackCount .playIcon {
     visibility: visible;  
 }

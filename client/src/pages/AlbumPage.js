@@ -5,7 +5,7 @@ import "./AlbumPage.css";
 import * as actions from "../actions";
 import { connect } from "react-redux";
 import { useEffect } from "react";
-import { BsFillPlayFill, BsThreeDots } from "react-icons/bs";
+import { BsFillPlayFill, BsThreeDots, BsVolumeUpFill as Volume } from "react-icons/bs";
 const AlbumPage = ({
   album,
   fetchAlbum,
@@ -13,9 +13,13 @@ const AlbumPage = ({
   fetchAlbumArtist,
   fetchAlbumSongs,
   setPlaylist,
-  setPlaylistIndex
+  setPlaylistIndex,
+  playlist,
+  playlistIndex
 }) => {
   const { albumId } = useParams();
+
+
 
   useEffect(() => {
     fetchAlbum(albumId);
@@ -42,22 +46,49 @@ const AlbumPage = ({
     return album.songs ? <span>{`${album.songs.length} songs`}</span> : null;
   };
 
+  const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+
+  const renderPlayingButtons = (albumSongs, index, order) => {
+    if (equals(albumSongs, playlist) && playlistIndex === index) {
+      return (
+        <div className="playingIcon">
+          <Volume color="#ec148c" size={20} alt="Volume" />
+        </div>
+      );
+
+
+    }
+
+    return (
+
+      <>
+        <div onClick={() => {
+          setPlaylist(albumSongs);
+          setPlaylistIndex(index);
+        }} className="playIcon">
+          <BsFillPlayFill size={20} />
+        </div>
+
+        <span className="trackNumber">{order}</span>
+      </>
+
+
+    );
+
+  };
+
   const renderSongs = () => {
     //TODO perhaps change to get artist name from song instead of album
     var listOfSongIds = [];
-    album.songs.forEach((song) => {listOfSongIds.push(song._id)});
+    album.songs.forEach((song) => { listOfSongIds.push(song._id) });
     return album.songs.map((song, index) => {
       return (
         <li className="tracklistRow" key={song._id}>
           <div className="trackCount">
-            <div onClick={() => {
-              setPlaylist(listOfSongIds);
-              setPlaylistIndex(index);
-            }} className="playIcon">
-              <BsFillPlayFill size={20} />
-            </div>
+            {renderPlayingButtons(listOfSongIds, index, song.albumOrder)}
 
-            <span className="trackNumber">{song.albumOrder}</span>
+
           </div>
           <div className="trackInfo">
             <span className="trackName">{song.songTitle}</span>
@@ -104,8 +135,8 @@ const AlbumPage = ({
   );
 };
 
-function mapStateToProps({ album }) {
-  return { album };
+function mapStateToProps({ album, song }) {
+  return { album, playlist: song.playlist, playlistIndex: song.index };
 }
 
 export default connect(mapStateToProps, actions)(AlbumPage);
