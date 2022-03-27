@@ -133,6 +133,7 @@ const NowPlayingBar = ({
   useEffect(() => {
  
       setCurrentPlaylist(playlist);
+      setCurrentIndex(0);
   
 
 
@@ -140,7 +141,7 @@ const NowPlayingBar = ({
 
   useEffect(() => {
 
-    if(shuffle && shuffledPlaylist.length === 0) {
+    if(shuffle) {
       console.log("SHUFFLING PLAYLIST!");
       console.log("Current index Shuffling Playlis", currentIndex);
       var playlistWithoutCurrentSongId = [...playlist];
@@ -152,8 +153,12 @@ const NowPlayingBar = ({
       
     }
     else {
-     
-        setOriginalIndex(playlist.indexOf(shuffledPlaylist[currentIndex]));
+        console.log("shuffleIndex", shuffleIndex);
+        console.log("shuffledPLaylist: ", shuffledPlaylist);
+        console.log("playlist", playlist);
+        console.log("element", (shuffledPlaylist[shuffleIndex]));
+        console.log("Resetting index and suffled array new INdex:", playlist.findIndex(element => String(element) === String(shuffledPlaylist[shuffleIndex])));
+        setOriginalIndex(playlist.findIndex(element => String(element) === String(shuffledPlaylist[shuffleIndex])));
         setShuffledPlaylist([]);
         setShuffleIndex(null);
       
@@ -212,6 +217,20 @@ const NowPlayingBar = ({
     var volume = audioRef.current.volume * 100;
     volumeProgressRef.current.style.width = volume + "%";
   };
+
+  // const findIndexOfId = (array, id) => {
+  //   const search = String(id);
+  //   return array.forEach((value, index) => {
+
+  //       if(String(value) === search) {
+  //         return index;
+  //       }
+
+  //   });
+
+  //   return -1;
+
+  // };
 
   const prevSong = () => {
     console.log("PREV SONG CURRENT INDEX AND SHuffle index", currentIndex, shuffleIndex);
