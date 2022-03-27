@@ -13,7 +13,7 @@ module.exports = app => {
 
 
         try {
-            const { songTitle, _artist, duration, songPath, albumOrder, plays, _album } = await Song.findOne({ _id: req.params.songId });
+            const { _id, songTitle, _artist, duration, songPath, albumOrder, plays, _album } = await Song.findOne({ _id: req.params.songId });
 
 
             const { artistName } = await Artist.findOne({ _id: _artist });
@@ -22,7 +22,7 @@ module.exports = app => {
 
 
 
-            res.send({ songTitle, artistName, albumTitle, artworkPath, duration, songPath, plays, albumOrder });
+            res.send({ _id, songTitle, artistName, albumTitle, artworkPath, duration, songPath, plays, albumOrder });
         }
         catch(err) {
             res.status(404).send(err);
@@ -53,6 +53,17 @@ module.exports = app => {
         
 
     });
+
+      app.get('/api/songs/playlist', requireLogin, async (req, res) => { 
+      try {
+          const songIds = await Song.find({}, '_id');
+          res.send(songIds);
+      }
+
+      catch(err) {
+          res.status(404).send(err);
+      }
+  });
 
 
 
