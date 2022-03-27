@@ -29,7 +29,7 @@ const DashboardPage = (props) => {
   }, [fetchAlbums]);
 
   const renderAlbums = () => {
-    console.log("inside render albums", props.albums);
+   
 
     return props.albums.map(({ _id, albumTitle, artworkPath }) => {
       return (

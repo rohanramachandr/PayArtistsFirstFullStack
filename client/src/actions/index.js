@@ -50,7 +50,7 @@ export const fetchAlbumSongs = (albumId) => async dispatch => {
 };
 
 export const fetchSongDetails = (songId) => async dispatch => {
-    console.log("fetchsong details url", `/api/song/details/${songId}`);
+    // console.log("fetchsong details url", `/api/song/details/${songId}`);
 
     const res = await axios.get(`/api/song/details/${songId}`);
 
