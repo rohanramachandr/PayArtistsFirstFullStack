@@ -13,7 +13,7 @@ const AlbumPage = ({
   fetchAlbumArtist,
   fetchAlbumSongs,
   setPlaylist,
-  setPlaylistIndex,
+  setClickIndex,
   playlist,
   playlistIndex
 }) => {
@@ -65,7 +65,7 @@ const AlbumPage = ({
       <>
         <div onClick={() => {
           setPlaylist(albumSongs);
-          setPlaylistIndex(index);
+          setClickIndex(index);
         }} className="playIcon">
           <BsFillPlayFill size={20} />
         </div>

@@ -20,8 +20,9 @@ const NowPlayingBar = ({
   fetchPlaylist,
   fetchSongDetails,
   updateSongPlays,
-  index,
-  setPlaylistIndex
+  clickIndex,
+  setPlaylistIndex,
+  setClickIndex
 }) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -29,7 +30,7 @@ const NowPlayingBar = ({
   const [repeat, setRepeat] = useState(false);
   const [mute, setMute] = useState(false);
   const [shuffle, setShuffle] = useState(false);
-  const [currentPlaylist, setCurrentPlaylist] = useState(null);
+  const [currentPlaylist, setCurrentPlaylist] = useState([]);
   const [shuffledPlaylist, setShuffledPlaylist] = useState([]);
   const [shuffleIndex, setShuffleIndex] = useState(null);
   const [originalIndex, setOriginalIndex] = useState(0);
@@ -118,7 +119,33 @@ const NowPlayingBar = ({
   }, []);
 
   useEffect(() => {
+    console.log("In use effect clickIndex");
+   
+    // setCurrentlyPlaying(null);
+    if (clickIndex !== null) {
+      console.log("SEtting current index in useeffect clickINdex: ", clickIndex);
+      setCurrentIndex(clickIndex);
+   
+    } 
 
+  }, [clickIndex, setCurrentIndex]);
+  
+
+  useEffect(() => {
+
+  
+      
+    setCurrentPlaylist(playlist);
+      
+      
+      
+    
+
+  }, [playlist, setCurrentPlaylist]);
+
+  useEffect(() => {
+
+   audioRef.current.pause();
     
     setCurrentlyPlaying(currentSong);
     audioRef.current.pause();
@@ -140,10 +167,16 @@ const NowPlayingBar = ({
         
         updateSongPlays(currentSong._id);
       }
-  
+
+
+
+
+        audioRef.current.play()
+
+      
      
   
-      audioRef.current.play();
+      
     };
     if (currentlyPlaying) {
 
@@ -154,9 +187,14 @@ const NowPlayingBar = ({
 
   useEffect(() => {
     const setTrack = async (index, newPlaylist, play) => {
-      
+      console.log("playing song at index", index);
       await fetchSongDetails(newPlaylist[index]);
       setPause(false);
+      setPlaylistIndex(playlist.findIndex(element => String(element) === String(newPlaylist[index])));
+     
+
+
+      
       
   
   
@@ -164,36 +202,30 @@ const NowPlayingBar = ({
     setOriginalIndex(currentIndex);
     
     if (currentPlaylist && currentPlaylist.length > 0) {
-      setTrack(currentIndex, currentPlaylist, false);
+      if (!pause) {
+        setPause(true);
+       
+      }
+      else {
+        setTrack(currentIndex, currentPlaylist, false);
+      }
+      
       
     } 
 
-  }, [currentPlaylist, currentIndex, fetchPlaylist, fetchSongDetails]);
+  }, [currentPlaylist, currentIndex, fetchPlaylist, fetchSongDetails, playlist, setPlaylistIndex]);
 
-  useEffect(() => {
-    setPlaylistIndex(currentIndex);
+  // useEffect(() => {
+  //   setPlaylistIndex(currentIndex);
 
-  }, [currentIndex, setPlaylistIndex])
+  // }, [currentIndex, setPlaylistIndex])
 
-  useEffect(() => {
-
-    if (playlist.length > 0) {
-      setCurrentPlaylist(playlist);
-      setCurrentIndex(index);
-      setPause(false)
-    }
-
-    
-
-
-
-  }, [playlist,index]);
+ 
 
 
   useEffect(() => {
   if (shuffle && shuffleIndex === null) {
-        // console.log("SHUFFLING PLAYLIST!");
-        // console.log("Current index Shuffling Playlis", currentIndex);
+       
         var playlistWithoutCurrentSongId = [...playlist];
         var currentSongId = playlistWithoutCurrentSongId.splice(currentIndex, 1);
         var newShuffledPlaylist = shuffleArray(playlistWithoutCurrentSongId);
@@ -238,7 +270,6 @@ const NowPlayingBar = ({
   const playSong = () => {
     setPause(false);
     if (audioRef.current.currentTime === 0) {
-      // console.log("updating plays");
       updateSongPlays(currentSong._id);
     }
 
@@ -266,7 +297,7 @@ const NowPlayingBar = ({
 
 
   const prevSong = () => {
-    // console.log("PREV SONG CURRENT INDEX AND SHuffle index", currentIndex, shuffleIndex);
+  
     if (originalIndex === 0 || shuffleIndex === 0) {
       setTime(0)
       return;
@@ -299,8 +330,7 @@ const NowPlayingBar = ({
   };
 
   const nextSong = () => {
-    // console.log("current Index next song", currentIndex);
-    // console.log("orginalINdex", originalIndex);
+
     if (repeat) {
       setTime(0);
       playSong();
@@ -313,12 +343,14 @@ const NowPlayingBar = ({
 
       if (shuffleIndex === currentPlaylist.length - 1) {
         setShuffleIndex(0);
-        setCurrentIndex(0);
+        // setCurrentIndex(0);
+        setClickIndex(0)
         setCurrentPlaylist(shuffledPlaylist);
       }
       else {
 
-        setCurrentIndex(shuffleIndex + 1);
+        // setCurrentIndex(shuffleIndex + 1);
+        setClickIndex(shuffleIndex + 1);
         setShuffleIndex(shuffleIndex + 1);
         setCurrentPlaylist(shuffledPlaylist);
 
@@ -330,11 +362,13 @@ const NowPlayingBar = ({
     else {
       if (originalIndex === currentPlaylist.length - 1) {
         setOriginalIndex(0);
-        setCurrentIndex(0);
+        // setCurrentIndex(0);
+        setClickIndex(0);
         setCurrentPlaylist(playlist);
       }
       else {
-        setCurrentIndex(originalIndex + 1);
+        // setCurrentIndex(originalIndex + 1);
+        setClickIndex(originalIndex + 1);
         setOriginalIndex(originalIndex + 1);
         setCurrentPlaylist(playlist);
 
@@ -579,7 +613,7 @@ const NowPlayingBar = ({
 };
 
 function mapStateToProps({ song }) {
-  return { playlist: song.playlist, currentSong: song.songDetails, index: song.index };
+  return { playlist: song.playlist, currentSong: song.songDetails, index: song.index, clickIndex: song.clickIndex };
 }
 
 export default connect(mapStateToProps, actions)(NowPlayingBar);

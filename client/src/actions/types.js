@@ -9,4 +9,4 @@ export const UPDATE_SONG_PLAYS = 'update_song_plays';
 export const FETCH_PLAYLIST = 'fetch_playlist';
 export const SET_PLAYLIST = 'set_playlist';
 export const SET_PLAYLIST_INDEX = 'set_playlist_index';
-
+export const SET_CLICK_INDEX = 'set_click_index';

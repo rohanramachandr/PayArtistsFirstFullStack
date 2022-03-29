@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, SET_PLAYLIST, SET_PLAYLIST_INDEX } from './types';
+import { FETCH_ALBUMS, FETCH_USER, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, SET_PLAYLIST, SET_PLAYLIST_INDEX, SET_CLICK_INDEX } from './types';
 
 export const fetchUser = () => async dispatch => {
 
@@ -74,7 +74,7 @@ export const updateSongPlays = (songId) => async dispatch => {
 };
 
 export const setPlaylist = (playlist) => {
-    console.log("setting playlist", playlist);
+    
     return {
         type: SET_PLAYLIST,
         payload: playlist
@@ -82,9 +82,17 @@ export const setPlaylist = (playlist) => {
 };
 
 export const setPlaylistIndex = (index) => {
-    console.log("setting playlist index", index);
+    
     return {
         type: SET_PLAYLIST_INDEX,
+        payload: index
+    };
+};
+
+export const setClickIndex = (index) => {
+    console.log("Setting CLick Index", index);
+    return {
+        type: SET_CLICK_INDEX,
         payload: index
     };
 };
