@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { connect } from "react-redux";
 import loadingArtwork from "../../../images/loadingArtwork.jpg";
 import {
@@ -13,6 +13,7 @@ import {
 } from "react-icons/bs";
 import "./NowPlayingBar.css";
 import * as actions from "../../../actions/index";
+import axios from 'axios';
 
 const NowPlayingBar = ({
   playlist,
@@ -43,6 +44,57 @@ const NowPlayingBar = ({
   const progressRef = useRef(null);
   const volumeProgressRef = useRef(null);
   const audioRef = useRef(new Audio());
+
+  
+  const playSong = useCallback((trackId = null) => {
+    setPause(false);
+    if (audioRef.current.currentTime === 0) {
+        if (trackId !== null) {
+          console.log("updating plays", trackId);
+          updateSongPlays(trackId);
+        }
+     
+      }
+    
+    audioRef.current.play();
+
+  }, [updateSongPlays]);
+
+  const pauseSong = () => {
+    setPause(true)
+    audioRef.current.pause();
+
+  };
+
+  // const s = useCallback(() => {
+  //   setOpen(true)
+  // }, [])
+
+  
+
+  const setTrack = useCallback(async (trackId, newPlaylist, play) => {
+
+    setCurrentIndex(newPlaylist.findIndex(element => String(element) === String(trackId)));
+    const res = await axios.get(`/api/song/details/${trackId}`);
+    console.log(res.data);
+    setCurrentlyPlaying(res.data);
+
+    audioRef.current.pause();
+    audioRef.current.load();
+
+    if (play) {
+      playSong(res.data._id);
+    }
+    
+  
+
+    // if (play) {
+    //   playSong();
+    // }
+    
+
+  }, [playSong]);
+
 
 
 
@@ -118,139 +170,165 @@ const NowPlayingBar = ({
     });
   }, []);
 
-  useEffect(() => {
-    console.log("In use effect clickIndex");
-   
-    // setCurrentlyPlaying(null);
-    if (clickIndex !== null) {
-      console.log("SEtting current index in useeffect clickINdex: ", clickIndex);
-      setCurrentIndex(clickIndex);
-   
-    } 
-
-  }, [clickIndex, setCurrentIndex]);
-  
 
   useEffect(() => {
 
-  
-      
-    setCurrentPlaylist(playlist);
-      
-      
-      
-    
-
-  }, [playlist, setCurrentPlaylist]);
-
-  useEffect(() => {
-
-   audioRef.current.pause();
-    
-    setCurrentlyPlaying(currentSong);
-    audioRef.current.pause();
-    audioRef.current.load();
- 
-    
-  }, [currentSong, setCurrentlyPlaying]);
-
-
-  useEffect(() => {
-    const pauseSong = () => {
-
-      audioRef.current.pause();
-    };
-  
-    const playSong = () => {
- 
-      if (audioRef.current.currentTime === 0) {
-        
-        updateSongPlays(currentSong._id);
-      }
-
-
-
-
-        audioRef.current.play()
-
-      
-     
-  
-      
-    };
-    if (currentlyPlaying) {
-
-      pause ? pauseSong() : playSong();
+    if (playlist.length > 0 && clickIndex !== null){
+      setTrack(playlist[clickIndex], playlist, true);
     }
 
-  }, [pause, currentlyPlaying, currentSong, updateSongPlays]);
-
-  useEffect(() => {
-    const setTrack = async (index, newPlaylist, play) => {
-      console.log("playing song at index", index);
-      await fetchSongDetails(newPlaylist[index]);
-      setPause(false);
-      setPlaylistIndex(playlist.findIndex(element => String(element) === String(newPlaylist[index])));
-     
-
-
-      
-      
-  
-  
-    };
-    setOriginalIndex(currentIndex);
     
-    if (currentPlaylist && currentPlaylist.length > 0) {
-      if (!pause) {
-        setPause(true);
-       
-      }
-      else {
-        setTrack(currentIndex, currentPlaylist, false);
-      }
-      
-      
-    } 
 
-  }, [currentPlaylist, currentIndex, fetchPlaylist, fetchSongDetails, playlist, setPlaylistIndex]);
+  }, [clickIndex, playlist, setTrack]);
+
 
   // useEffect(() => {
-  //   setPlaylistIndex(currentIndex);
 
-  // }, [currentIndex, setPlaylistIndex])
+  //   if (currentlyPlaying !== null){
+  //    if (audioRef.current.currentTime === 0) {
+  //     console.log("updating plays", currentlyPlaying);
+  //       updateSongPlays(currentlyPlaying._id);
+  //   }
+  //   }
+
+    
+
+  // }, [currentlyPlaying]);
+
+
+  // useEffect(() => {
+  //   console.log("In use effect clickIndex");
+   
+  //   // setCurrentlyPlaying(null);
+  //   if (clickIndex !== null) {
+  //     console.log("SEtting current index in useeffect clickINdex: ", clickIndex);
+  //     setCurrentIndex(clickIndex);
+   
+  //   } 
+
+  // }, [clickIndex, setCurrentIndex]);
+  
+
+  // useEffect(() => {
+
+  
+      
+  //   setCurrentPlaylist(playlist);
+      
+      
+      
+    
+
+  // }, [playlist, setCurrentPlaylist]);
+
+  // useEffect(() => {
+
+  //  audioRef.current.pause();
+    
+  //   setCurrentlyPlaying(currentSong);
+  //   audioRef.current.pause();
+  //   audioRef.current.load();
+ 
+    
+  // }, [currentSong, setCurrentlyPlaying]);
+
+
+  // useEffect(() => {
+  //   const pauseSong = () => {
+
+  //     audioRef.current.pause();
+  //   };
+  
+  //   const playSong = () => {
+ 
+  //     if (audioRef.current.currentTime === 0) {
+        
+  //       updateSongPlays(currentSong._id);
+  //     }
+
+
+
+
+  //       audioRef.current.play()
+
+      
+     
+  
+      
+  //   };
+  //   if (currentlyPlaying) {
+
+  //     pause ? pauseSong() : playSong();
+  //   }
+
+  // }, [pause, currentlyPlaying, currentSong, updateSongPlays]);
+
+  // useEffect(() => {
+  //   const setTrack = async (index, newPlaylist, play) => {
+  //     console.log("playing song at index", index);
+  //     await fetchSongDetails(newPlaylist[index]);
+  //     setPause(false);
+  //     setPlaylistIndex(playlist.findIndex(element => String(element) === String(newPlaylist[index])));
+     
+
+
+      
+      
+  
+  
+  //   };
+  //   setOriginalIndex(currentIndex);
+    
+  //   if (currentPlaylist && currentPlaylist.length > 0) {
+  //     if (!pause) {
+  //       setPause(true);
+       
+  //     }
+  //     else {
+  //       setTrack(currentIndex, currentPlaylist, false);
+  //     }
+      
+      
+  //   } 
+
+  // }, [currentPlaylist, currentIndex, fetchPlaylist, fetchSongDetails, playlist, setPlaylistIndex]);
+
+  // // useEffect(() => {
+  // //   setPlaylistIndex(currentIndex);
+
+  // // }, [currentIndex, setPlaylistIndex])
 
  
 
 
-  useEffect(() => {
-  if (shuffle && shuffleIndex === null) {
+  // useEffect(() => {
+  // if (shuffle && shuffleIndex === null) {
        
-        var playlistWithoutCurrentSongId = [...playlist];
-        var currentSongId = playlistWithoutCurrentSongId.splice(currentIndex, 1);
-        var newShuffledPlaylist = shuffleArray(playlistWithoutCurrentSongId);
-        newShuffledPlaylist = [currentSongId, ...newShuffledPlaylist];
-        setShuffleIndex(0);
-        setShuffledPlaylist(newShuffledPlaylist);
+  //       var playlistWithoutCurrentSongId = [...playlist];
+  //       var currentSongId = playlistWithoutCurrentSongId.splice(currentIndex, 1);
+  //       var newShuffledPlaylist = shuffleArray(playlistWithoutCurrentSongId);
+  //       newShuffledPlaylist = [currentSongId, ...newShuffledPlaylist];
+  //       setShuffleIndex(0);
+  //       setShuffledPlaylist(newShuffledPlaylist);
 
-      }
-  }, [shuffle, currentIndex, playlist, shuffleIndex]);
+  //     }
+  // }, [shuffle, currentIndex, playlist, shuffleIndex]);
 
 
-  useEffect(() => {
+  // useEffect(() => {
 
    
-    if(!shuffle && shuffleIndex !== null) {
+  //   if(!shuffle && shuffleIndex !== null) {
     
-      setOriginalIndex(playlist.findIndex(element => String(element) === String(shuffledPlaylist[shuffleIndex])));
-      setShuffledPlaylist([]);
-      setShuffleIndex(null);
+  //     setOriginalIndex(playlist.findIndex(element => String(element) === String(shuffledPlaylist[shuffleIndex])));
+  //     setShuffledPlaylist([]);
+  //     setShuffleIndex(null);
 
 
 
-    }
+  //   }
 
-  }, [shuffle, shuffledPlaylist, shuffleIndex, playlist]);
+  // }, [shuffle, shuffledPlaylist, shuffleIndex, playlist]);
 
   const updateTime = () => {
     if (audioRef.current.duration) {
@@ -267,16 +345,16 @@ const NowPlayingBar = ({
 
 
 
-  const playSong = () => {
-    setPause(false);
-    if (audioRef.current.currentTime === 0) {
-      updateSongPlays(currentSong._id);
-    }
+  // const playSong = () => {
+  //   setPause(false);
+  //   if (audioRef.current.currentTime === 0) {
+  //     updateSongPlays(currentSong._id);
+  //   }
 
   
 
-    audioRef.current.play();
-  };
+  //   audioRef.current.play();
+  // };
 
   const updateTimeProgressBar = () => {
     setCurTime(formatTime(audioRef.current.currentTime));
@@ -329,57 +407,72 @@ const NowPlayingBar = ({
     }
   };
 
+
   const nextSong = () => {
-
-    if (repeat) {
-      setTime(0);
-      playSong();
-      return;
-    }
-
-
-
-    if (shuffle) {
-
-      if (shuffleIndex === currentPlaylist.length - 1) {
-        setShuffleIndex(0);
-        // setCurrentIndex(0);
-        setClickIndex(0)
-        setCurrentPlaylist(shuffledPlaylist);
-      }
-      else {
-
-        // setCurrentIndex(shuffleIndex + 1);
-        setClickIndex(shuffleIndex + 1);
-        setShuffleIndex(shuffleIndex + 1);
-        setCurrentPlaylist(shuffledPlaylist);
-
-      }
-
-
-
+    var nextIndex;
+    if (currentIndex === playlist.length - 1){
+      nextIndex = 0;
     }
     else {
-      if (originalIndex === currentPlaylist.length - 1) {
-        setOriginalIndex(0);
-        // setCurrentIndex(0);
-        setClickIndex(0);
-        setCurrentPlaylist(playlist);
-      }
-      else {
-        // setCurrentIndex(originalIndex + 1);
-        setClickIndex(originalIndex + 1);
-        setOriginalIndex(originalIndex + 1);
-        setCurrentPlaylist(playlist);
-
-      }
-
+      nextIndex = currentIndex + 1;
     }
 
-
-
+    var trackToPlay = playlist[nextIndex];
+    setCurrentIndex(nextIndex);
+    setTrack(trackToPlay, playlist, true);
 
   };
+  // const nextSong = () => {
+
+  //   if (repeat) {
+  //     setTime(0);
+  //     playSong();
+  //     return;
+  //   }
+
+
+
+  //   if (shuffle) {
+
+  //     if (shuffleIndex === currentPlaylist.length - 1) {
+  //       setShuffleIndex(0);
+  //       // setCurrentIndex(0);
+  //       setClickIndex(0)
+  //       setCurrentPlaylist(shuffledPlaylist);
+  //     }
+  //     else {
+
+  //       // setCurrentIndex(shuffleIndex + 1);
+  //       setClickIndex(shuffleIndex + 1);
+  //       setShuffleIndex(shuffleIndex + 1);
+  //       setCurrentPlaylist(shuffledPlaylist);
+
+  //     }
+
+
+
+  //   }
+  //   else {
+  //     if (originalIndex === currentPlaylist.length - 1) {
+  //       setOriginalIndex(0);
+  //       // setCurrentIndex(0);
+  //       setClickIndex(0);
+  //       setCurrentPlaylist(playlist);
+  //     }
+  //     else {
+  //       // setCurrentIndex(originalIndex + 1);
+  //       setClickIndex(originalIndex + 1);
+  //       setOriginalIndex(originalIndex + 1);
+  //       setCurrentPlaylist(playlist);
+
+  //     }
+
+  //   }
+
+
+
+
+  // };
 
 
 
@@ -498,7 +591,7 @@ const NowPlayingBar = ({
           className="controlButton pause"
           title="Pause Button"
           onClick={() => {
-            setPause(true);
+            pauseSong();
           }}
         >
           <Pause color="#ec148c" size={45} alt="Pause" />
@@ -511,7 +604,7 @@ const NowPlayingBar = ({
         className="controlButton play"
         title="Play Button"
         onClick={() => {
-          setPause(false);
+          playSong(currentlyPlaying._id);
         }}
       >
         <Play color="#ec148c" size={45} alt="Play" />
