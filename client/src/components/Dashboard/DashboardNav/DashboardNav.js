@@ -26,7 +26,7 @@ const DashboardNav = () => {
 
                     <div className="navItem">
 
-                        <Link to="/dashboard" className="navItemLink">Browse</Link>
+                        <Link to="/dashboard/browse" className="navItemLink">Browse</Link>
 
                     </div>
 

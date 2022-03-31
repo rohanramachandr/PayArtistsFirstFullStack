@@ -6,7 +6,9 @@ import * as actions from './actions';
 import Home from './pages/HomePage';
 import SignInPage from './pages/SigninPage';
 import DashboardPage from './pages/DashboardPage';
-import AlbumPage from './pages/AlbumPage';
+import Album from './components/Dashboard/Album/Album';
+import Browse from './components/Dashboard/Browse/Browse';
+// import AlbumPage from './pages/AlbumPage';
 import RootGaurd from './guards/RootGuard';
 
 
@@ -23,10 +25,15 @@ class App extends Component {
       <Router>
         <RootGaurd>
           <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/signin" element={<SignInPage />} />
-            <Route exact path="/dashboard" element={<DashboardPage />} />
-            <Route exact path="/album/:albumId" element={<AlbumPage />} />
+            <Route path="/" element={<Home />} />
+            <Route path="signin" element={<SignInPage />} />
+            <Route path="dashboard" element={<DashboardPage />}>
+              <Route path="browse" element={<Browse />} />
+              <Route path="album/:albumId" element={<Album />} />
+
+            </Route>
+
+
 
           </Routes>
         </RootGaurd>
