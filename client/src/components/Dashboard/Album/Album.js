@@ -62,8 +62,14 @@ const Album = ({
 
       <>
         <div onClick={() => {
-          setPlaylist(albumSongs);
-          setClickIndex(index);
+          if (!equals(albumSongs, playlist)) {
+            setPlaylist(albumSongs);
+          }
+          if (playlistIndex !== index) {
+            console.log("setting click index", index);
+            setClickIndex(index);
+          }
+          
         }} className="playIcon">
           <BsFillPlayFill size={20} />
         </div>
