@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, SET_PLAYLIST, SET_PLAYLIST_INDEX, SET_CLICK_INDEX } from './types';
+import { FETCH_ALBUMS, FETCH_USER, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, SET_PLAYLIST, SET_PLAYLIST_INDEX, SET_CLICK_INDEX, RESET_ALBUM_PAGE } from './types';
 
 export const fetchUser = () => async dispatch => {
 
@@ -47,6 +47,14 @@ export const fetchAlbumSongs = (albumId) => async dispatch => {
 
     dispatch({ type: FETCH_ALBUM_SONGS, payload: res.data });
 
+};
+
+export const resetAlbumPage = () => {
+    
+    return {
+        type: RESET_ALBUM_PAGE,
+        payload: null
+    };
 };
 
 export const fetchSongDetails = (songId) => async dispatch => {

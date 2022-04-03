@@ -8,6 +8,7 @@ const Album = ({
   album,
   fetchAlbum,
   fetchAlbumGenre,
+  resetAlbumPage,
   fetchAlbumArtist,
   fetchAlbumSongs,
   setPlaylist,
@@ -24,7 +25,11 @@ const Album = ({
     fetchAlbumGenre(albumId);
     fetchAlbumArtist(albumId);
     fetchAlbumSongs(albumId);
-  }, [albumId, fetchAlbum, fetchAlbumGenre, fetchAlbumArtist, fetchAlbumSongs]);
+
+    return () => {
+      resetAlbumPage();
+    };
+  }, [albumId, fetchAlbum, fetchAlbumGenre, fetchAlbumArtist, fetchAlbumSongs, resetAlbumPage]);
 
   const renderArtwork = () => {
     return album.album ? (

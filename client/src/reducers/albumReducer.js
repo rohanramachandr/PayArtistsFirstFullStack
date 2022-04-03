@@ -1,4 +1,4 @@
-import { FETCH_ALBUM, FETCH_ALBUM_ARTIST, FETCH_ALBUM_GENRE, FETCH_ALBUM_SONGS } from '../actions/types';
+import { FETCH_ALBUM, FETCH_ALBUM_ARTIST, FETCH_ALBUM_GENRE, FETCH_ALBUM_SONGS, RESET_ALBUM_PAGE } from '../actions/types';
 const initState = {album: null, genre: null, artist: null, songs: []};
 
 export default function albumReducer(state=initState, action) {
@@ -11,6 +11,8 @@ export default function albumReducer(state=initState, action) {
             return {...state, artist: action.payload.artistName};
         case FETCH_ALBUM_SONGS:
             return {...state, songs: action.payload};
+        case RESET_ALBUM_PAGE:
+            return initState;
         default:
             return state;
     }

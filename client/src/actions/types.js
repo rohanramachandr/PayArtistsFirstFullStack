@@ -10,3 +10,4 @@ export const FETCH_PLAYLIST = 'fetch_playlist';
 export const SET_PLAYLIST = 'set_playlist';
 export const SET_PLAYLIST_INDEX = 'set_playlist_index';
 export const SET_CLICK_INDEX = 'set_click_index';
+export const RESET_ALBUM_PAGE = 'reset_album_page';
