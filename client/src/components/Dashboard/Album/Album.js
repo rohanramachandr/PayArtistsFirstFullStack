@@ -1,15 +1,14 @@
 import { useParams } from "react-router-dom";
-import DashboardNav from "../components/Dashboard/DashboardNav/DashboardNav";
-import NowPlayingBar from "../components/Dashboard/NowPlayingBar/NowPlayingBar";
-import "./AlbumPage.css";
-import * as actions from "../actions";
+import "./Album.css";
+import * as actions from "../../../actions";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 import { BsFillPlayFill, BsThreeDots, BsVolumeUpFill as Volume } from "react-icons/bs";
-const AlbumPage = ({
+const Album = ({
   album,
   fetchAlbum,
   fetchAlbumGenre,
+  resetAlbumPage,
   fetchAlbumArtist,
   fetchAlbumSongs,
   setPlaylist,
@@ -26,7 +25,11 @@ const AlbumPage = ({
     fetchAlbumGenre(albumId);
     fetchAlbumArtist(albumId);
     fetchAlbumSongs(albumId);
-  }, [albumId, fetchAlbum, fetchAlbumGenre, fetchAlbumArtist, fetchAlbumSongs]);
+
+    return () => {
+      resetAlbumPage();
+    };
+  }, [albumId, fetchAlbum, fetchAlbumGenre, fetchAlbumArtist, fetchAlbumSongs, resetAlbumPage]);
 
   const renderArtwork = () => {
     return album.album ? (
@@ -64,8 +67,14 @@ const AlbumPage = ({
 
       <>
         <div onClick={() => {
-          setPlaylist(albumSongs);
-          setClickIndex(index);
+          if (!equals(albumSongs, playlist)) {
+            setPlaylist(albumSongs);
+          }
+         
+          
+          setClickIndex([index]);
+          
+          
         }} className="playIcon">
           <BsFillPlayFill size={20} />
         </div>
@@ -108,9 +117,7 @@ const AlbumPage = ({
   };
 
   return (
-    <div id="mainContainer">
-      <div id="topContainer">
-        <DashboardNav />
+   
 
         <div id="mainViewContainer">
           <div id="mainContent">
@@ -128,10 +135,7 @@ const AlbumPage = ({
             </div>
           </div>
         </div>
-      </div>
-
-      <NowPlayingBar />
-    </div>
+     
   );
 };
 
@@ -139,4 +143,4 @@ function mapStateToProps({ album, song }) {
   return { album, playlist: song.playlist, playlistIndex: song.index };
 }
 
-export default connect(mapStateToProps, actions)(AlbumPage);
+export default connect(mapStateToProps, actions)(Album);

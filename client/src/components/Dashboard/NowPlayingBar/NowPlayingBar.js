@@ -20,6 +20,7 @@ const NowPlayingBar = ({
   updateSongPlays,
   clickIndex,
   setPlaylistIndex }) => {
+  const playlistRef = useRef(playlist);
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [pause, setPause] = useState(true);
@@ -27,6 +28,8 @@ const NowPlayingBar = ({
   const [mute, setMute] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [shuffledPlaylist, setShuffledPlaylist] = useState([]);
+  const shuffleRef = useRef(shuffle);
+  const shuffledPlaylistRef = useRef(shuffledPlaylist);
   const [curTime, setCurTime] = useState("0.00");
   const [remTime, setRemTime] = useState("0.00");
   const nowPlayingBarContainerRef = useRef(null);
@@ -36,12 +39,26 @@ const NowPlayingBar = ({
   const volumeProgressRef = useRef(null);
   const audioRef = useRef(new Audio());
 
+  useEffect(() => {
+    shuffleRef.current = shuffle;
+    shuffledPlaylistRef.current = shuffledPlaylist;
+  }, [shuffle, shuffledPlaylist]);
+
+  useEffect(() => {
+   
+    playlistRef.current = playlist;
+    setShuffledPlaylist([]);
+    shuffledPlaylistRef.current = [];
+  
+
+  }, [playlist]);
+
+ 
 
   const playSong = useCallback((trackId = null) => {
     setPause(false);
     if (audioRef.current.currentTime === 0) {
       if (trackId !== null) {
-        // console.log("updating plays", trackId);
         updateSongPlays(trackId);
       }
 
@@ -60,18 +77,31 @@ const NowPlayingBar = ({
 
 
   const setTrack = useCallback(async (trackId, newPlaylist, play, shuffle, shuffledPlaylist) => {
-    // console.log(shuffle, "shuffle set track");
+    
+    const curIndex = newPlaylist.findIndex(element => String(element) === String(trackId));
     if (shuffle) {
-      // console.log("new current index shuffle", shuffledPlaylist.findIndex(element => String(element) === String(trackId)));
-      setCurrentIndex(shuffledPlaylist.findIndex(element => String(element) === String(trackId)))
+      
+      if (shuffledPlaylist.length === 0) {
+       
+        var playlistWithoutCurrentSongId = [...newPlaylist];
+        var currentSongId = playlistWithoutCurrentSongId.splice(curIndex, 1);
+        var newShuffledPlaylist = shuffleArray(playlistWithoutCurrentSongId);
+        newShuffledPlaylist = [currentSongId[0], ...newShuffledPlaylist];
+        setShuffledPlaylist(newShuffledPlaylist);
+        setCurrentIndex(0);
+
+      }
+      else {
+        setCurrentIndex(shuffledPlaylist.findIndex(element => String(element) === String(trackId)));
+      }
+      
     }
     else {
-      // console.log("New current index regular", newPlaylist.findIndex(element => String(element) === String(trackId)));
-      setCurrentIndex(newPlaylist.findIndex(element => String(element) === String(trackId)));
+      setCurrentIndex(curIndex);
     }
 
     const res = await axios.get(`/api/song/details/${trackId}`);
-    // console.log(res.data);
+    
     setCurrentlyPlaying(res.data);
 
     audioRef.current.pause();
@@ -159,14 +189,15 @@ const NowPlayingBar = ({
   useEffect(() => {
 
 
-    if (playlist.length > 0 && clickIndex !== null) {
-      setTrack(playlist[clickIndex], playlist, true, false, []);
-      setShuffle(false);
+    if (playlistRef.current.length > 0 && clickIndex.length === 1) {
+    
+      setTrack(String(playlistRef.current[clickIndex[0]]), playlistRef.current, true, shuffleRef.current, shuffledPlaylistRef.current);
+      
     }
 
 
 
-  }, [clickIndex, playlist, setTrack]);
+  }, [clickIndex, setTrack]);
 
   useEffect(() => {
     if (currentlyPlaying !== null) {
@@ -208,13 +239,12 @@ const NowPlayingBar = ({
 
   const prevSong = () => {
 
-    console.log("prevsong", currentIndex);
     if (audioRef.current.currentTime >= 3 || currentIndex === 0) {
       setTime(0);
       return;
     }
     else {
-
+   
       setTrack(shuffle ? shuffledPlaylist[currentIndex - 1] : playlist[currentIndex - 1], playlist, true, shuffle, shuffledPlaylist);
     }
   };
@@ -236,7 +266,7 @@ const NowPlayingBar = ({
     }
 
     var trackToPlay = shuffle ? shuffledPlaylist[nextIndex] : playlist[nextIndex];
-    // setCurrentIndex(nextIndex);
+ 
     setTrack(trackToPlay, playlist, true, shuffle, shuffledPlaylist);
 
   };
@@ -281,7 +311,7 @@ const NowPlayingBar = ({
       var playlistWithoutCurrentSongId = [...playlist];
       var currentSongId = playlistWithoutCurrentSongId.splice(currentIndex, 1);
       var newShuffledPlaylist = shuffleArray(playlistWithoutCurrentSongId);
-      newShuffledPlaylist = [currentSongId, ...newShuffledPlaylist];
+      newShuffledPlaylist = [currentSongId[0], ...newShuffledPlaylist];
       setShuffledPlaylist(newShuffledPlaylist);
       setCurrentIndex(0);
     }
@@ -289,7 +319,7 @@ const NowPlayingBar = ({
     else {
       setCurrentIndex(playlist.findIndex(element => String(element) === String(currentlyPlaying._id)));
     }
-    console.log("next shuffle", nextShuffle);
+    
     setShuffle(nextShuffle);
 
   };
