@@ -65,10 +65,10 @@ const Album = ({
           if (!equals(albumSongs, playlist)) {
             setPlaylist(albumSongs);
           }
-          if (playlistIndex !== index) {
-            console.log("setting click index", index);
-            setClickIndex(index);
-          }
+         
+          
+          setClickIndex([index]);
+          
           
         }} className="playIcon">
           <BsFillPlayFill size={20} />

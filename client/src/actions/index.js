@@ -90,7 +90,7 @@ export const setPlaylistIndex = (index) => {
 };
 
 export const setClickIndex = (index) => {
-    console.log("Setting CLick Index in action", index);
+
     return {
         type: SET_CLICK_INDEX,
         payload: index
