@@ -1,0 +1,41 @@
+#mainViewContainer {
+    margin-left: 220px;
+    padding-bottom: 90px;
+    width: calc(100% -220px);
+}
+
+#mainContent {
+    padding: 0 20px;
+}
+
+.entityInfo {
+    padding: 40px 0 10px 0;
+    display: inline-block;
+    width: 100%;
+}
+
+.artistInfo {
+    text-align: center;
+}
+
+.artistInfo .button {
+    color: #fff;
+    cursor: pointer;
+    margin: 20px 0 10px 0;
+    background-color: transparent;
+    font-weight: 1000;
+    letter-spacing: 2px;
+    border: 2px solid #fff;
+    border-radius: 500px;
+    padding: 15px;
+    min-width: 130px;
+
+}
+
+
+.button.pink {
+    
+    background-color: #ec148c;
+    border-color: #ec148c;
+
+}
