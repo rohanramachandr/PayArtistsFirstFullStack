@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import "./Album.css";
 import * as actions from "../../../actions";
 import { connect } from "react-redux";
-import { useEffect } from "react";
+import React ,{ useEffect } from "react";
 import { BsFillPlayFill, BsThreeDots, BsVolumeUpFill as Volume } from "react-icons/bs";
 const Album = ({
   album,

@@ -11,3 +11,7 @@ export const SET_PLAYLIST = 'set_playlist';
 export const SET_PLAYLIST_INDEX = 'set_playlist_index';
 export const SET_CLICK_INDEX = 'set_click_index';
 export const RESET_ALBUM_PAGE = 'reset_album_page';
+export const FETCH_ARTIST_INFO = 'fetch_artist_info';
+export const FETCH_ARTIST_SONGS = 'fetch_artist_songs';
+export const FETCH_ARTIST_ALBUMS = 'fetch_artist_albums';
+export const RESET_ARTIST_PAGE = 'reset_artist_page';

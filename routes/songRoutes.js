@@ -22,7 +22,7 @@ module.exports = app => {
 
 
 
-            res.send({ _id, songTitle, artistName, albumTitle, artworkPath, duration, songPath, plays, albumOrder });
+            res.send({ _id, _album, songTitle, artistName, albumTitle, artworkPath, duration, songPath, plays, albumOrder });
         }
         catch(err) {
             res.status(404).send(err);

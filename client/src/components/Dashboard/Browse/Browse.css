@@ -39,3 +39,8 @@
     white-space: nowrap;
     
 }
+
+.trackListContainer h2, .gridViewContainer h2 {
+    text-align: center;
+    padding: 5px 0;
+}
