@@ -32,10 +32,126 @@
 
 }
 
+.tracklist {
+    padding: 0;
+}
+
+.tracklistRow {
+    height: 62px;
+    padding: 15px 10px;
+    list-style: none;
+}
+
+.tracklistRow span {
+    color: #939393;
+    font-weight: 200;
+}
+
+.tracklistRow:hover {
+    background-color: #282828;
+}
+
+.tracklistRow .trackCount {
+    width: 8%;
+    float: left;
+}
+
+.tracklistRow .trackCount .playIcon {
+    visibility: hidden;
+    position: absolute;
+    cursor: pointer;
+ 
+}
+
+.tracklistRow .trackCount .playingIcon {
+    width: 8%;
+    float: left;
+ 
+}
+
+.tracklistRow:hover .trackCount .playIcon {
+    visibility: visible;  
+}
+
+.tracklistRow .trackCount span {
+    visibility: visible;  
+}
+
+.tracklistRow:hover .trackCount span {
+    visibility: hidden;  
+}
+
+.tracklistRow .trackInfo {
+    width: 75%;
+    float: left;
+}
+
+.tracklistRow .trackInfo span {
+    display: block;
+}
+
+.tracklistRow .trackOptions {
+    width: 5%;
+    float: left;
+    text-align: right;
+}
+
+.tracklistRow .trackOptions .optionsIcon {
+    width: 15%;
+    visibility: hidden;
+
+}
+
+.tracklistRow:hover .trackOptions .optionsIcon {
+    visibility: visible;
+}
+
+.tracklistRow .trackDuration {
+    width: 12%;
+    float: left;
+    text-align: right
+}
+
+.tracklistRow .trackInfo .trackName {
+    color: #fff;
+    margin-bottom: 7px;
+}
+
 
 .button.pink {
     
     background-color: #ec148c;
     border-color: #ec148c;
 
+}
+
+.borderBottom {
+    border-bottom: 1px solid #939393;
+    margin-bottom: 20px;
+}
+
+.gridViewItem {
+    display: inline-block;
+    margin-right: 20px;
+    width: 29%;
+    max-width: 200px;
+    min-width: 150px;
+    color: #fff;
+    text-decoration: none; 
+}
+
+.gridViewItem img {
+    width: 100%;
+}
+
+
+
+.gridViewInfo {
+    font-weight: 300;
+    text-align: center;
+    padding: 5px 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    
 }

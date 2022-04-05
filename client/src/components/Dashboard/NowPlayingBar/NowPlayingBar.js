@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 import loadingArtwork from "../../../images/loadingArtwork.jpg";
 import {
@@ -45,15 +46,15 @@ const NowPlayingBar = ({
   }, [shuffle, shuffledPlaylist]);
 
   useEffect(() => {
-   
+
     playlistRef.current = playlist;
     setShuffledPlaylist([]);
     shuffledPlaylistRef.current = [];
-  
+
 
   }, [playlist]);
 
- 
+
 
   const playSong = useCallback((trackId = null) => {
     setPause(false);
@@ -77,12 +78,12 @@ const NowPlayingBar = ({
 
 
   const setTrack = useCallback(async (trackId, newPlaylist, play, shuffle, shuffledPlaylist) => {
-    
+
     const curIndex = newPlaylist.findIndex(element => String(element) === String(trackId));
     if (shuffle) {
-      
+
       if (shuffledPlaylist.length === 0) {
-       
+
         var playlistWithoutCurrentSongId = [...newPlaylist];
         var currentSongId = playlistWithoutCurrentSongId.splice(curIndex, 1);
         var newShuffledPlaylist = shuffleArray(playlistWithoutCurrentSongId);
@@ -94,14 +95,14 @@ const NowPlayingBar = ({
       else {
         setCurrentIndex(shuffledPlaylist.findIndex(element => String(element) === String(trackId)));
       }
-      
+
     }
     else {
       setCurrentIndex(curIndex);
     }
 
     const res = await axios.get(`/api/song/details/${trackId}`);
-    
+
     setCurrentlyPlaying(res.data);
 
     audioRef.current.pause();
@@ -190,9 +191,9 @@ const NowPlayingBar = ({
 
 
     if (playlistRef.current.length > 0 && clickIndex.length === 1) {
-    
+
       setTrack(String(playlistRef.current[clickIndex[0]]), playlistRef.current, true, shuffleRef.current, shuffledPlaylistRef.current);
-      
+
     }
 
 
@@ -205,7 +206,7 @@ const NowPlayingBar = ({
     }
   }, [currentlyPlaying, playlist, setPlaylistIndex]);
 
-  
+
 
   const updateTime = () => {
     if (audioRef.current.duration) {
@@ -225,7 +226,7 @@ const NowPlayingBar = ({
       formatTime(audioRef.current.duration - audioRef.current.currentTime)
     );
 
-  var progress =
+    var progress =
       (audioRef.current.currentTime / audioRef.current.duration) * 100;
     progressRef.current.style.width = progress + "%";
   };
@@ -244,7 +245,7 @@ const NowPlayingBar = ({
       return;
     }
     else {
-   
+
       setTrack(shuffle ? shuffledPlaylist[currentIndex - 1] : playlist[currentIndex - 1], playlist, true, shuffle, shuffledPlaylist);
     }
   };
@@ -266,7 +267,7 @@ const NowPlayingBar = ({
     }
 
     var trackToPlay = shuffle ? shuffledPlaylist[nextIndex] : playlist[nextIndex];
- 
+
     setTrack(trackToPlay, playlist, true, shuffle, shuffledPlaylist);
 
   };
@@ -319,7 +320,7 @@ const NowPlayingBar = ({
     else {
       setCurrentIndex(playlist.findIndex(element => String(element) === String(currentlyPlaying._id)));
     }
-    
+
     setShuffle(nextShuffle);
 
   };
@@ -423,9 +424,9 @@ const NowPlayingBar = ({
         title="Play Button"
         onClick={() => {
           if (currentlyPlaying !== null) {
-             playSong(currentlyPlaying._id);
+            playSong(currentlyPlaying._id);
           }
-         
+
         }}
       >
         <Play color="#ec148c" size={45} alt="Play" />
@@ -440,7 +441,17 @@ const NowPlayingBar = ({
           <div id="nowPlayingLeft">
             <div className="content">
               <span className="albumLink">
-                <img
+                {currentlyPlaying ? <Link className="barLink" to={`/dashboard/album/${currentlyPlaying._album}`}>
+                  <img
+                    className="albumArtwork"
+                    alt="Album Art"
+                    src={
+                      currentlyPlaying
+                        ? currentlyPlaying.artworkPath
+                        : loadingArtwork
+                    }
+                  />
+                </Link> : <img
                   className="albumArtwork"
                   alt="Album Art"
                   src={
@@ -448,18 +459,20 @@ const NowPlayingBar = ({
                       ? currentlyPlaying.artworkPath
                       : loadingArtwork
                   }
-                />
+                />}
+
+
               </span>
 
               <div className="trackInfo">
                 <span className="trackName">
                   <span>
-                    {currentlyPlaying ? currentlyPlaying.songTitle : "Unknown"}
+                    {currentlyPlaying ? <Link className="barLink" to={`/dashboard/album/${currentlyPlaying._album}`}>{currentlyPlaying.songTitle}</Link> : "Unknown"}
                   </span>
                 </span>
                 <span className="artistName">
                   <span>
-                    {currentlyPlaying ? currentlyPlaying.artistName : "Unknown"}
+                    {currentlyPlaying ? <Link className="barLink" to={`/dashboard/artist/${currentlyPlaying.artistName}`}>{currentlyPlaying.artistName}</Link> : "Unknown"}
                   </span>
                 </span>
               </div>
