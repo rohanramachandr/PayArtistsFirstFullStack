@@ -24,23 +24,13 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
 
    
 
-    // const renderArtwork = () => {
-    //     return album.album ? (
-    //       <img src={album.album.artworkPath} alt="album art" />
-    //     ) : null;
-    //   };
-
-    //   const renderAlbumTitle = () => {
-    //     return album.album ? <h2>{album.album.albumTitle}</h2> : null;
-    //   };
+   
 
     const renderArtistName = () => {
         return info ? <span>{info.artistName}</span> : null;
     };
 
-    //   const renderNumSongs = () => {
-    //     return songs ? <span>{`${album.songs.length} songs`}</span> : null;
-    //   };
+   
 
     const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -96,7 +86,7 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
                     </div>
                     <div className="trackInfo">
                         <span className="trackName">{song.songTitle}</span>
-                        <span className="artistName">{info.artistName}</span>
+                        <span className="artistName">{renderArtistName()}</span>
                     </div>
                     <div className="trackOptions">
                         <div className="optionsIcon">
