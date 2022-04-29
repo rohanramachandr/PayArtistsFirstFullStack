@@ -12,6 +12,7 @@ const songSchema = new Schema({
     albumOrder: { type: Number, default: 1 },
     plays: { type: Number, default: 0 }
 
+    
 })
 
 mongoose.model('songs', songSchema);
