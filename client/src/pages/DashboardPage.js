@@ -7,6 +7,8 @@ import { Outlet } from "react-router-dom";
 import "./DashboardPage.css";
 import DashboardAppBar from "../components/Dashboard/DashboardAppBar/DashboardAppBar";
 // import NavRoute from "../components/Dashboard/NavRoute/NavRoute";
+import theme from "../components/Dashboard/theme";
+import { ThemeProvider } from "@material-ui/core";
 
 const DashboardPage = (props) => {
 
@@ -16,7 +18,7 @@ const DashboardPage = (props) => {
 
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <DashboardAppBar />
       <div id="mainContainer">
         <div id="topContainer">
@@ -28,7 +30,7 @@ const DashboardPage = (props) => {
 
         <NowPlayingBar />
       </div>
-    </>
+    </ThemeProvider>
 
   );
 };
