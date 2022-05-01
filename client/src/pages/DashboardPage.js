@@ -9,25 +9,23 @@ import DashboardAppBar from "../components/Dashboard/DashboardAppBar/DashboardAp
 import theme from "../components/Dashboard/theme";
 import { ThemeProvider } from "@material-ui/core";
 import SwipeableNavBar from "../components/Dashboard/DashboardNav/SwipeableNav";
+import { DashboardContextProvider } from "../components/Dashboard/DashboardContext";
 
 const DashboardPage = (props) => {
 
 
   return (
     <ThemeProvider theme={theme}>
-      <DashboardAppBar />
-      <SwipeableNavBar />
-      <div id="mainContainer">
-        <div id="topContainer">
-          {/* <DashboardNav /> */}
-          
-          <Outlet />
-
-
+      <DashboardContextProvider>
+        <DashboardAppBar />
+        <SwipeableNavBar />
+        <div id="mainContainer">
+          <div id="topContainer">
+            <Outlet />
+          </div>
+          <NowPlayingBar />
         </div>
-
-        <NowPlayingBar />
-      </div>
+      </DashboardContextProvider>
     </ThemeProvider>
 
   );

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import { DashboardContext } from '../DashboardContext';
 
 
 
@@ -38,6 +39,8 @@ const styles = {
 
 function DashboardAppBar(props) {
 
+  const {setMenuOpen} = useContext(DashboardContext);
+
 
   const toggleSearch = () => {
 
@@ -46,7 +49,7 @@ function DashboardAppBar(props) {
           <IconButton
             color="inherit"
             aria-label="Menu"
-            // onClick={() => setMenuOpen(true)}
+            onClick={() => setMenuOpen(true)}
           >
             <Menu />
           </IconButton>

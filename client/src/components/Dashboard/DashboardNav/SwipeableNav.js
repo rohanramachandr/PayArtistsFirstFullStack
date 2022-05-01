@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { DashboardContext } from "../DashboardContext";
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
-import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Divider, Typography } from "@material-ui/core";
+import { Box, List, ListItem, ListItemIcon, ListItemText, Divider, Typography } from "@material-ui/core";
 import { Link } from 'react-router-dom';
 import AlbumIcon from '@mui/icons-material/Album';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import "./DashboardNav.css";
+
 
 
 const SwipeableNavBar = () => {
 
-    const [menuOpen, setMenuOpen] = useState(false);
+    const {menuOpen, setMenuOpen} = useContext(DashboardContext);
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     const styles = {
@@ -43,8 +44,8 @@ const SwipeableNavBar = () => {
 
     return (
 
-        <>
-            <Button onClick={() => setMenuOpen(true)}>Left</Button>
+     
+            
             <SwipeableDrawer
 
                 open={menuOpen}
@@ -52,7 +53,7 @@ const SwipeableNavBar = () => {
                 onOpen={() => setMenuOpen(true)}
                 disableBackdropTransition={!iOS} 
                 disableDiscovery={iOS}
-                
+
             >
 
                 <Box
@@ -65,13 +66,14 @@ const SwipeableNavBar = () => {
                     <List>
                         <Link to="/" style={styles.link}>
                             <ListItem button key="Logo">
-                                <Typography style={styles.logo} variant="h5" gutterBottom component="div">
+                                <Typography style={styles.logo} variant="h5"  component="div">
                                     PayArtistsFirst
                                 </Typography>
 
                             </ListItem>
 
                         </Link>
+                        <Divider variant="middle" style={styles.divider} />
                         <Link to="/dashboard/browse" style={styles.link}>
                             <ListItem button key="Browse">
                                 <ListItemIcon>
@@ -103,55 +105,11 @@ const SwipeableNavBar = () => {
                             </ListItem>
                         </a>
                     </List>
-
-
-                    {/* <a href="/dashboard" className="logo">PayArtistsFirst</a>
-
-                <div className="group">
-
-                    <div className="navItem">
-
-                        <a href="/search" className="navItemLink">Search
-
-                            Search
-                        </a>
-
-                    </div>
-
-                </div>
-
-                <div className="group">
-
-                    <div className="navItem">
-
-                        <Link to="/dashboard/browse" className="navItemLink">Browse</Link>
-
-                    </div>
-
-                    <div className="navItem">
-
-                        <a href="/yourmusic" className="navItemLink">Your Music</a>
-
-                    </div>
-
-                    <div className="navItem">
-
-                        <a href="/profile" className="navItemLink">Rohan Ramachandran</a>
-
-                    </div>
-
-                    <div className="navItem">
-
-                        <a href="/api/logout" className="navItemLink">Log Out</a>
-
-                    </div>
-
-                </div> */}
+   
                 </Box>
 
             </SwipeableDrawer>
 
-        </>
 
 
 
