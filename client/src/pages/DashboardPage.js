@@ -8,7 +8,8 @@ import "./DashboardPage.css";
 import DashboardAppBar from "../components/Dashboard/DashboardAppBar/DashboardAppBar";
 // import NavRoute from "../components/Dashboard/NavRoute/NavRoute";
 import theme from "../components/Dashboard/theme";
-import { ThemeProvider } from "@material-ui/core";
+import { SwipeableDrawer, ThemeProvider } from "@material-ui/core";
+import SwipeableNavBar from "../components/Dashboard/DashboardNav/SwipeableNav";
 
 const DashboardPage = (props) => {
 
@@ -22,7 +23,8 @@ const DashboardPage = (props) => {
       <DashboardAppBar />
       <div id="mainContainer">
         <div id="topContainer">
-          <DashboardNav />
+          {/* <DashboardNav /> */}
+          <SwipeableNavBar />
           <Outlet />
 
 

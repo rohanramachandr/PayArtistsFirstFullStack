@@ -23,7 +23,7 @@ const styles = {
     
   },
   title: {
-    textAlign: 'center',
+    textAlign: 'left',
     width: 'calc(100% - 96px)'
 
     
