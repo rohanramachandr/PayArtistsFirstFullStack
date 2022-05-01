@@ -1,41 +1,90 @@
 import React, { useState } from "react";
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
-import { Box } from "@material-ui/core";
+import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Divider } from "@material-ui/core";
 import { Link } from 'react-router-dom';
+import AlbumIcon from '@mui/icons-material/Album';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import "./DashboardNav.css";
 
 
 const SwipeableNavBar = () => {
 
-    const [menuOpen, setMenuOpen ] = useState(true);
+    const [menuOpen, setMenuOpen] = useState(false);
 
-    const styles ={
+    const styles = {
         drawer: {
-            width: 250, 
+            width: 250,
             height: '100%',
-            background: '#181818'
+            // background: '#181818'
+            background: '#181818',
+            borderRight: '1px solid #fff',
+            color: '#ec148c'
+
+
+        },
+        icon: {
+            color: "#ec148c"
         }
+
     };
 
 
 
     return (
 
+        <>
+            <Button onClick={() => setMenuOpen(true)}>Left</Button>
+            <SwipeableDrawer
 
-        <SwipeableDrawer
-          
-            open={menuOpen}
-            onClose={() => setMenuOpen(false)}
-            onOpen={() => setMenuOpen(true)}
+                open={menuOpen}
+                onClose={() => setMenuOpen(false)}
+                onOpen={() => setMenuOpen(true)}
 
 
-        >
-
-            <Box 
-                style={styles.drawer}
             >
-                <a href="/dashboard" className="logo">PayArtistsFirst</a>
+
+                <Box
+                    style={styles.drawer}
+                >
+
+
+                    <List>
+
+                        <ListItem button key="Browse">
+                            <ListItemIcon>
+                                <MusicNoteIcon fontSize="large" style={styles.icon} />
+                            </ListItemIcon>
+                            <ListItemText primary="Browse" />
+                        </ListItem>
+                        <ListItem button key="Become An Artist">
+                            <ListItemIcon>
+                                <AlbumIcon fontSize="large" style={styles.icon} />
+                            </ListItemIcon>
+                            <ListItemText primary="Become An Artist" />
+                        </ListItem>
+                        <ListItem button key="Settings">
+                            <ListItemIcon>
+                                <SettingsIcon fontSize="large" style={styles.icon} />
+                            </ListItemIcon>
+                            <ListItemText primary="Settings" />
+                        </ListItem>
+                       
+
+                    </List>
+                    <Divider style={styles.icon}/>
+                    <List>
+                    <ListItem button key="Logout">
+                            <ListItemIcon>
+                                <LogoutIcon fontSize="large" style={styles.icon} />
+                            </ListItemIcon>
+                            <ListItemText primary="Logout" />
+                        </ListItem>
+
+                    </List>
+                    {/* <a href="/dashboard" className="logo">PayArtistsFirst</a>
 
                 <div className="group">
 
@@ -76,10 +125,12 @@ const SwipeableNavBar = () => {
 
                     </div>
 
-                </div>
-            </Box>
+                </div> */}
+                </Box>
 
-        </SwipeableDrawer>
+            </SwipeableDrawer>
+
+        </>
 
 
 
