@@ -31,6 +31,7 @@ const styles = {
   input: {
     color: '#fff',
   },
+  logout : {textDecoration: 'none', color: 'inherit'}
 };
 
 
@@ -56,7 +57,7 @@ function DashboardAppBar(props) {
           
           
            
-          <a href="/api/logout" style={{textDecoration: 'none', color: 'inherit'}}><Button color="inherit">LOGOUT</Button></a> 
+          <a href="/api/logout" style={styles.logout}><Button color="inherit">LOGOUT</Button></a> 
           
         </>
       );

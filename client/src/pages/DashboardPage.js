@@ -13,10 +13,6 @@ import SwipeableNavBar from "../components/Dashboard/DashboardNav/SwipeableNav";
 const DashboardPage = (props) => {
 
 
-
-
-
-
   return (
     <ThemeProvider theme={theme}>
       <DashboardAppBar />
