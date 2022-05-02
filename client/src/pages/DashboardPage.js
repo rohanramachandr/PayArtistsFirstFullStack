@@ -10,6 +10,7 @@ import theme from "../components/Dashboard/theme";
 import { ThemeProvider } from "@material-ui/core";
 import SwipeableNavBar from "../components/Dashboard/DashboardNav/SwipeableNav";
 import { DashboardContextProvider } from "../components/Dashboard/DashboardContext";
+import ResponsivePlayingBar from "../components/Dashboard/NowPlayingBar/ResponsivePlayingBar";
 
 const DashboardPage = (props) => {
 
@@ -23,7 +24,8 @@ const DashboardPage = (props) => {
           <div id="topContainer">
             <Outlet />
           </div>
-          <NowPlayingBar />
+          {/* <NowPlayingBar /> */}
+          <ResponsivePlayingBar />
         </div>
       </DashboardContextProvider>
     </ThemeProvider>
