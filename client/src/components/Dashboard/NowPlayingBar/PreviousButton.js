@@ -10,4 +10,4 @@ const PreviousButton = ({playPrevious}) => {
   );
 };
 
-export default PreviousButton
+export default PreviousButton;
