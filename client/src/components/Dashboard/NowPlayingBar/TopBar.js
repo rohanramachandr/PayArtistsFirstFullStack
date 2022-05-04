@@ -66,14 +66,14 @@ const snackbarMsg = "Hello";
   };
 
   const minimizePlayer = () => {
-    history.goBack()
+   // history.goBack()
     setPlayerState("minimized");
   };
 
   return (
     <Grid
       container
-      justify="space-between"
+      justifyContent="space-between"
       direction="row"
       style={{
         padding: " 0 10px",
@@ -84,34 +84,15 @@ const snackbarMsg = "Hello";
     >
       <VolumeController player={player} />
       {/* {deleteDialogComponent} */}
-      <Reply
+      {/* <Reply
         style={{ transform: " scaleX(-1) translateY(-2px)" }}
         onClick={shareSong}
         color="primary"
       />
       
-      <SleepTimer player={player}/>
+      <SleepTimer player={player}/> */}
 
-      <div>
-        {isSongDownloaded ? (
-          <DoneOutline
-            color="primary"
-            // onClick={() => handleRemoveSong(song.id)}
-          /> //song will be removed
-        ) : (
-          <>
-            <GetApp
-              color="primary"
-              onClick={() => {
-                // handleDownload(song.id);
-                setSongDownloading(true);
-              }}
-            />
-          </>
-        )}
-        {isSongDownloading ? <DownloadLoader color="primary" /> : null}
-        {/* if the song is downloading we will show loading */}
-      </div>
+ 
 
       <ExpandMore
         onClick={minimizePlayer}

@@ -7,7 +7,8 @@ const VolumeController = ({ player, setPlayerState }) => {
 
   const volumeChange = (e, newVal) => {
     setVolume(newVal);
-    player.volume = newVal / 100;
+    // player.volume = newVal / 100;
+    player.volume = 0;
     //
   };
 

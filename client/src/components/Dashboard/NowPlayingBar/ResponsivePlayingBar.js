@@ -50,7 +50,7 @@ const ResponsivePlayingBar = () => {
 
     const [playerState, setPlayerState] = useState('minimized');
     // there will be 3 states
-    // maximized, minimized, playlist
+    // maximized, minimized, playlist, or empty
 
     const [minimized, setMinimized] = useState(true);
     const [isRepeatOn, setIsRepeatOn] = useState(false);
@@ -297,7 +297,7 @@ const ResponsivePlayingBar = () => {
 
         playerStyle.background = '#e91e63';
 
-        // playerStyle.bottom = "48px";
+        //playerStyle.bottom = "48px";
         // calculate the top height and we are subtracting 148px becz
         // 48 is the value of menu bar and 100px is minimized height
         // make body overflow scroll 😝
@@ -486,16 +486,16 @@ const ResponsivePlayingBar = () => {
                         <Grid
                             container
                             direction="row"
-                            justify="space-evenly"
+                            justifyContent="space-evenly"
                             alignItems="center"
                             style={{ maxWidth: '290px', height: '80px', margin: '0 auto' }}
                         >
                             <PreviousButton playPrevious={playPrevious} />
-                            <PlayPauseButton player={player} audioState={audioState} />
+                            <PlayPauseButton player={player} audioState={"paused"} />
                             <NextButton onPlayNext={playNext} />
                         </Grid>
                     </Grid>
-                    <RelatedVideos
+                    {/* <RelatedVideos
                         toggleMaxPlaylist={toggleMaxPlaylist}
                         setPlaylist={() => setIsItFromPlaylist(true)}
                         playerState={playerState}
@@ -506,7 +506,7 @@ const ResponsivePlayingBar = () => {
                         setIsRepeatOn={() => {
                             setIsRepeatOn(!isRepeatOn);
                         }}
-                    />
+                    /> */}
                 </>
             );
         }
@@ -532,6 +532,7 @@ const ResponsivePlayingBar = () => {
                         emptyPlayer={(e) => {
                             e.stopPropagation();
                             setCurrentVideoSnippet([]);
+                            setPlayerState('empty')
                         }}
                     />
                     <TimelineController
@@ -569,35 +570,41 @@ const ResponsivePlayingBar = () => {
     //     return null;
     // }
     console.log("REndering playing bar");
-    return (
-        <div
-            // drag="y"
-            // dragConstraints={{ top: 0, bottom: 600 }}
-            ref={containerRef}
-            // style={playerStyle}
-            onClick={expandPlayer}
-            className={'mediaPlayerContainer ' + returnMinMaxClass()}
-        >
-            {returnMaximizedPlayer()}
-            {returnMinimizedPlayer()}
-            {/* <audio
-                // onTimeUpdate={timeUpdate}
-                onLoadStart={() => {
-                    setAudioState('loading');
-                }}
-                id="audio-element"
-                onLoadedData={updateSongDB}
-                // crossOrigin="anonymous"
-                onPlay={() => setAudioState('playing')}
-                onPlaying={() => setAudioState('playing')}
-                onPause={() => setAudioState('paused')}
-                onEnded={songEnded}
-                autoPlay
-                ref={audioPlayer}
-            // type="audio/mp4"
-            /> */}
-        </div>
-    );
+    if (playerState !== 'empty'){
+        return (
+            <div
+                // drag="y"
+                // dragConstraints={{ top: 0, bottom: 600 }}
+                ref={containerRef}
+                // style={playerStyle}
+                onClick={expandPlayer}
+                className={'mediaPlayerContainer ' + returnMinMaxClass()}
+            >
+                {returnMaximizedPlayer()}
+                {returnMinimizedPlayer()}
+                {/* <audio
+                    // onTimeUpdate={timeUpdate}
+                    onLoadStart={() => {
+                        setAudioState('loading');
+                    }}
+                    id="audio-element"
+                    onLoadedData={updateSongDB}
+                    // crossOrigin="anonymous"
+                    onPlay={() => setAudioState('playing')}
+                    onPlaying={() => setAudioState('playing')}
+                    onPause={() => setAudioState('paused')}
+                    onEnded={songEnded}
+                    autoPlay
+                    ref={audioPlayer}
+                // type="audio/mp4"
+                /> */}
+            </div>
+        );
+        
+    }
+
+    return null;
+  
 };
 
 export default ResponsivePlayingBar;

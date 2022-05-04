@@ -107,7 +107,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
     <Grid
       container
       direction="column"
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       style={{ marginTop: "40px" }}
       onClick={e => {

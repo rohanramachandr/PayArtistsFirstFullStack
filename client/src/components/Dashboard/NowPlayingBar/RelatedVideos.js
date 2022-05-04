@@ -49,9 +49,10 @@ const RelatedVideos = ({
   setIsRepeatOn,
   isRepeatOn,
 }) => {
-  const {dispatch} = useContext(GlobalContext);
+  // const {dispatch} = useContext(GlobalContext);
   const setCurrentVideoSnippet = (data) => {
-    dispatch({ type: "setCurrentVideoSnippet", snippet: data });
+    // dispatch({ type: "setCurrentVideoSnippet", snippet: data });
+    return
   };
   const handleShuffleClick = () => {
     setRelatedVideos(shuffle(relatedVideos));
@@ -119,7 +120,7 @@ const RelatedVideos = ({
         container
         direction="row"
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
       >
         <LibraryMusic />
         <Typography variant="h6">Coming Next</Typography>
