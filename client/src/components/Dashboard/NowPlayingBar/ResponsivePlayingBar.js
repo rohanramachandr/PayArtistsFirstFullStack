@@ -122,14 +122,15 @@ const ResponsivePlayingBar = () => {
     useEffect(() => {
 
         document.addEventListener('songClicked', ({ detail }) => {
-            const { songId } = detail;
-            console.log("songId", songId)
+            const { playlist, clickIndex } = detail;
+            console.log("playlist and clickIndex", playlist, clickIndex)
             setPlayerState('minimized');
+            setAudioState('loading');
         
         });
 
         return () => {
-            document.removeEventListener('songClicked');
+            document.removeEventListener('songClicked', () => {});
         }
         
         
