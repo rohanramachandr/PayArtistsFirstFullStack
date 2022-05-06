@@ -7,6 +7,14 @@ const theme = createTheme({
             'Encode Sans Expanded'
         ]
     },
+    palette: {
+        primary: {
+          main: '#ec148c',
+        },
+        secondary: {
+          main: '#000',
+        }
+    },
   
 
       

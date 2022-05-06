@@ -48,9 +48,9 @@ const ResponsivePlayingBar = () => {
     // there will be 4 states
     // loading, loaded, playing, paused
 
-    const [playerState, setPlayerState] = useState('minimized');
+    const [playerState, setPlayerState] = useState('notPlaying');
     // there will be 3 states
-    // maximized, minimized, playlist, or empty
+    // maximized, minimized, playlist, or 'notPlaying'
 
     const [minimized, setMinimized] = useState(true);
     const [isRepeatOn, setIsRepeatOn] = useState(false);
@@ -118,6 +118,23 @@ const ResponsivePlayingBar = () => {
                 setAudioState('paused');
             });
     };
+
+    useEffect(() => {
+
+        document.addEventListener('songClicked', ({ detail }) => {
+            const { songId } = detail;
+            console.log("songId", songId)
+            setPlayerState('minimized');
+        
+        });
+
+        return () => {
+            document.removeEventListener('songClicked');
+        }
+        
+        
+
+    },[])
 
     // useEffect(() => {
     //     // console.log("state changed triggedred");
@@ -290,31 +307,31 @@ const ResponsivePlayingBar = () => {
         transition: 'all .3s ease',
     };
 
-    if (playerState === 'minimized') {
-        playerStyle.transform = 'translateY(calc(100% - 106px))';
-        playerStyle.zIndex = 0;
-        // if theme is not dark then only apply the pink style
+    // if (playerState === 'minimized') {
+    //     playerStyle.transform = 'translateY(calc(100% - 106px))';
+    //     playerStyle.zIndex = 0;
+    //     // if theme is not dark then only apply the pink style
 
-        playerStyle.background = '#e91e63';
 
-        //playerStyle.bottom = "48px";
-        // calculate the top height and we are subtracting 148px becz
-        // 48 is the value of menu bar and 100px is minimized height
-        // make body overflow scroll 😝
-        body.style.overflow = 'auto';
-    }
 
-    if (playerState === 'maximized') {
-        // make body overflow hidden 🙈
-        body.style.overflow = 'hidden';
-        // if (themeSelectValue === 'Dark') {
-        //   playerStyle.background = '#333';
-        // }
-    }
+    //     //playerStyle.bottom = "48px";
+    //     // calculate the top height and we are subtracting 148px becz
+    //     // 48 is the value of menu bar and 100px is minimized height
+    //     // make body overflow scroll 😝
+    //     body.style.overflow = 'auto';
+    // }
 
-    if (playerState === 'playlist') {
-        playerStyle.transform = 'translateY(-418px)';
-    }
+    // if (playerState === 'maximized') {
+    //     // make body overflow hidden 🙈
+    //     body.style.overflow = 'hidden';
+    //     // if (themeSelectValue === 'Dark') {
+    //      //playerStyle.background = '#333';
+    //     // }
+    // }
+
+    // if (playerState === 'playlist') {
+    //     playerStyle.transform = 'translateY(-418px)';
+    // }
 
     const expandPlayer = () => {
         if (playerState === 'minimized') {
@@ -450,6 +467,13 @@ const ResponsivePlayingBar = () => {
         } else if (playerState === 'playlist') {
             return 'playerPlaylist';
         }
+        else if (playerState === 'notPlaying') {
+             return "playerNotPlaying";
+        }
+
+        return "";//Maximized
+
+       
     };
 
     const returnMaximizedPlayer = () => {
@@ -532,7 +556,7 @@ const ResponsivePlayingBar = () => {
                         emptyPlayer={(e) => {
                             e.stopPropagation();
                             setCurrentVideoSnippet([]);
-                            setPlayerState('empty')
+                            setPlayerState('notPlaying')
                         }}
                     />
                     <TimelineController
@@ -570,19 +594,19 @@ const ResponsivePlayingBar = () => {
     //     return null;
     // }
     console.log("REndering playing bar");
-    if (playerState !== 'empty'){
-        return (
-            <div
-                // drag="y"
-                // dragConstraints={{ top: 0, bottom: 600 }}
-                ref={containerRef}
-                // style={playerStyle}
-                onClick={expandPlayer}
-                className={'mediaPlayerContainer ' + returnMinMaxClass()}
-            >
-                {returnMaximizedPlayer()}
-                {returnMinimizedPlayer()}
-                {/* <audio
+
+    return (
+        <div
+            // drag="y"
+            // dragConstraints={{ top: 0, bottom: 600 }}
+            ref={containerRef}
+            // style={playerStyle}
+            onClick={expandPlayer}
+            className={'mediaPlayerContainer ' + returnMinMaxClass()}
+        >
+            {returnMaximizedPlayer()}
+            {returnMinimizedPlayer()}
+            {/* <audio
                     // onTimeUpdate={timeUpdate}
                     onLoadStart={() => {
                         setAudioState('loading');
@@ -598,13 +622,11 @@ const ResponsivePlayingBar = () => {
                     ref={audioPlayer}
                 // type="audio/mp4"
                 /> */}
-            </div>
-        );
-        
-    }
+        </div>
+    );
 
-    return null;
-  
+
+
 };
 
 export default ResponsivePlayingBar;

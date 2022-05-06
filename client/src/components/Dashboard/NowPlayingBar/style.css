@@ -92,6 +92,7 @@
   /* main media player container style */
   .mediaPlayerContainer {
     position: fixed;
+    top:0;
     right: 0;
     bottom: 0;
     background: #fff;
@@ -104,6 +105,12 @@
   
   .playerMinimized {
     transform: translateY(calc(100% - 106px));
+    z-index: 0;
+    background-color: #ec148c;
+  }
+
+  .playerNotPlaying {
+    transform: translateY(calc(100% - -50px));
     z-index: 0;
     background-color: #ec148c;
   }

@@ -52,7 +52,7 @@ const Album = ({
   const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 
-  const renderPlayingButtons = (albumSongs, index, order) => {
+  const renderPlayingButtons = (albumSongs, index, order, songId) => {
     if (equals(albumSongs, playlist) && playlistIndex === index) {
       return (
         <div className="playingIcon">
@@ -67,12 +67,14 @@ const Album = ({
 
       <>
         <div onClick={() => {
-          if (!equals(albumSongs, playlist)) {
-            setPlaylist(albumSongs);
-          }
+          // if (!equals(albumSongs, playlist)) {
+          //   setPlaylist(albumSongs);
+          // }
          
           
-          setClickIndex([index]);
+          // setClickIndex([index]);
+          const customEvent = new CustomEvent('songClicked', { detail: { albumId, songId } });
+          document.dispatchEvent(customEvent);
           
           
         }} className="playIcon">
@@ -95,7 +97,7 @@ const Album = ({
       return (
         <li className="tracklistRow" key={song._id}>
           <div className="trackCount">
-            {renderPlayingButtons(listOfSongIds, index, song.albumOrder)}
+            {renderPlayingButtons(listOfSongIds, index, song.albumOrder, song._id)}
 
 
           </div>

@@ -110,13 +110,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
       justifyContent="center"
       alignItems="center"
       style={{ marginTop: "40px" }}
-      onClick={e => {
-        if (isDblTouchTap(e)) {
-          likeSong();
-        //   rateSong(data.id, "liked", audioEl);
-        }
-        // call the like song function on double tap
-      }}
+   
     >
       <motion.div
         className="box"

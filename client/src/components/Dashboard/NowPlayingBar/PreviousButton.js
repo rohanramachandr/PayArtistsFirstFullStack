@@ -4,7 +4,7 @@ import { SkipPrevious } from "@material-ui/icons/";
 
 const PreviousButton = ({playPrevious}) => {
   return (
-    <IconButton color="primary" aria-label="Pause" onClick={playPrevious}>
+    <IconButton color="secondary" aria-label="Pause" onClick={playPrevious}>
       <SkipPrevious fontSize="large"/>
     </IconButton>
   );
