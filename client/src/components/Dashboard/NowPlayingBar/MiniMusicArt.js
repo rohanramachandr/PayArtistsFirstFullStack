@@ -31,7 +31,7 @@ const MiniMuiscArt = ({ playPause, data, playNext, emptyPlayer }) => {
           <div className={"mainArt"}>
             <img
               className={"miniArtImg"}
-              src={getThumbnail()}
+              src={data.thumbnail}
               alt="music art"
             />
             <PlayPauseButton

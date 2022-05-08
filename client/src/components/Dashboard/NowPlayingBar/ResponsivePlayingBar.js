@@ -11,6 +11,9 @@ import MiniMusicArt from './MiniMusicArt';
 import RelatedVideos from './RelatedVideos';
 import getAudioLink from './getAudioLink';
 import youtubeSearch from './youtubeSearch';
+import axios from 'axios';
+import { connect } from "react-redux";
+import * as actions from "../../../actions/index";
 
 
 
@@ -27,7 +30,9 @@ import { GlobalContext } from './GlobalState';
 // }
 let relatedVideosVar;
 
-const ResponsivePlayingBar = () => {
+const ResponsivePlayingBar = ({
+    updateSongPlays
+   }) => {
     //   let params = new URLSearchParams(location.search);
 
     //   const { currentVideoSnippet, themeSelectValue } = useContext(
@@ -59,6 +64,8 @@ const ResponsivePlayingBar = () => {
     const [audioURL, setAudioURL] = useState(null);
     const body = document.querySelector('body');
     const currentVideoSnippet = { audio: "", title: "", artist: "", id: "" };
+    const [currentlyPlaying, setCurrentlyPlaying] = useState({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "" });
+    const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const audioPlayer = useRef();
     const player = audioPlayer.current;
     const setupMediaSessions = () => {
@@ -75,12 +82,12 @@ const ResponsivePlayingBar = () => {
                 //     type: 'image/png',
                 //   },
                 // ],
-                title: "",
-                artist: "",
+                title: currentlyPlaying.title,
+                artist: currentlyPlaying.artist,
                 artwork: [
                     {
-                        src: "",
-                        sizes: "",
+                        src: currentlyPlaying.thumbnail,
+                        sizes: '512x512',
                         type: 'image/png',
                     },
                 ],
@@ -119,23 +126,35 @@ const ResponsivePlayingBar = () => {
             });
     };
 
+    const getSongInfo = async ({ detail }) => {
+        const { playlist, clickIndex } = detail;
+        console.log("playlist and clickIndex", playlist, clickIndex)
+        setPlayerState('minimized');
+        setAudioState('loading');
+        setCurrentPlaylist(playlist);
+        const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
+        const {albumOrder, albumTitle, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id} = res.data
+        console.log("res getSOngdetails songPath", songPath);
+        setCurrentlyPlaying({audio: songPath, title: songTitle, artist: artistName, thumbnail: artworkPath, _id});
+        audioPlayer.current.src = songPath;
+        playAudio();
+
+    
+    };
+
     useEffect(() => {
 
-        document.addEventListener('songClicked', ({ detail }) => {
-            const { playlist, clickIndex } = detail;
-            console.log("playlist and clickIndex", playlist, clickIndex)
-            setPlayerState('minimized');
-            setAudioState('loading');
-        
-        });
+      
+
+        document.addEventListener('songClicked', getSongInfo);
 
         return () => {
-            document.removeEventListener('songClicked', () => {});
+            document.removeEventListener('songClicked', getSongInfo);
         }
         
         
 
-    },[])
+    },[]);
 
     // useEffect(() => {
     //     // console.log("state changed triggedred");
@@ -259,21 +278,38 @@ const ResponsivePlayingBar = () => {
         }
     };
 
-    const playNext = () => {
-        // also set this is from playlist
-        setIsItFromPlaylist(true);
-        // console.log("play next related videos", relatedVideos);
-        // find the index of playing song in the playlist
-        const currentIndex = relatedVideosVar.findIndex(
-            (video) => video.id.videoId === currentVideoSnippet.id
-        );
-        // console.log("the current index is", currentIndex);
+    const playNext = async () => {
+        if (currentPlaylist) {
+            setIsItFromPlaylist(true);
+            console.log("currentPlaylist and id", currentPlaylist, currentlyPlaying._id)
+            const currentIndex = currentPlaylist.findIndex(
+                     (id) => id === currentlyPlaying._id
+            );
 
-        let video;
-        // console.log("hey we will play next song");
-        video = relatedVideosVar[currentIndex + 1]; //we will play the next song
+            console.log("the current index is", currentIndex);
 
-        setVideoSnippet(video);
+            const nextIndex = currentIndex === currentPlaylist.length - 1 ? 0 : currentIndex + 1; 
+
+            await getSongInfo({detail:{playlist: currentPlaylist, clickIndex: nextIndex}})
+
+
+
+
+        }
+        // // also set this is from playlist
+        // setIsItFromPlaylist(true);
+        // // console.log("play next related videos", relatedVideos);
+        // // find the index of playing song in the playlist
+        // const currentIndex = relatedVideosVar.findIndex(
+        //     (video) => video.id.videoId === currentVideoSnippet.id
+        // );
+        // // console.log("the current index is", currentIndex);
+
+        // let video;
+        // // console.log("hey we will play next song");
+        // video = relatedVideosVar[currentIndex + 1]; //we will play the next song
+
+        // setVideoSnippet(video);
     };
 
     const playPrevious = () => {
@@ -501,7 +537,7 @@ const ResponsivePlayingBar = () => {
                         />
                         <div {...swipeHandlerMaximized} className="musicArtContainer">
                             <MusicArt
-                                data={currentVideoSnippet}
+                                data={currentlyPlaying}
                                 rating={rating}
                                 audioEl={player}
                             />
@@ -516,7 +552,7 @@ const ResponsivePlayingBar = () => {
                             style={{ maxWidth: '290px', height: '80px', margin: '0 auto' }}
                         >
                             <PreviousButton playPrevious={playPrevious} />
-                            <PlayPauseButton player={player} audioState={"paused"} />
+                            <PlayPauseButton player={player} audioState={audioState} />
                             <NextButton onPlayNext={playNext} />
                         </Grid>
                     </Grid>
@@ -553,11 +589,13 @@ const ResponsivePlayingBar = () => {
                             setIsNextFromMini(true);
                             playNext();
                         }}
-                        data={currentVideoSnippet}
+                        data={currentlyPlaying}
                         emptyPlayer={(e) => {
                             e.stopPropagation();
-                            setCurrentVideoSnippet([]);
+                            //setCurrentVideoSnippet([]);
+                            setCurrentlyPlaying({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "" });
                             setPlayerState('notPlaying')
+                            audioPlayer.current.src=null;
                         }}
                     />
                     <TimelineController
@@ -607,22 +645,22 @@ const ResponsivePlayingBar = () => {
         >
             {returnMaximizedPlayer()}
             {returnMinimizedPlayer()}
-            {/* <audio
+            <audio
                     // onTimeUpdate={timeUpdate}
                     onLoadStart={() => {
                         setAudioState('loading');
                     }}
                     id="audio-element"
-                    onLoadedData={updateSongDB}
-                    // crossOrigin="anonymous"
+                    onLoadedData={() => updateSongPlays(currentlyPlaying.id)}
+               
                     onPlay={() => setAudioState('playing')}
                     onPlaying={() => setAudioState('playing')}
                     onPause={() => setAudioState('paused')}
                     onEnded={songEnded}
                     autoPlay
                     ref={audioPlayer}
-                // type="audio/mp4"
-                /> */}
+                    type="audio/mp4"
+                />
         </div>
     );
 
@@ -630,4 +668,4 @@ const ResponsivePlayingBar = () => {
 
 };
 
-export default ResponsivePlayingBar;
+export default connect(null, actions)(ResponsivePlayingBar);

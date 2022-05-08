@@ -89,7 +89,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
   //using the regex
   const shortTitle = data => {
     // this regex is to remove channel name from song title
-    const re = new RegExp(data.channelTitle + " - | : ", "g");
+    const re = new RegExp(data.title + " - | : ", "g");
 
     return data.title.replace(re, "");
   };
@@ -121,8 +121,8 @@ const MusicArt = ({ data, rating, audioEl }) => {
         style={artContainerStyle}
         {...swipeUpHandler}
       >
-        <FavoriteTwoTone className={"songHeart left"} style={heartStyle} />
-        <FavoriteTwoTone className={"songHeart right"} style={heartStyle} />
+        {/* <FavoriteTwoTone className={"songHeart left"} style={heartStyle} />
+        <FavoriteTwoTone className={"songHeart right"} style={heartStyle} /> */}
         <Avatar
           className="searchThumb"
           style={{
@@ -130,9 +130,9 @@ const MusicArt = ({ data, rating, audioEl }) => {
             height: "215px",
             boxShadow: "#0000008c 1px 3px 8px"
           }}
-          alt="video thumbnail"
-          src={getThumbnail()}
-          imgProps={{ onLoad: e => checkImg(e) }}
+          alt="music thumbnail"
+          src={data.thumbnail}
+          
         />
       </motion.div>
       <br />
@@ -140,7 +140,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
         {shortTitle(data)}
       </Typography>
       <Typography color="primary" variant="subtitle1">
-        {data.channelTitle}
+        {data.artist}
       </Typography>
       <br />
     </Grid>
