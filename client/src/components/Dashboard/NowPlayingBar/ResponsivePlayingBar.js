@@ -129,7 +129,10 @@ const ResponsivePlayingBar = ({
     const getSongInfo = async ({ detail }) => {
         const { playlist, clickIndex } = detail;
         console.log("playlist and clickIndex", playlist, clickIndex)
-        setPlayerState('minimized');
+        if (playerState === 'notPlaying') {
+          setPlayerState('minimized');  
+        }
+        
         setAudioState('loading');
         setCurrentPlaylist(playlist);
         const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
@@ -312,22 +315,24 @@ const ResponsivePlayingBar = ({
         // setVideoSnippet(video);
     };
 
-    const playPrevious = () => {
-        setIsItFromPlaylist(true);
+    const playPrevious = async () => {
+        if (currentPlaylist) {
 
-        // if the player time is greater than 5 sec we will move the time to 0
-        if (player.currentTime > 5) {
-            player.currentTime = 0;
-        } else {
-            const currentIndex = relatedVideosVar.findIndex(
-                (video) => video.id.videoId === currentVideoSnippet.id
-            );
-            let video;
-            if (currentIndex !== -1) {
-                video = relatedVideosVar[currentIndex - 1]; //we will play the next song
-                setVideoSnippet(video);
-            } else {
+            if (player.currentTime > 5) {
                 player.currentTime = 0;
+            }
+            else {
+                console.log("currentPlaylist and id", currentPlaylist, currentlyPlaying._id)
+                const currentIndex = currentPlaylist.findIndex(
+                         (id) => id === currentlyPlaying._id
+                );
+          
+                if (currentIndex !== -1 && currentIndex !== 0) {
+                    const prevIndex = currentIndex - 1; //we will play the next song
+                    await getSongInfo({detail:{playlist: currentPlaylist, clickIndex: prevIndex}})
+                } else {
+                    player.currentTime = 0;
+                }
             }
         }
     };
@@ -556,18 +561,7 @@ const ResponsivePlayingBar = ({
                             <NextButton onPlayNext={playNext} />
                         </Grid>
                     </Grid>
-                    {/* <RelatedVideos
-                        toggleMaxPlaylist={toggleMaxPlaylist}
-                        setPlaylist={() => setIsItFromPlaylist(true)}
-                        playerState={playerState}
-                        relatedVideos={relatedVideos}
-                        setRelatedVideos={(data) => setRelatedVideos(data)}
-                        isRepeatOn={isRepeatOn}
-                        // this will set the repeat setting
-                        setIsRepeatOn={() => {
-                            setIsRepeatOn(!isRepeatOn);
-                        }}
-                    /> */}
+                 
                 </>
             );
         }
