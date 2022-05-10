@@ -64,7 +64,7 @@ const ResponsivePlayingBar = ({
     const [audioURL, setAudioURL] = useState(null);
     const body = document.querySelector('body');
     const currentVideoSnippet = { audio: "", title: "", artist: "", id: "" };
-    const [currentlyPlaying, setCurrentlyPlaying] = useState({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "" });
+    const [currentlyPlaying, setCurrentlyPlaying] = useState({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "", _album: "" });
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const audioPlayer = useRef();
     const player = audioPlayer.current;
@@ -138,7 +138,7 @@ const ResponsivePlayingBar = ({
         const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
         const {albumOrder, albumTitle, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id} = res.data
         console.log("res getSOngdetails songPath", songPath);
-        setCurrentlyPlaying({audio: songPath, title: songTitle, artist: artistName, thumbnail: artworkPath, _id});
+        setCurrentlyPlaying({audio: songPath, title: songTitle, artist: artistName, thumbnail: artworkPath, _id, _album});
         audioPlayer.current.src = songPath;
         playAudio();
 
