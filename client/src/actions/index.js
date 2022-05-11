@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, SET_PLAYLIST, SET_PLAYLIST_INDEX, SET_CLICK_INDEX, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS } from './types';
+import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID } from './types';
 
 export const fetchUser = () => async dispatch => {
 
@@ -57,21 +57,15 @@ export const resetAlbumPage = () => {
     };
 };
 
-export const fetchSongDetails = (songId) => async dispatch => {
-    // console.log("fetchsong details url", `/api/song/details/${songId}`);
+export const setCurrentSongID = (id) => {
 
-    const res = await axios.get(`/api/song/details/${songId}`);
+    return {
+        type: SET_CURRENT_SONG_ID,
+        payload: id
+    }
+}; 
 
-    dispatch({ type: FETCH_SONG_DETAILS, payload: res.data });
 
-};
-
-
-export const fetchPlaylist = () => async dispatch => {
-    const res = await axios.get("/api/songs/playlist");
-
-    dispatch({ type: FETCH_PLAYLIST, payload: res.data });
-};
 
 export const updateSongPlays = (songId) => async dispatch => {
 
@@ -85,29 +79,8 @@ export const updateSongPlays = (songId) => async dispatch => {
 
 };
 
-export const setPlaylist = (playlist) => {
 
-    return {
-        type: SET_PLAYLIST,
-        payload: playlist
-    };
-};
 
-export const setPlaylistIndex = (index) => {
-
-    return {
-        type: SET_PLAYLIST_INDEX,
-        payload: index
-    };
-};
-
-export const setClickIndex = (index) => {
-
-    return {
-        type: SET_CLICK_INDEX,
-        payload: index
-    };
-};
 
 export const fetchArtistInfo = (artistName) => async dispatch => {
     const res = await axios.get(`/api/artists/${artistName}`);

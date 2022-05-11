@@ -31,7 +31,8 @@ import { GlobalContext } from './GlobalState';
 let relatedVideosVar;
 
 const ResponsivePlayingBar = ({
-    updateSongPlays
+    updateSongPlays,
+    setCurrentSongID
    }) => {
     //   let params = new URLSearchParams(location.search);
 
@@ -137,7 +138,7 @@ const ResponsivePlayingBar = ({
         setCurrentPlaylist(playlist);
         const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
         const {albumOrder, albumTitle, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id} = res.data
-        console.log("res getSOngdetails songPath", songPath);
+        setCurrentSongID(_id);
         setCurrentlyPlaying({audio: songPath, title: songTitle, artist: artistName, thumbnail: artworkPath, _id, _album});
         audioPlayer.current.src = songPath;
         playAudio();
@@ -545,6 +546,7 @@ const ResponsivePlayingBar = ({
                                 data={currentlyPlaying}
                                 rating={rating}
                                 audioEl={player}
+                                setPlayerState={setPlayerState}
                             />
                         </div>
                         <TimelineController audioState={audioState} player={player} />
@@ -590,6 +592,7 @@ const ResponsivePlayingBar = ({
                             setCurrentlyPlaying({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "" });
                             setPlayerState('notPlaying')
                             audioPlayer.current.src=null;
+                            setCurrentSongID("");
                         }}
                     />
                     <TimelineController

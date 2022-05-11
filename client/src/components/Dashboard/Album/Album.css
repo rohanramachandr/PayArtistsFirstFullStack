@@ -106,6 +106,7 @@ body {
 .tracklistRow .trackCount .playingIcon {
     width: 8%;
     float: left;
+    color: #ec148c;
  
 }
 

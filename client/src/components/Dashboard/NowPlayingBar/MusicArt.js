@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { Link } from 'react-router-dom';
 import { useSwipeable } from "react-swipeable";
 import { motion } from "framer-motion";
 import { Avatar, Grid, Typography } from "@material-ui/core";
@@ -26,7 +27,7 @@ function isDblTouchTap(event) {
 
 let initialPosition;
 
-const MusicArt = ({ data, rating, audioEl }) => {
+const MusicArt = ({ data, rating, audioEl, setPlayerState }) => {
   const swipeUpHandler = useSwipeable({
     onSwipedUp: e => {
       dislikeSong();
@@ -136,12 +137,13 @@ const MusicArt = ({ data, rating, audioEl }) => {
         />
       </motion.div>
       <br />
-      <Typography color="primary" variant="h5" className="musicArtTitle" align="center">
+      <Link className="playingBarLink" to={`/dashboard/album/${data._album}`} onClick={() => setPlayerState('minimized') }><Typography style={{ width: "fit-content"}} color="primary" variant="h5" className="musicArtTitle" align="center">
         {shortTitle(data)}
-      </Typography>
-      <Typography color="primary" variant="subtitle1">
+      </Typography></Link>
+      
+      <Link className="playingBarLink" to={`/dashboard/artist/${data.artist}`} onClick={() => setPlayerState('minimized')}><Typography style={{ width: "fit-content"}} color="primary" variant="subtitle1">
         {data.artist}
-      </Typography>
+      </Typography></Link>
       <br />
     </Grid>
   );

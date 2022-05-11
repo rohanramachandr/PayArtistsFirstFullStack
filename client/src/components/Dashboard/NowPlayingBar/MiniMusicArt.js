@@ -22,8 +22,8 @@ const MiniMuiscArt = ({ playPause, data, playNext, emptyPlayer }) => {
       <div className={"overflow-hidden"}>
         <div className="details">
          
-          <Link className="playingBarLink" to={`/dashboard/album/${data._album}`} onClick={(e) =>  e.stopPropagation()}><Typography variant="body1">{data.title}</Typography></Link>
-          <Link className="playingBarLink" to={`/dashboard/artist/${data.artist}`} onClick={(e) =>  e.stopPropagation()}><Typography variant="body2">{data.artist}</Typography></Link>
+          <Link className="playingBarLink" to={`/dashboard/album/${data._album}`} onClick={(e) =>  e.stopPropagation()}><Typography variant="body1" style={{ width: "fit-content"}}>{data.title}</Typography></Link>
+          <Link className="playingBarLink" to={`/dashboard/artist/${data.artist}`} onClick={(e) =>  e.stopPropagation()}><Typography variant="body2" style={{ width: "fit-content"}}>{data.artist}</Typography></Link>
           
         </div>
         <div className="buttons">

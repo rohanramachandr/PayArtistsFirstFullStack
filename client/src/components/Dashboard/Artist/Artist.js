@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import * as actions from "../../../actions";
 import { connect } from "react-redux";
-import { BsFillPlayFill, BsThreeDots, BsVolumeUpFill as Volume } from "react-icons/bs";
+import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 
 import "./Artist.css";
 
-const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage, setClickIndex, albums, info, songs, playlist, playlistIndex, setPlaylist }) => {
+const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage, albums, info, songs, currentSongId }) => {
 
     const { artistName } = useParams();
 
@@ -36,47 +38,44 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
 
 
     const renderPlayingButtons = (artistSongs, index, order) => {
+        if (currentSongId === artistSongs[index]) {
+          return (
+            <div className="playingIcon">
+              <VolumeUpRoundedIcon color="inherit"/>
+            </div>
+          );
     
-        if (equals(artistSongs, playlist) && playlistIndex === index) {
-            return (
-                <div className="playingIcon">
-                    <Volume color="#ec148c" size={20} alt="Volume" />
-                </div>
-            );
-
-
+    
         }
-
+    
         return (
-
-            <>
-                <div onClick={() => {
-                    if (!equals(artistSongs, playlist)) {
-                        
-                        setPlaylist(artistSongs);
-                    }
-
-
-                    setClickIndex([index]);
-
-
-                }} className="playIcon">
-                    <BsFillPlayFill size={20} />
-                </div>
-
-                <span className="trackNumber">{order}</span>
-            </>
-
-
+    
+          <>
+            <div onClick={() => {
+             
+              const customEvent = new CustomEvent('songClicked', { detail: { playlist: artistSongs, clickIndex: index } });
+              document.dispatchEvent(customEvent);
+              
+              
+            }} className="playIcon">
+              <PlayArrowRoundedIcon color="inherit" />
+            </div>
+    
+            <span className="trackNumber">{order}</span>
+          </>
+    
+    
         );
-
-    };
+    
+      };
 
     const renderSongs = () => {
         //TODO perhaps change to get artist name from song instead of album
         var listOfSongIds = [];
         songs.forEach((song) => { listOfSongIds.push(song._id) });
+        console.log("songs", songs);
         return songs.map((song, index) => {
+            
             return (
                 <li className="tracklistRow" key={song._id}>
                     <div className="trackCount">
@@ -90,7 +89,7 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
                     </div>
                     <div className="trackOptions">
                         <div className="optionsIcon">
-                            <BsThreeDots size={20} />
+                            <MoreHorizRoundedIcon color="inherit"/>
                         </div>
                     </div>
                     <div className="trackDuration">
@@ -105,8 +104,9 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
         if (songs.length > 0) {
             var listOfSongIds = [];
             songs.forEach((song) => { listOfSongIds.push(song._id) });
-            setPlaylist(listOfSongIds);
-            setClickIndex(0);
+            const customEvent = new CustomEvent('songClicked', { detail: { playlist: listOfSongIds, clickIndex: 0 } });
+            document.dispatchEvent(customEvent);
+            
         }
     };
 
@@ -167,7 +167,7 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
 };
 
 function mapStateToProps({ artist: { albums, info, songs }, song }) {
-    return { albums, info, songs, playlist: song.playlist, playlistIndex: song.index };
+    return { albums, info, songs, currentSongId: song.currentSongId };
 }
 
 
