@@ -69,7 +69,7 @@ const ResponsivePlayingBar = ({
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const audioPlayer = useRef();
     const player = audioPlayer.current;
-    const setupMediaSessions = () => {
+    const setupMediaSessions = (songInfo) => {
         if ('mediaSession' in navigator) {
             // console.log("navigator setupped");
 
@@ -83,11 +83,11 @@ const ResponsivePlayingBar = ({
                 //     type: 'image/png',
                 //   },
                 // ],
-                title: currentlyPlaying.title,
-                artist: currentlyPlaying.artist,
+                title: songInfo.title,
+                artist: songInfo.artist,
                 artwork: [
                     {
-                        src: currentlyPlaying.thumbnail,
+                        src: songInfo.thumbnail,
                         sizes: '512x512',
                         type: 'image/png',
                     },
@@ -95,7 +95,7 @@ const ResponsivePlayingBar = ({
             });
             navigator.mediaSession.setActionHandler('play', () => {
                 /* Code excerpted. */
-                playAudio();
+                playAudio(songInfo);
             });
             navigator.mediaSession.setActionHandler('pause', () => {
                 /* Code excerpted. */
@@ -110,14 +110,14 @@ const ResponsivePlayingBar = ({
         }
     };
 
-    const playAudio = () => {
+    const playAudio = (songInfo) => {
         audioPlayer.current
             .play()
             .then((_) => {
                 // Automatic playback started!
                 // Show playing UI.
                 // console.log("audio played auto");
-                setupMediaSessions();
+                setupMediaSessions(songInfo);
             })
             .catch((error) => {
                 // Auto-play was prevented
@@ -139,9 +139,10 @@ const ResponsivePlayingBar = ({
         const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
         const {albumOrder, albumTitle, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id} = res.data
         setCurrentSongID(_id);
-        setCurrentlyPlaying({audio: songPath, title: songTitle, artist: artistName, thumbnail: artworkPath, _id, _album});
+        const songInfo = {audio: songPath, title: songTitle, artist: artistName, thumbnail: artworkPath, _id, _album};
+        setCurrentlyPlaying(songInfo);
         audioPlayer.current.src = songPath;
-        playAudio();
+        playAudio(songInfo);
 
     
     };
@@ -317,7 +318,9 @@ const ResponsivePlayingBar = ({
     };
 
     const playPrevious = async () => {
+        console.log("current playlist", currentPlaylist)
         if (currentPlaylist) {
+            console.log("playing previous track")
 
             if (player.currentTime > 5) {
                 player.currentTime = 0;
