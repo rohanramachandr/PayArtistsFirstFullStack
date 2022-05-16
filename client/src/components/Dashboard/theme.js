@@ -1,4 +1,4 @@
-import { createTheme } from "@material-ui/core";
+import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
  
     
@@ -8,13 +8,26 @@ const theme = createTheme({
         ]
     },
     palette: {
-        primary: {
-          main: '#ec148c',
+        primary:{
+          
+          main:'#ec148c'
         },
+         
+        
         secondary: {
-          main: '#000',
+          main:'#000'
+        },
+        neutral: {
+          main: "#fff"
+
         }
-    },
+    }
+
+  
+
+  
+  
+
   
 
       

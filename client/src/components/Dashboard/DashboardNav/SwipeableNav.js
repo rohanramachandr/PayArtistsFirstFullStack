@@ -13,7 +13,7 @@ import MusicNoteIcon from '@mui/icons-material/MusicNote';
 
 const SwipeableNavBar = () => {
 
-    const {menuOpen, setMenuOpen} = useContext(DashboardContext);
+    const {menuOpen, setMenuOpen, setBecomeArtistOpen} = useContext(DashboardContext);
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     const styles = {
@@ -83,7 +83,7 @@ const SwipeableNavBar = () => {
                             </ListItem>
                         </Link>
 
-                        <ListItem button key="Become An Artist">
+                        <ListItem button key="Become An Artist" onClick={() => setBecomeArtistOpen(true)}>
                             <ListItemIcon>
                                 <AlbumIcon fontSize="large" style={styles.icon} />
                             </ListItemIcon>

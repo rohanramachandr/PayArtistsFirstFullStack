@@ -20,7 +20,7 @@ import * as actions from "../../../actions/index";
 
 // import '../../external/saveCountry';
 
-import './style.css';
+import './ResponsivePlayBar.css';
 
 
 // window.onbeforeunload = function() {

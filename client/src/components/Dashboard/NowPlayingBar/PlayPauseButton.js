@@ -21,14 +21,14 @@ const PlayPauseButton = ({ player, audioState, minimized }) => {
     if (audioState === "playing") {
       // if the state will be minimized then we will return the nromal pause button
       if (minimized) {
-        return <Pause style={{ fontSize: "3em", opacity: ".8" }} />;
+        return <Pause style={{ fontSize: "3em", opacity: ".8", color: "#000" }} />;
       }
       return <PauseCircleFilled style={{ fontSize: "4em" }} color="primary" />;
     } else if (audioState === "paused" || audioState === "loaded") {
       if (minimized) {
-        return <PlayArrow style={{ fontSize: "3em", opacity: ".8" }} />;
+        return <PlayArrow style={{ fontSize: "3em", opacity: ".8", color: "#000"}}  />;
       }
-      return <PlayCircleFilled style={{ fontSize: "4em" }} color="primary" />;
+      return <PlayCircleFilled style={{ fontSize: "4em", color: "#000" }} />;
     } else if (audioState === "loading") {
       return <CircularProgress />;
     }
