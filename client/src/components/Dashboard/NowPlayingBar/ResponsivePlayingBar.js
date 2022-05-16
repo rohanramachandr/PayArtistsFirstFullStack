@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Grid } from '@material-ui/core';
 import { useSwipeable } from 'react-swipeable';
 import PlayPauseButton from './PlayPauseButton';
@@ -8,7 +8,6 @@ import MusicArt from './MusicArt';
 import TimelineController from './TimelineController';
 import TopBar from './TopBar';
 import MiniMusicArt from './MiniMusicArt';
-import RelatedVideos from './RelatedVideos';
 import getAudioLink from './getAudioLink';
 import youtubeSearch from './youtubeSearch';
 import axios from 'axios';
@@ -23,12 +22,11 @@ import * as actions from "../../../actions/index";
 
 import './style.css';
 
-import { GlobalContext } from './GlobalState';
 
 // window.onbeforeunload = function() {
 //   return 'You have unsaved changes!';
 // }
-let relatedVideosVar;
+// let relatedVideosVar;
 
 const ResponsivePlayingBar = ({
     updateSongPlays,
@@ -47,8 +45,8 @@ const ResponsivePlayingBar = ({
         dispatch({ type: 'setCurrentVideoSnippet', snippet: data });
     };
 
-    const [relatedVideos, setRelatedVideos] = useState([]);
-    const [isItFromPlaylist, setIsItFromPlaylist] = useState(false);
+    // const [relatedVideos, setRelatedVideos] = useState([]);
+    //const [isItFromPlaylist, setIsItFromPlaylist] = useState(false);
     //
     const [audioState, setAudioState] = useState(null);
     // there will be 4 states
@@ -285,7 +283,7 @@ const ResponsivePlayingBar = ({
 
     const playNext = async () => {
         if (currentPlaylist) {
-            setIsItFromPlaylist(true);
+            //setIsItFromPlaylist(true);
             console.log("currentPlaylist and id", currentPlaylist, currentlyPlaying._id)
             const currentIndex = currentPlaylist.findIndex(
                      (id) => id === currentlyPlaying._id
