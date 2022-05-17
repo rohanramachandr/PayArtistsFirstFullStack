@@ -7,7 +7,7 @@ import "./DashboardPage.css";
 import DashboardAppBar from "../components/Dashboard/DashboardAppBar/DashboardAppBar";
 // import NavRoute from "../components/Dashboard/NavRoute/NavRoute";
 import theme from "../components/Dashboard/theme";
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import SwipeableNavBar from "../components/Dashboard/DashboardNav/SwipeableNav";
 import { DashboardContextProvider } from "../components/Dashboard/DashboardContext";
 import ResponsivePlayingBar from "../components/Dashboard/NowPlayingBar/ResponsivePlayingBar";

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Box, Modal, Fade, Typography, Backdrop, TextField, Button} from '@mui/material';
+import {Box, Modal, Fade, Typography, Backdrop, TextField, Button} from '@material-ui/core';
 import { DashboardContext } from '../DashboardContext';
 
 const style = {
@@ -16,7 +16,7 @@ const style = {
 };
 
 const submitButtonStyles = {
-    backgroundColor: '#ec148c',
+
     position: "absolute",
     bottom: "10px",
     right: "10px",
@@ -52,7 +52,7 @@ export default function BecomeArtistModal() {
                         Please create a unique artist username
                     </Typography>
                     <TextField  id="standard-basic" label="Artist Username" variant="standard" color='primary' helperText="This username is already taken" />
-                    <Button style={submitButtonStyles} variant="contained">Create Artist Profile</Button>
+                    <Button style={submitButtonStyles} variant="contained" color="primary">Create Artist Profile</Button>
  
                 </Box>
             </Fade>

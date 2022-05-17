@@ -28,7 +28,7 @@ const PlayPauseButton = ({ player, audioState, minimized }) => {
       if (minimized) {
         return <PlayArrow style={{ fontSize: "3em", opacity: ".8", color: "#000"}}  />;
       }
-      return <PlayCircleFilled style={{ fontSize: "4em", color: "#000" }} />;
+      return <PlayCircleFilled style={{ fontSize: "4em" }} color="primary"/>;
     } else if (audioState === "loading") {
       return <CircularProgress />;
     }
