@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Box, Modal, Fade, Typography, Backdrop, TextField, Button, Grid, IconButton } from '@material-ui/core';
 import CloseIcon from '@mui/icons-material/Close';
+import axios from 'axios';
 import { DashboardContext } from '../DashboardContext';
 
 const style = {
@@ -10,11 +11,11 @@ const style = {
     transform: 'translate(-50%, -50%)',
     height: 400,
     width: 350,
-    '@media screen and (max-width: 820px)': {
+    '@media screen and (max-width: 500px)': {
         width: '95%'
     },
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: '2px solid black',
     boxShadow: 24,
     p: 4
 };
@@ -36,7 +37,45 @@ const closeIconStyle = {
 
 export default function BecomeArtistModal() {
     const { becomeArtistOpen, setBecomeArtistOpen } = useContext(DashboardContext);
+    const [artistUsername, setArtistUsername] = useState("");
+    const [errors, setErrors] = useState([]);
+
+    
     const handleClose = () => setBecomeArtistOpen(false);
+
+
+    useEffect(() => {
+
+     
+        const delayDebounceFn = setTimeout(async () => {
+            console.log("artistUsername", artistUsername);
+         
+            let tempErrors = [];
+            if (artistUsername.length < 5) {
+                tempErrors.push("Username must be at least 5 characters")
+            }
+            if (artistUsername.length > 20) {
+                tempErrors.push("Username must be less than 20 characters")
+            }
+            if (/\s/.test(artistUsername)) {
+                tempErrors.push("Username must not contain any whitespace")
+            }
+            const res = await axios.get(`/api/artists/username/isvalid/${artistUsername}`);
+            console.log("response", res);
+            if (!res.data) {
+                 tempErrors.push("This username is already taken");
+            }
+            //TODO check if username is unique
+            setErrors(tempErrors);
+            // Send Axios request here
+          }, 1500)
+      
+          return () => clearTimeout(delayDebounceFn);
+
+    }, [artistUsername]);
+
+
+
 
     return (
 
@@ -51,6 +90,7 @@ export default function BecomeArtistModal() {
             BackdropProps={{
                 timeout: 500,
             }}
+            color="primary"
         >
             <Fade in={becomeArtistOpen}>
                 <Box sx={style}>
@@ -59,17 +99,22 @@ export default function BecomeArtistModal() {
                     </IconButton>
                     <Grid container
                         direction="row"
-                        justify="center"
+                        justifyContent="center"
                         alignItems="center"
                         style={{marginTop: "15px"}}
                     >
-                        <Typography id="transition-modal-title" variant="h6" component="h2" fullWidth>
+                        <Typography id="transition-modal-title" variant="h6" >
                             Set Up An Artist Profile
                         </Typography>
-                        <Typography id="transition-modal-description" sx={{ mt: 10 }} fullWidth>
+                        <Typography id="transition-modal-description" variant="body1" >
                             Create a unique artist username
                         </Typography>
-                        <TextField id="standard-basic" label="Artist Username" variant="standard" color='primary' helperText="This username is already taken" style={textFieldStyle} />
+                        <Typography id="transition-modal-description" variant="body2"  >
+                            ex. thebeatles
+                        </Typography>
+                        <TextField id="standard-basic" label="Artist Username" variant="standard" color='primary' helperText={errors.length !==0 && artistUsername !== "" ? errors[0] : null} required  error={errors.length !==0 && artistUsername !== ""} style={textFieldStyle} onChange={(e) => {
+                            setArtistUsername(e.target.value);
+                        }}/>
                         <Button variant="contained" color="primary" >Create Artist Profile</Button>
 
                     </Grid>

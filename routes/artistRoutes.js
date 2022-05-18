@@ -17,6 +17,18 @@ module.exports = (app) => {
     }
   });
 
+  //checks if artist username already exists
+  app.get("/api/artists/username/isvalid/:artistUsername", requireLogin, async (req, res) => {
+    try {
+      const artists = await Artist.find({ artistUsername: req.params.artistUsername });
+      res.send(artists.length === 0);
+    } catch (err) {
+      res.status(404).send(err);
+    }
+  });
+
+  
+
 
   app.get("/api/artists/:artistName/albums", requireLogin, async (req, res) => {
     try {
