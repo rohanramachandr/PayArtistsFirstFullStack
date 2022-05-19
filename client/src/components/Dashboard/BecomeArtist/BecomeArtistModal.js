@@ -37,42 +37,64 @@ const closeIconStyle = {
 
 export default function BecomeArtistModal() {
     const { becomeArtistOpen, setBecomeArtistOpen } = useContext(DashboardContext);
+    const [formData, setFormData] = useState({ artistUsername: "", artistName: "" });
     const [artistUsername, setArtistUsername] = useState("");
-    const [errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState({ artistUsername: [], artistName: [] });
+    const [errorFlag, setErrorFlag] = useState(true);
 
-    
     const handleClose = () => setBecomeArtistOpen(false);
 
 
     useEffect(() => {
 
-     
+
         const delayDebounceFn = setTimeout(async () => {
-            console.log("artistUsername", artistUsername);
-         
-            let tempErrors = [];
-            if (artistUsername.length < 5) {
-                tempErrors.push("Username must be at least 5 characters")
+            console.log("formData", formData);
+
+            let tempErrors = { artistUsername: [], artistName: [] };
+            if (formData.artistUsername.trim().length === 0) {
+                tempErrors.artistUsername.push("Username is required")
             }
-            if (artistUsername.length > 20) {
-                tempErrors.push("Username must be less than 20 characters")
+            if (formData.artistUsername.trim().length < 5) {
+                tempErrors.artistUsername.push("Username must be at least 5 characters")
             }
-            if (/\s/.test(artistUsername)) {
-                tempErrors.push("Username must not contain any whitespace")
+            if (formData.artistUsername.trim().length > 20) {
+                tempErrors.artistUsername.push("Username must be less than 20 characters")
             }
-            const res = await axios.get(`/api/artists/username/isvalid/${artistUsername}`);
-            console.log("response", res);
-            if (!res.data) {
-                 tempErrors.push("This username is already taken");
+            if (/\s/.test(formData.artistUsername)) {
+                tempErrors.artistUsername.push("Username must not contain any whitespace")
             }
+            if (formData.artistUsername.trim().length !== 0) {
+                const res = await axios.get(`/api/artists/username/isvalid/${formData.artistUsername}`);
+                console.log("response", res);
+                if (!res.data) {
+                    tempErrors.artistUsername.push("This username is already taken");
+                }
+            }
+            if (formData.artistName.trim().length > 30) {
+                tempErrors.artistName.push("Artist name must be less than 30 characters")
+            }
+            if (formData.artistName.trim().length === 0) {
+                tempErrors.artistName.push("Artist name is required")
+            }
+
+
             //TODO check if username is unique
+            if (tempErrors.artistUsername.length !== 0 || tempErrors.artistName.length !== 0) {
+                setErrorFlag(true);
+            }
+            else {
+                setErrorFlag(false)
+            }
             setErrors(tempErrors);
             // Send Axios request here
-          }, 1500)
-      
-          return () => clearTimeout(delayDebounceFn);
+        }, 2000)
 
-    }, [artistUsername]);
+        setErrors({ artistUsername: [], artistName: [] });
+        setErrorFlag(true);
+        return () => clearTimeout(delayDebounceFn);
+
+    }, [formData]);
 
 
 
@@ -101,7 +123,7 @@ export default function BecomeArtistModal() {
                         direction="row"
                         justifyContent="center"
                         alignItems="center"
-                        style={{marginTop: "15px"}}
+                        style={{ marginTop: "15px" }}
                     >
                         <Typography id="transition-modal-title" variant="h6" >
                             Set Up An Artist Profile
@@ -109,13 +131,13 @@ export default function BecomeArtistModal() {
                         <Typography id="transition-modal-description" variant="body1" >
                             Create a unique artist username
                         </Typography>
-                        <Typography id="transition-modal-description" variant="body2"  >
-                            ex. thebeatles
-                        </Typography>
-                        <TextField id="standard-basic" label="Artist Username" variant="standard" color='primary' helperText={errors.length !==0 && artistUsername !== "" ? errors[0] : null} required  error={errors.length !==0 && artistUsername !== ""} style={textFieldStyle} onChange={(e) => {
-                            setArtistUsername(e.target.value);
-                        }}/>
-                        <Button variant="contained" color="primary" >Create Artist Profile</Button>
+                        <TextField id="standard-basic" label="Artist Username" variant="standard" value={formData.artistUsername} color='primary' helperText={errors.artistUsername.length !== 0 && formData.artistUsername !== "" ? errors.artistUsername[0] : "ex. thebeatles"} required error={errors.artistUsername.length !== 0 && formData.artistUsername !== ""} style={textFieldStyle} onChange={(e) => {
+                            setFormData({ ...formData, artistUsername: e.target.value });
+                        }} />
+                        <TextField id="standard-basic" label="Artist Name" variant="standard" value={formData.artistName} color='primary' helperText={errors.artistName.length !== 0 && formData.artistName !== "" ? errors.artistName[0] : "ex. The Beatles"} required error={errors.artistName.length !== 0 && formData.artistName !== ""} style={textFieldStyle} onChange={(e) => {
+                            setFormData({ ...formData, artistName: e.target.value });
+                        }} />
+                        <Button variant="contained" color="primary" disabled={errorFlag}>Create Artist Profile</Button>
 
                     </Grid>
 
