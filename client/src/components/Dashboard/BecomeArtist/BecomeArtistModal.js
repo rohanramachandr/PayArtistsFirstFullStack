@@ -1,8 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Box, Modal, Fade, Typography, Backdrop, TextField, Button, Grid, IconButton } from '@material-ui/core';
+import { connect } from 'react-redux';
+import { Box, Modal, Fade, Typography, Backdrop, TextField, Button, Grid, IconButton, CircularProgress } from '@material-ui/core';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { DashboardContext } from '../DashboardContext';
+import * as actions from '../../../actions';
 
 const style = {
     position: 'absolute',
@@ -26,7 +28,11 @@ const textFieldStyle = {
 
 };
 
+const progressStyle = {
+    width: '50%',
+    height: '50%',
 
+};
 
 const closeIconStyle = {
     position: 'absolute',
@@ -35,14 +41,16 @@ const closeIconStyle = {
 
 };
 
-export default function BecomeArtistModal() {
+function BecomeArtistModal({ createArtist }) {
     const { becomeArtistOpen, setBecomeArtistOpen } = useContext(DashboardContext);
+    const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished
     const [formData, setFormData] = useState({ artistUsername: "", artistName: "" });
     const [artistUsername, setArtistUsername] = useState("");
     const [errors, setErrors] = useState({ artistUsername: [], artistName: [] });
     const [errorFlag, setErrorFlag] = useState(true);
 
     const handleClose = () => setBecomeArtistOpen(false);
+
 
 
     useEffect(() => {
@@ -97,6 +105,55 @@ export default function BecomeArtistModal() {
     }, [formData]);
 
 
+    const renderContent = () => {
+        switch (formState) {
+
+
+            case 'loading':
+                return (
+                    <>
+                        <CircularProgress style={progressStyle} />
+                        <Typography id="transition-modal-title" variant="h6" style={{marginTop: '30px'}} >
+                            Creating your artist profile
+                        </Typography>
+                    </>
+
+
+                );
+
+
+            default:
+                return (
+                    <>
+
+                        <Typography id="transition-modal-title" variant="h6" >
+                            Set Up An Artist Profile
+                        </Typography>
+                        <Typography id="transition-modal-description" variant="body1" >
+                            Create a unique artist username
+                        </Typography>
+                        <TextField id="standard-basic" label="Artist Username" variant="standard" value={formData.artistUsername} color='primary' helperText={errors.artistUsername.length !== 0 && formData.artistUsername !== "" ? errors.artistUsername[0] : "ex. thebeatles"} required error={errors.artistUsername.length !== 0 && formData.artistUsername !== ""} style={textFieldStyle} onChange={(e) => {
+                            setFormData({ ...formData, artistUsername: e.target.value });
+                        }} />
+                        <TextField id="standard-basic" label="Artist Name" variant="standard" value={formData.artistName} color='primary' helperText={errors.artistName.length !== 0 && formData.artistName !== "" ? errors.artistName[0] : "ex. The Beatles"} required error={errors.artistName.length !== 0 && formData.artistName !== ""} style={textFieldStyle} onChange={(e) => {
+                            setFormData({ ...formData, artistName: e.target.value });
+                        }} />
+                        <Button variant="contained" color="primary" disabled={errorFlag} onClick={async () => {
+                            setFormState('loading');
+                            await createArtist(formData.artistName, formData.artistUsername)
+                        }
+
+                        }>Create Artist Profile</Button>
+
+
+                    </>
+
+                );
+
+        }
+    };
+
+
 
 
     return (
@@ -115,29 +172,16 @@ export default function BecomeArtistModal() {
             color="primary"
         >
             <Fade in={becomeArtistOpen}>
-                <Box sx={style}>
-                    <IconButton aria-label="delete" style={closeIconStyle} onClick={handleClose}>
-                        <CloseIcon />
-                    </IconButton>
+                <Box sx={style}><IconButton aria-label="delete" style={closeIconStyle} onClick={handleClose}>
+                    <CloseIcon />
+                </IconButton>
                     <Grid container
                         direction="row"
                         justifyContent="center"
                         alignItems="center"
                         style={{ marginTop: "15px" }}
                     >
-                        <Typography id="transition-modal-title" variant="h6" >
-                            Set Up An Artist Profile
-                        </Typography>
-                        <Typography id="transition-modal-description" variant="body1" >
-                            Create a unique artist username
-                        </Typography>
-                        <TextField id="standard-basic" label="Artist Username" variant="standard" value={formData.artistUsername} color='primary' helperText={errors.artistUsername.length !== 0 && formData.artistUsername !== "" ? errors.artistUsername[0] : "ex. thebeatles"} required error={errors.artistUsername.length !== 0 && formData.artistUsername !== ""} style={textFieldStyle} onChange={(e) => {
-                            setFormData({ ...formData, artistUsername: e.target.value });
-                        }} />
-                        <TextField id="standard-basic" label="Artist Name" variant="standard" value={formData.artistName} color='primary' helperText={errors.artistName.length !== 0 && formData.artistName !== "" ? errors.artistName[0] : "ex. The Beatles"} required error={errors.artistName.length !== 0 && formData.artistName !== ""} style={textFieldStyle} onChange={(e) => {
-                            setFormData({ ...formData, artistName: e.target.value });
-                        }} />
-                        <Button variant="contained" color="primary" disabled={errorFlag}>Create Artist Profile</Button>
+                        {renderContent()}
 
                     </Grid>
 
@@ -149,3 +193,5 @@ export default function BecomeArtistModal() {
 
     );
 }
+
+export default connect(null, actions)(BecomeArtistModal);

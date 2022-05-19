@@ -96,6 +96,17 @@ export const fetchArtistAlbums = (artistName) => async dispatch => {
     dispatch({ type: FETCH_ARTIST_ALBUMS, payload: res.data });
 };
 
+
+export const createArtist = (artistName, artistUsername) => async dispatch => {
+    const values = {artistName, artistUsername};
+    const res = await axios.post('/api/artists/create', values);
+    dispatch({ type: FETCH_USER, payload: res.data });
+   
+};
+
+
+
+
 export const resetArtistPage = () => {
 
     return {

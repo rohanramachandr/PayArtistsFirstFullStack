@@ -27,12 +27,12 @@ module.exports = (app) => {
     }
   });
 
-  
+
 
 
   app.get("/api/artists/:artistName/albums", requireLogin, async (req, res) => {
     try {
-     
+
       const artist = await Artist.findOne({ artistName: req.params.artistName });
       const albums = await Album.find({ _artist: artist._id });
       res.send(albums);
@@ -43,12 +43,89 @@ module.exports = (app) => {
 
   app.get("/api/artists/:artistName/songs", requireLogin, async (req, res) => {
     try {
-    const artist = await Artist.findOne({ artistName: req.params.artistName });
-      const songs = await Song.find({ _artist: artist._id,}, null, {sort: {plays: -1}});
+      const artist = await Artist.findOne({ artistName: req.params.artistName });
+      const songs = await Song.find({ _artist: artist._id, }, null, { sort: { plays: -1 } });
       res.send(songs);
     } catch (err) {
       res.status(404).send(err);
     }
+  });
+
+
+  app.post('/api/artists/create', requireLogin, async (req, res) => {
+
+
+
+
+
+    try {
+      console.log("Hitting create artist endpoint", req)
+      const { artistName, artistUsername } = req.body;
+
+      console.log("req body", artistName, artistUsername);
+
+      let errors = []
+      if (artistUsername.trim().length === 0) {
+          errors.push("Username is required")
+      }
+      if (artistUsername.trim().length < 5) {
+          errors.push("Username must be at least 5 characters")
+      }
+      if (artistUsername.trim().length > 20) {
+          errors.push("Username must be less than 20 characters")
+      }
+      if (/\s/.test(artistUsername)) {
+          errors.push("Username must not contain any whitespace")
+      }
+      if (artistUsername.trim().length !== 0) {
+          const artists = await Artist.find({ artistUsername: req.params.artistUsername });
+          if (artists.length !== 0) {
+              errors.push("This username is already taken");
+          }
+      }
+      if (artistName.trim().length > 30) {
+          errors.push("Artist name must be less than 30 characters")
+      }
+      if (artistName.trim().length === 0) {
+          errors.push("Artist name is required")
+      }
+
+      if (errors.length > 0) {
+        res.status(401).send({ error: errors });
+
+      }
+
+
+
+      
+
+      if (!req.user.isArtist) {
+        const artist = new Artist({
+          artistName,
+          artistUsername,
+          _user: req.user.id
+        });
+        await artist.save();
+
+        req.user.isArtist = true;
+        const user = await req.user.save();
+
+        res.send(user);
+      }
+      else {
+        return res.status(401).send({ error: 'User is already an artist!' });
+
+      }
+
+
+    }
+    catch (err) {
+      res.status(422).send(err);
+
+    }
+
+
+
   });
 
 

@@ -30,7 +30,7 @@ passport.use(
 
             }
             else {
-                const user = await new User({ spotifyId: profile.id, name: profile.displayName }).save();
+                const user = await new User({ spotifyId: profile.id, name: profile.displayName, isArtist: false}).save();
                 done(null, user);
             }
     
