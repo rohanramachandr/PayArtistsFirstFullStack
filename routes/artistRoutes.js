@@ -59,10 +59,9 @@ module.exports = (app) => {
 
 
     try {
-      console.log("Hitting create artist endpoint", req)
+
       const { artistName, artistUsername } = req.body;
 
-      console.log("req body", artistName, artistUsername);
 
       let errors = []
       if (artistUsername.trim().length === 0) {

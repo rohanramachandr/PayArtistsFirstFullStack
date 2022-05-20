@@ -43,13 +43,24 @@ const closeIconStyle = {
 
 function BecomeArtistModal({ createArtist }) {
     const { becomeArtistOpen, setBecomeArtistOpen } = useContext(DashboardContext);
-    const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished
+    const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished or error
     const [formData, setFormData] = useState({ artistUsername: "", artistName: "" });
     const [artistUsername, setArtistUsername] = useState("");
     const [errors, setErrors] = useState({ artistUsername: [], artistName: [] });
     const [errorFlag, setErrorFlag] = useState(true);
 
-    const handleClose = () => setBecomeArtistOpen(false);
+    const handleClose = () => {
+        setBecomeArtistOpen(false);
+       
+    
+    };
+
+    useEffect(() => {
+        if (becomeArtistOpen) {
+            setFormState('notSubmitted');
+        }
+
+    }, [becomeArtistOpen])
 
 
 
@@ -113,9 +124,32 @@ function BecomeArtistModal({ createArtist }) {
                 return (
                     <>
                         <CircularProgress style={progressStyle} />
-                        <Typography id="transition-modal-title" variant="h6" style={{marginTop: '30px'}} >
+                        <Typography id="transition-modal-title" variant="h6" style={{ marginTop: '30px' }} >
                             Creating your artist profile
                         </Typography>
+                    </>
+
+
+                );
+
+            case 'error':
+                return (
+                    <>
+                        <Typography id="transition-modal-title" variant="h6" >
+                            Sorry!
+                        </Typography>
+                        
+                        <Typography id="transition-modal-description" variant="body1" style={{padding: '20px 0'}}>
+                            We could not create your profile
+                        </Typography>
+                        <Typography id="transition-modal-description" variant="body1">
+                            Please try again later
+                        </Typography>
+                       
+                        <Button variant="contained" color="primary" onClick={() => {
+                            handleClose();
+                           
+                        }} style={{marginTop: '20px'}}>Return To Dashboard</Button>
                     </>
 
 
@@ -140,7 +174,16 @@ function BecomeArtistModal({ createArtist }) {
                         }} />
                         <Button variant="contained" color="primary" disabled={errorFlag} onClick={async () => {
                             setFormState('loading');
-                            await createArtist(formData.artistName, formData.artistUsername)
+
+                            try {
+                                await createArtist(formData.artistName, formData.artistUsername)
+                                setFormState('finished');
+                            }
+                            catch (err) {
+                                setFormState('error');
+                            }
+                            
+
                         }
 
                         }>Create Artist Profile</Button>
