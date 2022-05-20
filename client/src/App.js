@@ -31,7 +31,7 @@ class App extends Component {
             <Route path="dashboard" element={<DashboardPage />}>
               <Route path="browse" element={<Browse />} />
               <Route path="album/:albumId" element={<Album />} />
-              <Route path="artist/:artistName" element={<Artist />} />
+              <Route path="artist/:artistUsername" element={<Artist />} />
 
 
             </Route>

@@ -8,9 +8,9 @@ const Song = mongoose.model("songs");
 module.exports = (app) => {
 
 
-  app.get("/api/artists/:artistName", requireLogin, async (req, res) => {
+  app.get("/api/artists/:artistUsername", requireLogin, async (req, res) => {
     try {
-      const artist = await Artist.findOne({ artistName: req.params.artistName });
+      const artist = await Artist.findOne({ artistUsername: req.params.artistUsername });
       res.send(artist);
     } catch (err) {
       res.status(404).send(err);
@@ -30,10 +30,10 @@ module.exports = (app) => {
 
 
 
-  app.get("/api/artists/:artistName/albums", requireLogin, async (req, res) => {
+  app.get("/api/artists/:artistUsername/albums", requireLogin, async (req, res) => {
     try {
 
-      const artist = await Artist.findOne({ artistName: req.params.artistName });
+      const artist = await Artist.findOne({ artistUsername: req.params.artistUsername });
       const albums = await Album.find({ _artist: artist._id });
       res.send(albums);
     } catch (err) {
@@ -41,16 +41,15 @@ module.exports = (app) => {
     }
   });
 
-  app.get("/api/artists/:artistName/songs", requireLogin, async (req, res) => {
+  app.get("/api/artists/:artistUsername/songs", requireLogin, async (req, res) => {
     try {
-      const artist = await Artist.findOne({ artistName: req.params.artistName });
+      const artist = await Artist.findOne({ artistUsername: req.params.artistUsername });
       const songs = await Song.find({ _artist: artist._id, }, null, { sort: { plays: -1 } });
       res.send(songs);
     } catch (err) {
       res.status(404).send(err);
     }
   });
-
 
   app.post('/api/artists/create', requireLogin, async (req, res) => {
 
@@ -59,7 +58,7 @@ module.exports = (app) => {
 
 
     try {
-
+      
       const { artistName, artistUsername } = req.body;
 
 
@@ -126,6 +125,7 @@ module.exports = (app) => {
 
 
   });
+ 
 
 
 };

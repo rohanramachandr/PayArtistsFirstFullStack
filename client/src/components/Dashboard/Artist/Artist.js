@@ -10,19 +10,19 @@ import "./Artist.css";
 
 const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage, albums, info, songs, currentSongId }) => {
 
-    const { artistName } = useParams();
+    const { artistUsername } = useParams();
 
 
     useEffect(() => {
-        fetchArtistInfo(artistName);
-        fetchArtistAlbums(artistName);
-        fetchArtistSongs(artistName);
+        fetchArtistInfo(artistUsername);
+        fetchArtistAlbums(artistUsername);
+        fetchArtistSongs(artistUsername);
 
 
         return () => {
             resetArtistPage();
         };
-    }, [artistName, fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage]);
+    }, [artistUsername, fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage]);
 
    
 
@@ -85,7 +85,7 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
                     </div>
                     <div className="trackInfo">
                         <span className="trackName">{song.songTitle}</span>
-                        <span className="artistName">{renderArtistName()}</span>
+                        <span className="artistUsername">{renderArtistName()}</span>
                     </div>
                     <div className="trackOptions">
                         <div className="optionsIcon">
@@ -133,7 +133,7 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
 
                     <div className="centerSection">
                         <div className="artistInfo">
-                            <h1 className="artistName">{renderArtistName()}</h1>
+                            <h1 className="artistUsername">{renderArtistName()}</h1>
 
                             <div className="headerButtons">
                                 <button className="button pink" onClick={() => playFirstSong()}>PLAY</button>

@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { Box, Modal, Fade, Typography, Backdrop, TextField, Button, Grid, IconButton, CircularProgress } from '@material-ui/core';
 import CloseIcon from '@mui/icons-material/Close';
@@ -51,8 +52,8 @@ function BecomeArtistModal({ createArtist }) {
 
     const handleClose = () => {
         setBecomeArtistOpen(false);
-       
-    
+
+
     };
 
     useEffect(() => {
@@ -135,25 +136,51 @@ function BecomeArtistModal({ createArtist }) {
             case 'error':
                 return (
                     <>
-                        <Typography id="transition-modal-title" variant="h6" >
+                        <Typography id="transition-modal-title" variant="h6">
                             Sorry!
                         </Typography>
-                        
-                        <Typography id="transition-modal-description" variant="body1" style={{padding: '20px 0'}}>
+
+                        <Typography id="transition-modal-description" variant="body1" style={{ padding: '20px 0' }}>
                             We could not create your profile
                         </Typography>
                         <Typography id="transition-modal-description" variant="body1">
                             Please try again later
                         </Typography>
-                       
+
                         <Button variant="contained" color="primary" onClick={() => {
                             handleClose();
-                           
-                        }} style={{marginTop: '20px'}}>Return To Dashboard</Button>
+
+                        }} style={{ marginTop: '20px' }}>Return To Dashboard</Button>
                     </>
 
 
                 );
+
+            case 'finished':
+                return (
+                    <>
+                        <Typography id="transition-modal-title" variant="h6" >
+                            Congrats!
+                        </Typography>
+
+                        <Typography id="transition-modal-description" variant="body1" style={{ padding: '20px 0' }} >
+                            We created your artist profile!
+                        </Typography>
+                        <Grid item xs={12} sm={12}>
+                            <Typography id="transition-modal-description" variant="body1" >
+                                Profile URL:
+                            </Typography>
+                        </Grid>
+
+                        <Link className="playingBarLink" to={`/dashboard/artist/${formData.artistUsername}`} onClick={() => handleClose()}>
+                            <Button variant="contained" color="primary" xs={12}  style={{ marginTop: '20px' }}>Go to my profile</Button>
+                        </Link>
+                        
+                    </>
+
+
+                );
+
 
 
             default:
@@ -182,7 +209,7 @@ function BecomeArtistModal({ createArtist }) {
                             catch (err) {
                                 setFormState('error');
                             }
-                            
+
 
                         }
 

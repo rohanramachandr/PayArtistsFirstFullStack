@@ -141,8 +141,8 @@ const MusicArt = ({ data, rating, audioEl, setPlayerState }) => {
         {shortTitle(data)}
       </Typography></Link>
       
-      <Link className="playingBarLink" to={`/dashboard/artist/${data.artist}`} onClick={() => setPlayerState('minimized')}><Typography style={{ width: "fit-content"}} color="primary" variant="subtitle1">
-        {data.artist}
+      <Link className="playingBarLink" to={`/dashboard/artist/${data.artistUsername}`} onClick={() => setPlayerState('minimized')}><Typography style={{ width: "fit-content"}} color="primary" variant="subtitle1">
+        {data.artistName}
       </Typography></Link>
       <br />
     </Grid>

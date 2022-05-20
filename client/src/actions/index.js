@@ -82,17 +82,17 @@ export const updateSongPlays = (songId) => async dispatch => {
 
 
 
-export const fetchArtistInfo = (artistName) => async dispatch => {
-    const res = await axios.get(`/api/artists/${artistName}`);
+export const fetchArtistInfo = (artistUsername) => async dispatch => {
+    const res = await axios.get(`/api/artists/${artistUsername}`);
     dispatch({ type: FETCH_ARTIST_INFO, payload: res.data });
 };
 
-export const fetchArtistSongs = (artistName) => async dispatch => {
-    const res = await axios.get(`/api/artists/${artistName}/songs`);
+export const fetchArtistSongs = (artistUsername) => async dispatch => {
+    const res = await axios.get(`/api/artists/${artistUsername}/songs`);
     dispatch({ type: FETCH_ARTIST_SONGS, payload: res.data });
 };
-export const fetchArtistAlbums = (artistName) => async dispatch => {
-    const res = await axios.get(`/api/artists/${artistName}/albums`);
+export const fetchArtistAlbums = (artistUsername) => async dispatch => {
+    const res = await axios.get(`/api/artists/${artistUsername}/albums`);
     dispatch({ type: FETCH_ARTIST_ALBUMS, payload: res.data });
 };
 

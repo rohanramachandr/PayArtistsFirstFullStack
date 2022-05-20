@@ -63,7 +63,7 @@ const ResponsivePlayingBar = ({
     const [audioURL, setAudioURL] = useState(null);
     const body = document.querySelector('body');
     const currentVideoSnippet = { audio: "", title: "", artist: "", id: "" };
-    const [currentlyPlaying, setCurrentlyPlaying] = useState({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "", _album: "" });
+    const [currentlyPlaying, setCurrentlyPlaying] = useState({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "", _album: "", artistName: "", artistUsername: ""});
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const audioPlayer = useRef();
     const player = audioPlayer.current;
@@ -135,9 +135,9 @@ const ResponsivePlayingBar = ({
         setAudioState('loading');
         setCurrentPlaylist(playlist);
         const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
-        const {albumOrder, albumTitle, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id} = res.data
+        const {albumOrder, albumTitle, artistUsername, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id} = res.data
         setCurrentSongID(_id);
-        const songInfo = {audio: songPath, title: songTitle, artist: artistName, thumbnail: artworkPath, _id, _album};
+        const songInfo = {audio: songPath, title: songTitle, artistName, artistUsername, thumbnail: artworkPath, _id, _album};
         setCurrentlyPlaying(songInfo);
         audioPlayer.current.src = songPath;
         playAudio(songInfo);
@@ -590,7 +590,7 @@ const ResponsivePlayingBar = ({
                         emptyPlayer={(e) => {
                             e.stopPropagation();
                             //setCurrentVideoSnippet([]);
-                            setCurrentlyPlaying({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "" });
+                            setCurrentlyPlaying({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "", artistName: "", artistUsername: "" });
                             setPlayerState('notPlaying')
                             audioPlayer.current.src=null;
                             setCurrentSongID("");

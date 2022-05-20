@@ -16,13 +16,13 @@ module.exports = app => {
             const { _id, songTitle, _artist, duration, songPath, albumOrder, plays, _album } = await Song.findOne({ _id: req.params.songId });
 
 
-            const { artistName } = await Artist.findOne({ _id: _artist });
+            const { artistName, artistUsername } = await Artist.findOne({ _id: _artist });
 
             const { albumTitle, artworkPath } = await Album.findOne({ _id: _album });
 
 
 
-            res.send({ _id, _album, songTitle, artistName, albumTitle, artworkPath, duration, songPath, plays, albumOrder });
+            res.send({ _id, _album, songTitle, artistName, artistUsername, albumTitle, artworkPath, duration, songPath, plays, albumOrder });
         }
         catch(err) {
             res.status(404).send(err);
