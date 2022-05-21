@@ -15,10 +15,14 @@ import Artist from './components/Dashboard/Artist/Artist';
 
 
 class App extends Component {
+ 
+
+
 
   componentDidMount() {
     this.props.fetchUser();
-
+    this.props.fetchUserArtistUsername();
+  
   }
 
   render() {
@@ -45,5 +49,7 @@ class App extends Component {
 
   }
 }
+
+
 
 export default connect(null, actions)(App);

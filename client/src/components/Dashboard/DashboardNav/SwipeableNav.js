@@ -1,17 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { DashboardContext } from "../DashboardContext";
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-
+import { connect } from 'react-redux';
 import { Box, List, ListItem, ListItemIcon, ListItemText, Divider, Typography } from "@material-ui/core";
 import { Link } from 'react-router-dom';
 import AlbumIcon from '@mui/icons-material/Album';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import * as actions from '../../../actions';
 
 
 
-const SwipeableNavBar = () => {
+const SwipeableNavBar = ({auth, fetchUserArtistUsername}) => {
 
     const {menuOpen, setMenuOpen, setBecomeArtistOpen} = useContext(DashboardContext);
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -39,6 +40,15 @@ const SwipeableNavBar = () => {
         link: { textDecoration: 'none', color: 'inherit' }
 
     };
+
+
+    useEffect(()=> {
+    
+
+       
+        console.log("auth", auth);
+
+    }, [auth])
 
 
 
@@ -118,4 +128,8 @@ const SwipeableNavBar = () => {
 
 };
 
-export default SwipeableNavBar;
+function mapStateToProps({ auth }) {
+    return { auth };
+}
+
+export default connect(mapStateToProps, actions)(SwipeableNavBar);

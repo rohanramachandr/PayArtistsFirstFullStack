@@ -1,11 +1,19 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID } from './types';
+import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID, FETCH_USER_ARTIST_USERNAME } from './types';
 
 export const fetchUser = () => async dispatch => {
 
     const res = await axios.get('/api/current_user');
 
     dispatch({ type: FETCH_USER, payload: res.data });
+
+};
+
+export const fetchUserArtistUsername = () => async dispatch => {
+
+    const res = await axios.get('/api/current_artist');
+
+    dispatch({ type: FETCH_USER_ARTIST_USERNAME, payload: res.data });
 
 };
 

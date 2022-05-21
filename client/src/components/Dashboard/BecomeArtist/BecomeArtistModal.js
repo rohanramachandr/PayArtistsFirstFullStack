@@ -42,7 +42,7 @@ const closeIconStyle = {
 
 };
 
-function BecomeArtistModal({ createArtist }) {
+function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername }) {
     const { becomeArtistOpen, setBecomeArtistOpen } = useContext(DashboardContext);
     const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished or error
     const [formData, setFormData] = useState({ artistUsername: "", artistName: "" });
@@ -205,6 +205,8 @@ function BecomeArtistModal({ createArtist }) {
                             try {
                                 await createArtist(formData.artistName, formData.artistUsername)
                                 setFormState('finished');
+                                await fetchUser();
+                                await fetchUserArtistUsername();
                             }
                             catch (err) {
                                 setFormState('error');
