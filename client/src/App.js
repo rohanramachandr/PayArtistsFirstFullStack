@@ -10,7 +10,7 @@ import Album from './components/Dashboard/Album/Album';
 import Browse from './components/Dashboard/Browse/Browse';
 // import AlbumPage from './pages/AlbumPage';
 import RootGaurd from './guards/RootGuard';
-import Artist from './components/Dashboard/Artist/Artist';
+import ArtistPage from './components/Dashboard/Artist/ArtistPage';
 
 
 
@@ -35,7 +35,7 @@ class App extends Component {
             <Route path="" element={<DashboardPage />}>
               <Route path="browse" element={<Browse />} />
               <Route path="album/:albumId" element={<Album />} />
-              <Route path=":artistUsername" element={<Artist />} />
+              <Route path=":artistUsername" element={<ArtistPage />} />
 
 
             </Route>

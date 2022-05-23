@@ -153,8 +153,17 @@
     text-decoration: none; 
 }
 
-.gridViewItem img {
+.gridViewItem img, .gridViewItem .icon {
     width: 100%;
+    height: 100%;
+}
+
+.gridViewItem .icon {
+    background-color: #000;
+    color:#fff;
+}
+.gridViewItem:hover {
+    cursor: pointer;
 }
 
 
