@@ -12,9 +12,9 @@ import * as actions from '../../../actions';
 
 
 
-const SwipeableNavBar = ({auth, fetchUserArtistUsername}) => {
+const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUsername }) => {
 
-    const {menuOpen, setMenuOpen, setBecomeArtistOpen} = useContext(DashboardContext);
+    const { menuOpen, setMenuOpen, setBecomeArtistOpen } = useContext(DashboardContext);
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     const styles = {
@@ -42,83 +42,108 @@ const SwipeableNavBar = ({auth, fetchUserArtistUsername}) => {
     };
 
 
-    useEffect(()=> {
-    
+    useEffect(() => {
 
-       
+
+
         console.log("auth", auth);
 
     }, [auth])
 
 
+    const renderMyMusicOrBecomeArtist = () => {
+
+        if (!isArtist) {
+
+            return (
+                <ListItem button key="Become An Artist" onClick={() => setBecomeArtistOpen(true)}>
+                    <ListItemIcon>
+                        <AlbumIcon fontSize="large" style={styles.icon} />
+                    </ListItemIcon>
+                    <ListItemText primary="Become An Artist" />
+                </ListItem>
+            );
+        }
+
+
+        return (
+            <Link to={`/${artistUsername}`} style={styles.link}>
+                <ListItem button key="My Music">
+                    <ListItemIcon>
+                        <AlbumIcon fontSize="large" style={styles.icon} />
+                    </ListItemIcon>
+                    <ListItemText primary="My Music" />
+                </ListItem>
+
+            </Link>
+        );
+
+    };
+
+
 
     return (
 
-     
-            
-            <SwipeableDrawer
 
-                open={menuOpen}
-                onClose={() => setMenuOpen(false)}
-                onOpen={() => setMenuOpen(true)}
-                disableBackdropTransition={!iOS} 
-                disableDiscovery={iOS}
+
+        <SwipeableDrawer
+
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+            onOpen={() => setMenuOpen(true)}
+            disableBackdropTransition={!iOS}
+            disableDiscovery={iOS}
+
+        >
+
+            <Box
+                style={styles.drawer}
+                onClick={() => setMenuOpen(false)}
+
 
             >
 
-                <Box
-                    style={styles.drawer}
-                    onClick={() => setMenuOpen(false)}
+                <List>
+                    <Link to="/" style={styles.link}>
+                        <ListItem button key="Logo">
+                            <Typography style={styles.logo} variant="h5" component="div">
+                                PayArtistsFirst
+                            </Typography>
 
-
-                >
-
-                    <List>
-                        <Link to="/" style={styles.link}>
-                            <ListItem button key="Logo">
-                                <Typography style={styles.logo} variant="h5"  component="div">
-                                    PayArtistsFirst
-                                </Typography>
-
-                            </ListItem>
-
-                        </Link>
-                        <Divider variant="middle" style={styles.divider} />
-                        <Link to="/browse" style={styles.link}>
-                            <ListItem button key="Browse">
-                                <ListItemIcon>
-                                    <MusicNoteIcon fontSize="large" style={styles.icon} />
-                                </ListItemIcon>
-                                <ListItemText primary="Browse" />
-                            </ListItem>
-                        </Link>
-
-                        <ListItem button key="Become An Artist" onClick={() => setBecomeArtistOpen(true)}>
-                            <ListItemIcon>
-                                <AlbumIcon fontSize="large" style={styles.icon} />
-                            </ListItemIcon>
-                            <ListItemText primary="Become An Artist" />
                         </ListItem>
-                        <ListItem button key="Settings">
-                            <ListItemIcon>
-                                <SettingsIcon fontSize="large" style={styles.icon} />
-                            </ListItemIcon>
-                            <ListItemText primary="Settings" />
-                        </ListItem>
-                        <Divider variant="middle" style={styles.divider} />
-                        <a href="/api/logout" style={styles.link}>
-                            <ListItem button key="Logout">
-                                <ListItemIcon>
-                                    <LogoutIcon fontSize="large" style={styles.icon} />
-                                </ListItemIcon>
-                                <ListItemText primary="Logout" />
-                            </ListItem>
-                        </a>
-                    </List>
-   
-                </Box>
 
-            </SwipeableDrawer>
+                    </Link>
+                    <Divider variant="middle" style={styles.divider} />
+                    <Link to="/browse" style={styles.link}>
+                        <ListItem button key="Browse">
+                            <ListItemIcon>
+                                <MusicNoteIcon fontSize="large" style={styles.icon} />
+                            </ListItemIcon>
+                            <ListItemText primary="Browse" />
+                        </ListItem>
+                    </Link>
+
+                    {renderMyMusicOrBecomeArtist()}
+                    <ListItem button key="Settings">
+                        <ListItemIcon>
+                            <SettingsIcon fontSize="large" style={styles.icon} />
+                        </ListItemIcon>
+                        <ListItemText primary="Settings" />
+                    </ListItem>
+                    <Divider variant="middle" style={styles.divider} />
+                    <a href="/api/logout" style={styles.link}>
+                        <ListItem button key="Logout">
+                            <ListItemIcon>
+                                <LogoutIcon fontSize="large" style={styles.icon} />
+                            </ListItemIcon>
+                            <ListItemText primary="Logout" />
+                        </ListItem>
+                    </a>
+                </List>
+
+            </Box>
+
+        </SwipeableDrawer>
 
 
 

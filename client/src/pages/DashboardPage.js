@@ -12,15 +12,16 @@ import SwipeableNavBar from "../components/Dashboard/DashboardNav/SwipeableNav";
 import { DashboardContextProvider } from "../components/Dashboard/DashboardContext";
 import ResponsivePlayingBar from "../components/Dashboard/NowPlayingBar/ResponsivePlayingBar";
 import BecomeArtistModal from "../components/Dashboard/BecomeArtist/BecomeArtistModal";
+import { connect } from 'react-redux';
 
-const DashboardPage = (props) => {
+const DashboardPage = ({auth}) => {
 
 
   return (
     <ThemeProvider theme={theme}>
       <DashboardContextProvider>
         <DashboardAppBar />
-        <SwipeableNavBar />
+        <SwipeableNavBar isArtist={auth && auth.isArtist} artistUsername={auth ? auth.artistUsername : ""}/>
         <div id="mainContainer">
           <div id="topContainer">
             <Outlet />
@@ -28,12 +29,15 @@ const DashboardPage = (props) => {
           {/* <NowPlayingBar /> */}
           <ResponsivePlayingBar />
         </div>
-        <BecomeArtistModal />
+        {<BecomeArtistModal/>}
       </DashboardContextProvider>
     </ThemeProvider>
 
   );
 };
 
+function mapStateToProps({ auth }) {
+  return { auth };
+}
 
-export default DashboardPage;
+export default connect(mapStateToProps)(DashboardPage);

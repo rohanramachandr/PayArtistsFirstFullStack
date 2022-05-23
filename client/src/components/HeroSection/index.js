@@ -24,7 +24,7 @@ const HeroSection = () => {
                 Sign up for a new account today and recieve your first upload free
             </HeroP>
             <HeroBtnWrapper>
-              <LinkButton to="/signin" onMouseEnter={onHover} onMouseLeave={onHover} primary="true" dark="true"   smooth={true} duration={500} spy={true} exact='true' offset={-80}>
+              <LinkButton to="/signin" onMouseEnter={onHover} onMouseLeave={onHover} primary="true" dark="true"   smooth="true" duration={500} spy="true" exact='true' offset={-80}>
                 Get started {hover ? <ArrowForward /> : <ArrowRight />}
               </LinkButton>
             </HeroBtnWrapper>
