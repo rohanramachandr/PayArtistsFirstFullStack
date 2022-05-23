@@ -32,10 +32,10 @@ class App extends Component {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="signin" element={<SignInPage />} />
-            <Route path="dashboard" element={<DashboardPage />}>
+            <Route path="" element={<DashboardPage />}>
               <Route path="browse" element={<Browse />} />
               <Route path="album/:albumId" element={<Album />} />
-              <Route path="artist/:artistUsername" element={<Artist />} />
+              <Route path=":artistUsername" element={<Artist />} />
 
 
             </Route>

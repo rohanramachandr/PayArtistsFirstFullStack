@@ -137,11 +137,11 @@ const MusicArt = ({ data, rating, audioEl, setPlayerState }) => {
         />
       </motion.div>
       <br />
-      <Link className="playingBarLink" to={`/dashboard/album/${data._album}`} onClick={() => setPlayerState('minimized') }><Typography style={{ width: "fit-content"}} color="primary" variant="h5" className="musicArtTitle" align="center">
+      <Link className="playingBarLink" to={`/album/${data._album}`} onClick={() => setPlayerState('minimized') }><Typography style={{ width: "fit-content"}} color="primary" variant="h5" className="musicArtTitle" align="center">
         {shortTitle(data)}
       </Typography></Link>
       
-      <Link className="playingBarLink" to={`/dashboard/artist/${data.artistUsername}`} onClick={() => setPlayerState('minimized')}><Typography style={{ width: "fit-content"}} color="primary" variant="subtitle1">
+      <Link className="playingBarLink" to={`/${data.artistUsername}`} onClick={() => setPlayerState('minimized')}><Typography style={{ width: "fit-content"}} color="primary" variant="subtitle1">
         {data.artistName}
       </Typography></Link>
       <br />

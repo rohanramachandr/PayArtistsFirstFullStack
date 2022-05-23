@@ -84,7 +84,7 @@ const SwipeableNavBar = ({auth, fetchUserArtistUsername}) => {
 
                         </Link>
                         <Divider variant="middle" style={styles.divider} />
-                        <Link to="/dashboard/browse" style={styles.link}>
+                        <Link to="/browse" style={styles.link}>
                             <ListItem button key="Browse">
                                 <ListItemIcon>
                                     <MusicNoteIcon fontSize="large" style={styles.icon} />

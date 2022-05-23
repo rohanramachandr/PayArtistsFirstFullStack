@@ -8,18 +8,18 @@ module.exports = (app) => {
         scope: ['user-read-email'],
         showDialog: true
 
-        })
+    })
     );
 
     app.get(
         '/auth/spotify/callback',
         passport.authenticate('spotify'),
         (req, res) => {
-            res.redirect('/dashboard/browse');
+            res.redirect('/browse');
         }
     );
 
-    app.get('/api/logout', (req ,res) => {
+    app.get('/api/logout', (req, res) => {
         req.logout();
         res.redirect('/');
     });
@@ -33,18 +33,20 @@ module.exports = (app) => {
 
     app.get('/api/current_artist', async (req, res) => {
 
-        if (req.user.isArtist) {
 
-            try {
-            const { artistUsername } = await Artist.findOne({ _user: req.user._id });
-            return res.send(artistUsername);
+
+        try {
+            if (req.user.isArtist) {
+                const { artistUsername } = await Artist.findOne({ _user: req.user._id });
+                return res.send(artistUsername);
             }
-            catch (err) {
-              return  res.status(422).send(err);
-          
-            }
-          
         }
+        catch (err) {
+            return res.status(422).send(err);
+
+        }
+
+
 
 
         return res.send("");
