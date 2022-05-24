@@ -1,17 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
-import * as actions from "../../../actions";
+import * as actions from "../../../../actions";
 import { connect } from "react-redux";
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import AddIcon from '@mui/icons-material/Add';
+import { DashboardContext } from '../../DashboardContext'
 
-import "./Artist.css";
+import "../Artist.css";
 
 const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage, albums, info, songs, currentSongId }) => {
 
     const { artistUsername } = useParams();
+    const { setAddAlbumOpen } = useContext(DashboardContext);
 
 
     useEffect(() => {
@@ -112,7 +114,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
     const renderAddAlbum = () => {
 
         return (
-            <div key="addAlbum" className="gridViewItem">
+            <div key="addAlbum" className="gridViewItem" onClick={() => setAddAlbumOpen(true)}>
               <AddIcon className="icon"/>
     
               <div className="gridViewInfo">Add Album</div>

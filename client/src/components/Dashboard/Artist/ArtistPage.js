@@ -2,7 +2,7 @@ import React from "react";
 import {  useLocation } from "react-router-dom";
 import { connect } from 'react-redux';
 import Artist from "./Artist";
-import MyArtist from "./MyArtist";
+import MyArtist from "./MyArtist/MyArtist";
 
 const ArtistPage = ({auth}) => {
 
