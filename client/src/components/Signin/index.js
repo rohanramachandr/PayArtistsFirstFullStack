@@ -17,7 +17,7 @@ const SignIn = () => {
     <>
       <Container>
         <FormWrap>
-          <Icon to='/'>PayArtistsFirst</Icon>
+          <Icon to='/'>ReleaseRadar</Icon>
           <FormContent>
             <Form>
               <FormH1>Sign in to your account</FormH1>

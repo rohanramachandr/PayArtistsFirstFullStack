@@ -107,7 +107,7 @@ const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUserna
                     <Link to="/" style={styles.link}>
                         <ListItem button key="Logo">
                             <Typography style={styles.logo} variant="h5" component="div">
-                                PayArtistsFirst
+                                ReleaseRadar
                             </Typography>
 
                         </ListItem>

@@ -55,7 +55,7 @@ function DashboardAppBar(props) {
           </IconButton>
           
           <Typography variant="h6" color="inherit" style={styles.title}>
-            PayArtistsFirst
+            ReleaseRadar
           </Typography>
           
           
