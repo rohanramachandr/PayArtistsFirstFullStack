@@ -67,8 +67,11 @@ function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername })
 
     useEffect(() => {
 
+        setErrors({ artistUsername: [], artistName: [] });
+        setErrorFlag(true);
 
-        const delayDebounceFn = setTimeout(async () => {
+
+        const timeoutID = setTimeout(async () => {
             console.log("formData", formData);
 
             let tempErrors = { artistUsername: [], artistName: [] };
@@ -110,9 +113,8 @@ function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername })
             // Send Axios request here
         }, 2000)
 
-        setErrors({ artistUsername: [], artistName: [] });
-        setErrorFlag(true);
-        return () => clearTimeout(delayDebounceFn);
+        
+        return () => clearTimeout(timeoutID);
 
     }, [formData]);
 
@@ -166,12 +168,7 @@ function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername })
                         <Typography id="transition-modal-description" variant="body1" style={{ padding: '20px 0' }} >
                             We created your artist profile!
                         </Typography>
-                        {/* <Grid item xs={12} sm={12}>
-                            <Typography id="transition-modal-description" variant="body1" >
-                               {`Profile URL: https://payartistfirst.com/${formData.artistUsername}`}
-                            </Typography>
-                        </Grid> */}
-
+                       
                         <Link className="playingBarLink" to={`/${formData.artistUsername}`} onClick={() => handleClose()}>
                             <Button variant="contained" color="primary" xs={12}  style={{ marginTop: '20px' }}>Go to my profile</Button>
                         </Link>

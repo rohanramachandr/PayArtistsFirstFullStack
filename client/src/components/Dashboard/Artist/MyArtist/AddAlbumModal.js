@@ -10,7 +10,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    height: 400,
+    height: 'fit-content',
     width: '95%',
     '@media screen and (max-width: 500px)': {
         width: '95%'
