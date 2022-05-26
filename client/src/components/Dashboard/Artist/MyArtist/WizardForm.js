@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Stepper, Step, StepLabel, Button, Typography, TextField, Grid } from '@material-ui/core';
+import { Box, Stepper, Step, StepLabel, Button, Typography, TextField, Grid, FormHelperText} from '@material-ui/core';
 
 
 const steps = ['Create Name', 'Upload Artwork', 'Upload Songs'];
@@ -7,7 +7,7 @@ const steps = ['Create Name', 'Upload Artwork', 'Upload Songs'];
 const WizardForm = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const [formData, setFormData] = useState({ albumName: "" });
+  const [formData, setFormData] = useState({ albumName: "", albumArtwork: null });
   const [errors, setErrors] = useState({ albumName: [] });
   const [errorFlag, setErrorFlag] = useState(true);
 
@@ -53,12 +53,6 @@ const WizardForm = () => {
     return skipped.has(step);
   };
 
-  const textFieldStyle = {
-    width: '50%',
-    margin: '0 25%'
-
-  };
-
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -93,20 +87,103 @@ const WizardForm = () => {
     setActiveStep(0);
   };
 
+  const onImageFileChange = (event) => {
+    setFormData({ ...formData, albumArtwork: event.target.files[0] })
+  };
+
   const renderFormContent = () => {
     switch (activeStep) {
+      case 1:
+        return (
+          <>
+
+            <Grid item >
+              <Typography id="transition-modal-description" variant="body1" style={{ width: '100%', textAlign: 'center' }}>
+                Select Album Cover Artwork
+              </Typography>
+            </Grid>
+
+            <Grid item>
+              <Button
+                variant="contained"
+                component="label"
+                helperText={"Helper text"}
+              >
+                Upload Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(event) => onImageFileChange(event)}
+                />
+              </Button>
+            
+              {formData.albumArtwork && <FormHelperText style={{textAlign: 'center'}}>{formData.albumArtwork.name}</FormHelperText>}
+            </Grid>
+
+            
+            
+
+
+
+
+          </>
+
+        );
+      case 2:
+        return (
+          <>
+
+            <Grid item >
+              <Typography id="transition-modal-description" variant="body1" style={{ width: '100%', textAlign: 'center' }}>
+                Upload Songs
+              </Typography>
+            </Grid>
+
+            <Grid item>
+              <Button
+                variant="contained"
+                component="label"
+                helperText={"Helper text"}
+              >
+                Upload Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(event) => onImageFileChange(event)}
+                />
+              </Button>
+            
+              {formData.albumArtwork && <FormHelperText style={{textAlign: 'center'}}>{formData.albumArtwork.name}</FormHelperText>}
+            </Grid>
+
+            
+            
+
+
+
+
+          </>
+
+        );
+
 
       default:
         return (
           <>
 
+            <Grid item >
+              <Typography id="transition-modal-description" variant="body1">
+                Enter Album Name
+              </Typography>
+            </Grid>
+            <Grid item style={{ width: '75%' }}>
+              <TextField id="standard-basic" label="Album Name" variant="standard" color='primary' value={formData.albumName} helperText={errors.albumName.length !== 0 && formData.albumName !== "" ? errors.albumName[0] : "ex. The College Dropout"} error={errors.albumName.length !== 0 && formData.albumName !== ""} required style={{ width: '100%' }} onChange={(e) => {
+                setFormData({ ...formData, albumName: e.target.value });
+              }} />
+            </Grid>
 
-            <Typography id="transition-modal-description" variant="body1" >
-              Enter Album Name
-            </Typography>
-            <TextField id="standard-basic" label="Album Name" variant="standard" color='primary' value={formData.albumName} helperText={errors.albumName.length !== 0 && formData.albumName !== "" ? errors.albumName[0] : "ex. The College Dropout"} error={errors.albumName.length !== 0 && formData.albumName !== ""} required style={textFieldStyle} onChange={(e) => {
-              setFormData({ ...formData, albumName: e.target.value });
-            }} />
 
 
 
@@ -152,9 +229,10 @@ const WizardForm = () => {
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
           <Grid container
-            direction="row"
+            direction="column"
             justifyContent="center"
             alignItems="center"
+            spacing={2}
             style={{ marginTop: "15px" }}
           >
             {renderFormContent()}
