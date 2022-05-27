@@ -8,7 +8,7 @@ const WizardForm = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [formData, setFormData] = useState({ albumName: "", albumArtwork: null, albumArtworkUrl: null });
-  const [errors, setErrors] = useState({ albumName: [] });
+  const [errors, setErrors] = useState([ [""],[""],[""] ]);//array for each active step
   const [errorFlag, setErrorFlag] = useState(true);
 
 
@@ -16,26 +16,24 @@ const WizardForm = () => {
 
   useEffect(() => {
 
-    setErrors({ albumName: [] });
-    setErrorFlag(true);
+    setErrors([ [""],[""],[""] ]);
+    
     const timeoutID = setTimeout(async () => {
       console.log("formData", formData);
 
-      let tempErrors = { albumName: [] };
+      let tempErrors = [ [],[],[] ];
       if (formData.albumName.trim().length === 0) {
-        tempErrors.albumName.push("Album name cannot contain only whitespace")
+        tempErrors[0].push("Album name cannot contain only whitespace")
       }
 
       if (formData.albumName.trim().length > 40) {
-        tempErrors.albumName.push("Album name must be less than 40 characters")
+        tempErrors[0].push("Album name must be less than 40 characters")
+      }
+      if (!formData.albumArtwork) {
+        tempErrors[1].push("Album artwork is required")
       }
 
-      if (tempErrors.albumName.length !== 0) {
-        setErrorFlag(true);
-      }
-      else {
-        setErrorFlag(false)
-      }
+     
       setErrors(tempErrors);
       // Send Axios request here
     }, 2000)
@@ -109,15 +107,20 @@ const WizardForm = () => {
               </Typography>
             </Grid>
              <Grid item >
-                <ImageCard imgSrc={formData.albumArtworkUrl} deletePhoto={deleteAlbumArtwork}/>
+                <ImageCard imgSrc={formData.albumArtworkUrl}/>
             </Grid>
 
             <Grid item>
-              <Button
+              {formData.albumArtwork ? 
+              <Button variant="contained" color="primary" onClick={() => deleteAlbumArtwork()}>Delete Photo</Button>
+
+              :
+
+               <Button
                 variant="contained"
                 component="label"
                 color="primary"
-                helperText={"Helper text"}
+                
               >
                 Upload Image
                 <input
@@ -128,10 +131,12 @@ const WizardForm = () => {
                 />
               </Button>
             
+            }
+             
               
             </Grid>
-            <Grid item>
-            {formData.albumArtwork && <FormHelperText style={{textAlign: 'center', paddingTop: 0}}>{formData.albumArtwork.name}</FormHelperText>}
+            <Grid item style={{paddingTop: 0}}>
+            {formData.albumArtwork && <FormHelperText style={{textAlign: 'center'}}>{formData.albumArtwork.name}</FormHelperText>}
             </Grid>
 
             
@@ -157,7 +162,7 @@ const WizardForm = () => {
               <Button
                 variant="contained"
                 component="label"
-                helperText={"Helper text"}
+               
               >
                 Upload Image
                 <input
@@ -192,7 +197,7 @@ const WizardForm = () => {
               </Typography>
             </Grid>
             <Grid item style={{ width: '75%' }}>
-              <TextField id="standard-basic" label="Album Name" variant="standard" color='primary' value={formData.albumName} helperText={errors.albumName.length !== 0 && formData.albumName !== "" ? errors.albumName[0] : "ex. The College Dropout"} error={errors.albumName.length !== 0 && formData.albumName !== ""} required style={{ width: '100%' }} onChange={(e) => {
+              <TextField id="standard-basic" label="Album Name" variant="standard" color='primary' value={formData.albumName} helperText={errors[0].length !== 0 && errors[0][0] !== "" && formData.albumName !== "" ? errors[0][0] : "ex. The College Dropout"} error={errors[0].length !== 0 && errors[0][0] !== "" && formData.albumName !== ""} required style={{ width: '100%' }} onChange={(e) => {
                 setFormData({ ...formData, albumName: e.target.value });
               }} />
             </Grid>
@@ -240,7 +245,7 @@ const WizardForm = () => {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          <Typography sx={{ mt: 2, mb: 1 }} style={{paddingLeft: "8px"}}>Step {activeStep + 1}</Typography>
           <Grid container
             direction="column"
             justifyContent="center"
@@ -267,8 +272,8 @@ const WizardForm = () => {
                 Skip
               </Button>
             )}
-
-            <Button onClick={handleNext} disabled={errorFlag}>
+            {console.log("errors active step", activeStep, errors[activeStep])}
+            <Button onClick={handleNext} disabled={errors[activeStep].length > 0}>
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
           </Box>

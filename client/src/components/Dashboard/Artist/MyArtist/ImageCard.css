@@ -1,12 +1,6 @@
 .imageCard {
-    width: 20vh;
-    height: 20vh;
-    border-radius: 11px;
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-image: none;
-    display: block;
+    width: 217px;
+    height: 217px;
 
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import CloseIcon from '@mui/icons-material/Close';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, Avatar } from '@material-ui/core';
 import './ImageCard.css'
 
 const ImageCard = ({ imgSrc, deletePhoto }) => {
@@ -12,10 +12,19 @@ const ImageCard = ({ imgSrc, deletePhoto }) => {
 
         if (imgSrc) {
             return (
-                <div className="imageCard" style={{ backgroundImage: darkBackground }}>
-                    <Tooltip className="close" title="Delete Photo">
-                        <CloseIcon style={{ color: "#fff" }} onClick={() => deletePhoto()} />
-                    </Tooltip>
+                <div className="imageCard">
+                    
+                    <Avatar
+     
+          style={{
+            width: "215px",
+            height: "215px",
+            boxShadow: "#0000008c 1px 3px 8px"
+          }}
+          alt="music thumbnail"
+          src={imgSrc}
+          
+        />
 
 
 
