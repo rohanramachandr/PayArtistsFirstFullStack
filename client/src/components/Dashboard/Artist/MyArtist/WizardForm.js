@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Stepper, Step, StepLabel, Button, Typography, TextField, Grid, FormHelperText} from '@material-ui/core';
-
+import ImageCard from './ImageCard';
 
 const steps = ['Create Name', 'Upload Artwork', 'Upload Songs'];
 
 const WizardForm = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const [formData, setFormData] = useState({ albumName: "", albumArtwork: null });
+  const [formData, setFormData] = useState({ albumName: "", albumArtwork: null, albumArtworkUrl: null });
   const [errors, setErrors] = useState({ albumName: [] });
   const [errorFlag, setErrorFlag] = useState(true);
+
+
 
 
   useEffect(() => {
@@ -43,9 +45,13 @@ const WizardForm = () => {
 
   }, [formData]);
 
+  const deleteAlbumArtwork = () => {
+    setFormData({...formData, albumArtwork: null, albumArtworkUrl: null})
+  };
+
 
   const isStepOptional = (step) => {
-    return step === 1;
+    return false;
 
   };
 
@@ -88,7 +94,7 @@ const WizardForm = () => {
   };
 
   const onImageFileChange = (event) => {
-    setFormData({ ...formData, albumArtwork: event.target.files[0] })
+    setFormData({ ...formData, albumArtwork: event.target.files[0], albumArtworkUrl: URL.createObjectURL(event.target.files[0])})
   };
 
   const renderFormContent = () => {
@@ -102,11 +108,15 @@ const WizardForm = () => {
                 Select Album Cover Artwork
               </Typography>
             </Grid>
+             <Grid item >
+                <ImageCard imgSrc={formData.albumArtworkUrl} deletePhoto={deleteAlbumArtwork}/>
+            </Grid>
 
             <Grid item>
               <Button
                 variant="contained"
                 component="label"
+                color="primary"
                 helperText={"Helper text"}
               >
                 Upload Image
@@ -118,7 +128,10 @@ const WizardForm = () => {
                 />
               </Button>
             
-              {formData.albumArtwork && <FormHelperText style={{textAlign: 'center'}}>{formData.albumArtwork.name}</FormHelperText>}
+              
+            </Grid>
+            <Grid item>
+            {formData.albumArtwork && <FormHelperText style={{textAlign: 'center', paddingTop: 0}}>{formData.albumArtwork.name}</FormHelperText>}
             </Grid>
 
             

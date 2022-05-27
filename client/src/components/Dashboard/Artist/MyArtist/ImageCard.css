@@ -1,0 +1,22 @@
+.imageCard {
+    width: 20vh;
+    height: 20vh;
+    border-radius: 11px;
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: none;
+    display: block;
+
+}
+
+
+.imageCard .close {
+    float: right;
+    padding: 5px 5px 0 0;
+
+}
+
+.imageCard .close:hover {
+    cursor: pointer;
+}
