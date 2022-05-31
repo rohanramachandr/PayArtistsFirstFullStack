@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Stepper, Step, StepLabel, Button, Typography, TextField, Grid, FormHelperText} from '@material-ui/core';
 import ImageCard from './ImageCard';
-
+import SongTable from './SongTable';
 const steps = ['Create Name', 'Upload Artwork', 'Upload Songs'];
 
 const WizardForm = () => {
@@ -158,23 +158,12 @@ const WizardForm = () => {
               </Typography>
             </Grid>
 
-            <Grid item>
-              <Button
-                variant="contained"
-                component="label"
-               
-              >
-                Upload Image
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={(event) => onImageFileChange(event)}
-                />
-              </Button>
-            
-              {formData.albumArtwork && <FormHelperText style={{textAlign: 'center'}}>{formData.albumArtwork.name}</FormHelperText>}
+
+            <Grid item >
+              <SongTable />
             </Grid>
+
+            
 
             
             
