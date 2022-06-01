@@ -7,6 +7,7 @@ import axios from 'axios';
 import { DashboardContext } from '../DashboardContext';
 import * as actions from '../../../actions';
 
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -42,11 +43,10 @@ const closeIconStyle = {
 
 };
 
-function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername }) {
+function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername, auth }) {
     const { becomeArtistOpen, setBecomeArtistOpen } = useContext(DashboardContext);
     const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished or error
     const [formData, setFormData] = useState({ artistUsername: "", artistName: "" });
-    const [artistUsername, setArtistUsername] = useState("");
     const [errors, setErrors] = useState({ artistUsername: [], artistName: [] });
     const [errorFlag, setErrorFlag] = useState(true);
 
@@ -113,7 +113,7 @@ function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername })
             // Send Axios request here
         }, 2000)
 
-        
+
         return () => clearTimeout(timeoutID);
 
     }, [formData]);
@@ -168,11 +168,11 @@ function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername })
                         <Typography id="transition-modal-description" variant="body1" style={{ padding: '20px 0' }} >
                             We created your artist profile!
                         </Typography>
-                       
-                        <Link className="playingBarLink" to={`/${formData.artistUsername}`} onClick={() => handleClose()}>
-                            <Button variant="contained" color="primary" xs={12}  style={{ marginTop: '20px' }}>Go to my profile</Button>
-                        </Link>
-                        
+
+                        {auth && auth.isArtist && auth.artistUsername !== "" && <Link className="playingBarLink" to={`/${auth.artistUsername}`} onClick={() => handleClose()}>
+                            <Button variant="contained" color="primary" xs={12} style={{ marginTop: '20px' }}>Go to my profile</Button>
+                        </Link>}
+
                     </>
 
 
@@ -241,9 +241,10 @@ function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername })
             color="primary"
         >
             <Fade in={becomeArtistOpen}>
-                <Box sx={style}><IconButton aria-label="delete" style={closeIconStyle} onClick={handleClose}>
-                    <CloseIcon />
-                </IconButton>
+                <Box sx={style}>
+                    <IconButton aria-label="delete" style={closeIconStyle} onClick={handleClose}>
+                        <CloseIcon />
+                    </IconButton>
                     <Grid container
                         direction="row"
                         justifyContent="center"
@@ -263,4 +264,8 @@ function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername })
     );
 }
 
-export default connect(null, actions)(BecomeArtistModal);
+const mapStateToProps = ({ auth }) => {
+    return { auth };
+};
+
+export default connect(mapStateToProps, actions)(BecomeArtistModal);
