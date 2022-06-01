@@ -5,15 +5,15 @@ import { connect } from "react-redux";
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-import AddIcon from '@mui/icons-material/Add';
 import { DashboardContext } from '../../DashboardContext'
+
 
 import "../Artist.css";
 
 const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage, albums, info, songs, currentSongId }) => {
 
     const { artistUsername } = useParams();
-    const { setAddAlbumOpen } = useContext(DashboardContext);
+    const { setUploadMusicOpen } = useContext(DashboardContext);
 
 
     useEffect(() => {
@@ -111,17 +111,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
         }
     };
 
-    const renderAddAlbum = () => {
 
-        return (
-            <div key="addAlbum" className="gridViewItem" onClick={() => setAddAlbumOpen(true)}>
-              <AddIcon className="icon"/>
-    
-              <div className="gridViewInfo">Add Album</div>
-            </div>
-          );
-
-    };
 
     const renderAlbums = () => {
    
@@ -149,7 +139,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
                             <h1 className="artistUsername">{renderArtistName()}</h1>
 
                             <div className="headerButtons">
-                                <button className="button pink" onClick={() => playFirstSong()}>PLAY</button>
+                                <button className="button pink" onClick={() => setUploadMusicOpen(true)}>UPLOAD MUSIC</button>
                             </div>
 
                         </div>
@@ -166,7 +156,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
                 <div className="gridViewContainer">
                     <h2>Albums</h2>
                     {albums.length > 0 && renderAlbums()}
-                    {renderAddAlbum()}
+                
             </div>
 
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { DashboardContext } from "../DashboardContext";
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { connect } from 'react-redux';
@@ -8,11 +8,11 @@ import AlbumIcon from '@mui/icons-material/Album';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import * as actions from '../../../actions';
 
 
 
-const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUsername }) => {
+
+const SwipeableNavBar = ({ isArtist, artistUsername }) => {
 
     const { menuOpen, setMenuOpen, setBecomeArtistOpen } = useContext(DashboardContext);
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -42,13 +42,7 @@ const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUserna
     };
 
 
-    useEffect(() => {
-
-
-
-        console.log("auth", auth);
-
-    }, [auth])
+   
 
 
     const renderMyMusicOrBecomeArtist = () => {
@@ -67,7 +61,8 @@ const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUserna
 
 
         return (
-            <Link to={`/${artistUsername}`} style={styles.link}>
+            <>
+                {artistUsername !== "" && <Link to={`/${artistUsername}`} style={styles.link}>
                 <ListItem button key="My Music">
                     <ListItemIcon>
                         <AlbumIcon fontSize="large" style={styles.icon} />
@@ -75,7 +70,9 @@ const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUserna
                     <ListItemText primary="My Music" />
                 </ListItem>
 
-            </Link>
+            </Link>}
+            </>
+        
         );
 
     };
@@ -157,4 +154,4 @@ function mapStateToProps({ auth }) {
     return { auth };
 }
 
-export default connect(mapStateToProps, actions)(SwipeableNavBar);
+export default connect(mapStateToProps, null)(SwipeableNavBar);

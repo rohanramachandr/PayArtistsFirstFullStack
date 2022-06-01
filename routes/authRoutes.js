@@ -42,7 +42,7 @@ module.exports = (app) => {
             }
         }
         catch (err) {
-            return res.status(422).send(err);
+            return res.status(422).send("");
 
         }
 

@@ -7,11 +7,11 @@ export const DashboardContextProvider = ({children}) => {
     
     const [menuOpen, setMenuOpen] = useState(false);
     const [becomeArtistOpen, setBecomeArtistOpen] = useState(false);
-    const [addAlbumOpen, setAddAlbumOpen] = useState(false);
+    const [uploadMusicOpen, setUploadMusicOpen] = useState(false);
 
 
     return (
-        <DashboardContext.Provider value={{menuOpen, setMenuOpen, becomeArtistOpen, setBecomeArtistOpen, addAlbumOpen, setAddAlbumOpen}}>
+        <DashboardContext.Provider value={{menuOpen, setMenuOpen, becomeArtistOpen, setBecomeArtistOpen, uploadMusicOpen, setUploadMusicOpen}}>
             {children}
         </DashboardContext.Provider>
 
