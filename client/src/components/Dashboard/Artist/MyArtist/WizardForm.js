@@ -182,7 +182,7 @@ const WizardForm = () => {
 
             <Grid item >
               <Typography id="transition-modal-description" variant="body1">
-                Enter Album Name
+                Enter Album Name Going To Redo
               </Typography>
             </Grid>
             <Grid item style={{ width: '75%' }}>
