@@ -12,10 +12,22 @@ body {
 
 
 #mainViewContainer {
+    padding-bottom: 106px;
+    width: 80%;
+    margin: 0 auto;
 
-    padding-bottom: 90px;
-    width: calc(100% -220px);
+    
+   
 }
+
+@media (max-width: 820px) {
+
+    #mainViewContainer {
+        width: 98%
+    }
+    
+}
+
 
 #mainContent {
     padding: 0 20px;
@@ -94,6 +106,7 @@ body {
 .tracklistRow .trackCount .playingIcon {
     width: 8%;
     float: left;
+    color: #ec148c;
  
 }
 

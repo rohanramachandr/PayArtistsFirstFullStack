@@ -8,9 +8,14 @@ const AuthGuard = ({children, auth}) => {
     const navigate = useNavigate();
     const location = useLocation();
     useEffect(() => { 
-        
-        if ((location.pathname === '/dashboard' || String(location.pathname).includes('/album/')) && auth === false ) {
-            navigate('/signin');
+        console.log("location pathname", location.pathname, location.pathname === "/")
+        if (location.pathname === "/" || location.pathname === "/signin") {
+            return;
+        }
+        else {
+            if (auth === false){
+                navigate('/signin');
+            }
         }
   
        

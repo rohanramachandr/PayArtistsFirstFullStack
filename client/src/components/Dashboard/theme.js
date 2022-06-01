@@ -1,4 +1,4 @@
-import { createTheme } from "@material-ui/core";
+import { createTheme } from '@material-ui/core/styles';
 const theme = createTheme({
  
     
@@ -7,6 +7,27 @@ const theme = createTheme({
             'Encode Sans Expanded'
         ]
     },
+    palette: {
+        primary:{
+          
+          main:'#ec148c'
+        },
+         
+        
+        secondary: {
+          main:'#000'
+        },
+        neutral: {
+          main: "#fff"
+
+        }
+    }
+
+  
+
+  
+  
+
   
 
       

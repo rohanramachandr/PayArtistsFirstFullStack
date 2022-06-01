@@ -1,11 +1,19 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE,FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, SET_PLAYLIST, SET_PLAYLIST_INDEX, SET_CLICK_INDEX, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS } from './types';
+import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID, FETCH_USER_ARTIST_USERNAME } from './types';
 
 export const fetchUser = () => async dispatch => {
 
     const res = await axios.get('/api/current_user');
 
     dispatch({ type: FETCH_USER, payload: res.data });
+
+};
+
+export const fetchUserArtistUsername = () => async dispatch => {
+
+    const res = await axios.get('/api/current_artist');
+
+    dispatch({ type: FETCH_USER_ARTIST_USERNAME, payload: res.data });
 
 };
 
@@ -50,77 +58,65 @@ export const fetchAlbumSongs = (albumId) => async dispatch => {
 };
 
 export const resetAlbumPage = () => {
-    
+
     return {
         type: RESET_ALBUM_PAGE,
         payload: null
     };
 };
 
-export const fetchSongDetails = (songId) => async dispatch => {
-    // console.log("fetchsong details url", `/api/song/details/${songId}`);
+export const setCurrentSongID = (id) => {
 
-    const res = await axios.get(`/api/song/details/${songId}`);
+    return {
+        type: SET_CURRENT_SONG_ID,
+        payload: id
+    }
+}; 
 
-    dispatch({ type: FETCH_SONG_DETAILS, payload: res.data });
 
-};
-
-
-export const fetchPlaylist = () => async dispatch => {
-    const res = await axios.get("/api/songs/playlist");
-
-    dispatch({type: FETCH_PLAYLIST, payload: res.data});
-};
 
 export const updateSongPlays = (songId) => async dispatch => {
 
-    const res = await axios.patch(`/api/song/update-plays/${songId}`);
+    if (songId) {
+        const res = await axios.patch(`/api/song/update-plays/${songId}`);
+        console.log("updated song plays", res.data)
+        dispatch({ type: UPDATE_SONG_PLAYS, payload: res.data });
+    }
 
-    dispatch({ type: UPDATE_SONG_PLAYS, payload: res.data });
+
 
 };
 
-export const setPlaylist = (playlist) => {
-    
-    return {
-        type: SET_PLAYLIST,
-        payload: playlist
-    };
+
+
+
+export const fetchArtistInfo = (artistUsername) => async dispatch => {
+    const res = await axios.get(`/api/artists/${artistUsername}`);
+    dispatch({ type: FETCH_ARTIST_INFO, payload: res.data });
 };
 
-export const setPlaylistIndex = (index) => {
-    
-    return {
-        type: SET_PLAYLIST_INDEX,
-        payload: index
-    };
+export const fetchArtistSongs = (artistUsername) => async dispatch => {
+    const res = await axios.get(`/api/artists/${artistUsername}/songs`);
+    dispatch({ type: FETCH_ARTIST_SONGS, payload: res.data });
+};
+export const fetchArtistAlbums = (artistUsername) => async dispatch => {
+    const res = await axios.get(`/api/artists/${artistUsername}/albums`);
+    dispatch({ type: FETCH_ARTIST_ALBUMS, payload: res.data });
 };
 
-export const setClickIndex = (index) => {
 
-    return {
-        type: SET_CLICK_INDEX,
-        payload: index
-    };
-};
-
-export const fetchArtistInfo = (artistName) => async dispatch => {
-    const res = await axios.get(`/api/artists/${artistName}`);
-    dispatch({type: FETCH_ARTIST_INFO, payload: res.data});
+export const createArtist = (artistName, artistUsername) => async dispatch => {
+    const values = {artistName, artistUsername};
+    const res = await axios.post('/api/artists/create', values);
+    dispatch({ type: FETCH_USER, payload: res.data });
+   
 };
 
-export const fetchArtistSongs = (artistName) => async dispatch => {
-    const res = await axios.get(`/api/artists/${artistName}/songs`);
-    dispatch({type: FETCH_ARTIST_SONGS, payload: res.data});
-};
-export const fetchArtistAlbums = (artistName) => async dispatch => {
-    const res = await axios.get(`/api/artists/${artistName}/albums`);
-    dispatch({type: FETCH_ARTIST_ALBUMS, payload: res.data});
-};
+
+
 
 export const resetArtistPage = () => {
-    
+
     return {
         type: RESET_ARTIST_PAGE,
         payload: null

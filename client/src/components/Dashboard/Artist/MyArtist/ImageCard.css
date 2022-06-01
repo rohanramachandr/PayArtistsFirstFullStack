@@ -1,0 +1,16 @@
+.imageCard {
+    width: 217px;
+    height: 217px;
+
+}
+
+
+.imageCard .close {
+    float: right;
+    padding: 5px 5px 0 0;
+
+}
+
+.imageCard .close:hover {
+    cursor: pointer;
+}

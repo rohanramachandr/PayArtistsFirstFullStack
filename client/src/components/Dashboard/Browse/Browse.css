@@ -1,7 +1,20 @@
 #mainViewContainer {
-    padding-bottom: 90px;
+    padding-bottom: 106px;
+    width: 80%;
+    margin: 0 auto;
+
+    
    
 }
+
+@media (max-width: 820px) {
+
+    #mainViewContainer {
+        width: 98%
+    }
+    
+}
+
 
 #mainContent {
     align-content: center;

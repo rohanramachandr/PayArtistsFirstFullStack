@@ -3,7 +3,10 @@ import "./Album.css";
 import * as actions from "../../../actions";
 import { connect } from "react-redux";
 import React ,{ useEffect } from "react";
-import { BsFillPlayFill, BsThreeDots, BsVolumeUpFill as Volume } from "react-icons/bs";
+import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+
 const Album = ({
   album,
   fetchAlbum,
@@ -11,10 +14,8 @@ const Album = ({
   resetAlbumPage,
   fetchAlbumArtist,
   fetchAlbumSongs,
-  setPlaylist,
-  setClickIndex,
-  playlist,
-  playlistIndex
+  currentSongId
+  
 }) => {
   const { albumId } = useParams();
 
@@ -49,14 +50,14 @@ const Album = ({
     return album.songs ? <span>{`${album.songs.length} songs`}</span> : null;
   };
 
-  const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
 
 
   const renderPlayingButtons = (albumSongs, index, order) => {
-    if (equals(albumSongs, playlist) && playlistIndex === index) {
+    if (currentSongId === albumSongs[index]) {
       return (
         <div className="playingIcon">
-          <Volume color="#ec148c" size={20} alt="Volume" />
+          <VolumeUpRoundedIcon color="inherit"/>
         </div>
       );
 
@@ -67,16 +68,13 @@ const Album = ({
 
       <>
         <div onClick={() => {
-          if (!equals(albumSongs, playlist)) {
-            setPlaylist(albumSongs);
-          }
          
-          
-          setClickIndex([index]);
+          const customEvent = new CustomEvent('songClicked', { detail: { playlist: albumSongs, clickIndex: index } });
+          document.dispatchEvent(customEvent);
           
           
         }} className="playIcon">
-          <BsFillPlayFill size={20} />
+          <PlayArrowRoundedIcon color="inherit" />
         </div>
 
         <span className="trackNumber">{order}</span>
@@ -105,7 +103,7 @@ const Album = ({
           </div>
           <div className="trackOptions">
             <div className="optionsIcon">
-              <BsThreeDots size={20} />
+              <MoreHorizRoundedIcon color="inherit"/>
             </div>
           </div>
           <div className="trackDuration">
@@ -140,7 +138,7 @@ const Album = ({
 };
 
 function mapStateToProps({ album, song }) {
-  return { album, playlist: song.playlist, playlistIndex: song.index };
+  return { album, playlist: song.playlist, currentSongId: song.currentSongId };
 }
 
 export default connect(mapStateToProps, actions)(Album);

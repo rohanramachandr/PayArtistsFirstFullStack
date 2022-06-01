@@ -10,15 +10,19 @@ import Album from './components/Dashboard/Album/Album';
 import Browse from './components/Dashboard/Browse/Browse';
 // import AlbumPage from './pages/AlbumPage';
 import RootGaurd from './guards/RootGuard';
-import Artist from './components/Dashboard/Artist/Artist';
+import ArtistPage from './components/Dashboard/Artist/ArtistPage';
 
 
 
 class App extends Component {
+ 
+
+
 
   componentDidMount() {
     this.props.fetchUser();
-
+    this.props.fetchUserArtistUsername();
+  
   }
 
   render() {
@@ -28,10 +32,10 @@ class App extends Component {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="signin" element={<SignInPage />} />
-            <Route path="dashboard" element={<DashboardPage />}>
+            <Route path="" element={<DashboardPage />}>
               <Route path="browse" element={<Browse />} />
               <Route path="album/:albumId" element={<Album />} />
-              <Route path="artist/:artistName" element={<Artist />} />
+              <Route path=":artistUsername" element={<ArtistPage />} />
 
 
             </Route>
@@ -45,5 +49,7 @@ class App extends Component {
 
   }
 }
+
+
 
 export default connect(null, actions)(App);

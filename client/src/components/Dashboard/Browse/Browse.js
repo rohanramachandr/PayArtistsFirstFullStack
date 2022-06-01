@@ -20,7 +20,7 @@ const Browse = (props) => {
 
     return props.albums.map(({ _id, albumTitle, artworkPath }) => {
       return (
-        <Link to={`/dashboard/album/${_id}`} key={_id} className="gridViewItem">
+        <Link to={`/album/${_id}`} key={_id} className="gridViewItem">
           <img src={artworkPath} alt={albumTitle} />
 
           <div className="gridViewInfo">{albumTitle}</div>

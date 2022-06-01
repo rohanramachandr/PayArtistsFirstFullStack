@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Video from '../../videos/synthCity2.mov';
 import { HeroContainer, HeroBg, VideoBg, HeroContent, HeroH1, HeroP, HeroBtnWrapper, ArrowForward, ArrowRight } from './HeroElements';
-import { Button } from '../ButtonElements';
+import { LinkButton } from '../ButtonElements';
 
 const HeroSection = () => {
   const [hover, setHover] = useState(false);
@@ -24,9 +24,9 @@ const HeroSection = () => {
                 Sign up for a new account today and recieve your first upload free
             </HeroP>
             <HeroBtnWrapper>
-              <Button to="signup" onMouseEnter={onHover} onMouseLeave={onHover} primary="true" dark="true"   smooth={true} duration={500} spy={true} exact='true' offset={-80}>
+              <LinkButton to="/signin" onMouseEnter={onHover} onMouseLeave={onHover} primary="true" dark="true"   smooth="true" duration={500} spy="true" exact='true' offset={-80}>
                 Get started {hover ? <ArrowForward /> : <ArrowRight />}
-              </Button>
+              </LinkButton>
             </HeroBtnWrapper>
         </HeroContent>
 

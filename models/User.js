@@ -3,7 +3,8 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
     spotifyId: String,
-    name: String
+    name: String,
+    isArtist: Boolean
 })
 
 mongoose.model('users', userSchema)

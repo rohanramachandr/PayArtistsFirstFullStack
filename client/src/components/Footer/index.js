@@ -57,9 +57,9 @@ const Footer = () => {
                 <SocialMedia>
                     <SocialMediaWrap>
                         <SocialLogo to='/' onClick={toggleHome}>
-                            PayArtistsFirst
+                            ReleaseRadar
                         </SocialLogo>
-                        <WebsiteRights>PayArtistsFirst © {new Date().getFullYear()} All Rights Reserved</WebsiteRights>
+                        <WebsiteRights>ReleaseRadar © {new Date().getFullYear()} All Rights Reserved</WebsiteRights>
                         <SocialIcons>
                             <SocialIconLink href="/" target="_blank" aria-label="Facebook">
                                 <FaFacebook />
