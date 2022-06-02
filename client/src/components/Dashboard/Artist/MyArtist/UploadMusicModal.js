@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-
-import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Avatar, Button, FormLabel } from '@material-ui/core';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Avatar, Button, FormLabel, Divider } from '@material-ui/core';
 
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -121,15 +121,21 @@ function UploadMusicModal({ artistUsername }) {
                             <TextField variant="filled" label="Artist Username" value={artistUsername} color='primary' type="text" disabled />
                         </Grid>
                         <Grid item>
+                                <Divider light={false} style={{width: "230px"}}/>
+                        </Grid>
+                        <Grid item>
                             <FormLabel>
                                 Album Artwork
                             </FormLabel>
                         </Grid>
-                        {formData.albumArtworkUrl && <Grid item >
+                        {<Grid item >
                             <Avatar label="Album Artwork" src={formData.albumArtworkUrl} variant="square" style={{
                                 width: "215px",
-                                height: "215px"
-                            }} />
+                                height: "215px",  
+                                border: `${formData.albumArtworkUrl ? '2px solid #ec148c' : 'none'}`,
+                                borderRadius: '12px'
+                            
+                            }} ><FileUploadIcon  sx={{ fontSize: 80 }} /></Avatar>
                         </Grid>}
 
                         <Grid item>
