@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Avatar, Button, FormLabel, Divider } from '@material-ui/core';
+import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Avatar, Button, FormLabel, Divider, FormHelperText, FormControl, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -16,6 +16,7 @@ const style = {
     width: '95%',
     bgcolor: 'background.paper',
     border: '2px solid black',
+    overflow: 'scroll',
     boxShadow: 24,
     p: 4
 };
@@ -39,6 +40,11 @@ const closeIconStyle = {
 
 };
 
+const inputLabelStyle = {
+    marginTop: '-11px',
+    textAlign: 'center'
+}
+
 function UploadMusicModal({ artistUsername }) {
     const { uploadMusicOpen, setUploadMusicOpen } = useContext(DashboardContext);
     // const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished or error
@@ -47,7 +53,7 @@ function UploadMusicModal({ artistUsername }) {
     // const [errors, setErrors] = useState({ artistUsername: [], artistName: [] });
     // const [errorFlag, setErrorFlag] = useState(true);
     const [artistInfo, setArtistInfo] = useState({ artistName: "" });
-    const [formData, setFormData] = useState({ albumName: "", albumArtwork: null, albumArtworkUrl: null });
+    const [formData, setFormData] = useState({ albumName: "", albumArtwork: null, albumArtworkUrl: null, tracks: [{ title: null, audioFile: null, cover: null, isSongwriter: null }] });
 
 
     useEffect(() => {
@@ -69,10 +75,22 @@ function UploadMusicModal({ artistUsername }) {
     const deleteAlbumArtwork = () => {
         setFormData({ ...formData, albumArtwork: null, albumArtworkUrl: null })
     };
+    const deleteAudioFile = (index) => {
+        var copyTracks = formData.tracks.slice();
+        copyTracks[index].audioFile = null;
+        setFormData({ ...formData, tracks: [...copyTracks] })
+    };
 
 
     const onImageFileChange = (event) => {
         setFormData({ ...formData, albumArtwork: event.target.files[0], albumArtworkUrl: URL.createObjectURL(event.target.files[0]) })
+    };
+
+
+    const onAudioFileChange = (event, index) => {
+        var copyTracks = formData.tracks.slice();
+        copyTracks[index].audioFile = event.target.files[0];
+        setFormData({ ...formData, tracks: [...copyTracks] })
     };
 
 
@@ -112,7 +130,10 @@ function UploadMusicModal({ artistUsername }) {
 
 
                         <Grid item>
-                            <TextField label="Number Of Songs" variant="filled" color='primary' type="number" required />
+                            <TextField label="Album/Single Name" variant="filled" color='primary' type="text" required />
+                        </Grid>
+                        <Grid item>
+                            <TextField label="Number Of Tracks" variant="filled" color='primary' type="number" required />
                         </Grid>
                         <Grid item>
                             <TextField variant="filled" label="Artist Name" value={artistInfo.artistName} color='primary' type="text" disabled />
@@ -121,7 +142,7 @@ function UploadMusicModal({ artistUsername }) {
                             <TextField variant="filled" label="Artist Username" value={artistUsername} color='primary' type="text" disabled />
                         </Grid>
                         <Grid item>
-                                <Divider light={false} style={{width: "230px"}}/>
+                            <Divider light={false} style={{ width: "230px" }} />
                         </Grid>
                         <Grid item>
                             <FormLabel>
@@ -131,16 +152,16 @@ function UploadMusicModal({ artistUsername }) {
                         {<Grid item >
                             <Avatar label="Album Artwork" src={formData.albumArtworkUrl} variant="square" style={{
                                 width: "215px",
-                                height: "215px",  
+                                height: "215px",
                                 border: `${formData.albumArtworkUrl ? '2px solid #ec148c' : 'none'}`,
                                 borderRadius: '12px'
-                            
-                            }} ><FileUploadIcon  sx={{ fontSize: 80 }} /></Avatar>
+
+                            }} ><FileUploadIcon sx={{ fontSize: 80 }} /></Avatar>
                         </Grid>}
 
                         <Grid item>
                             {formData.albumArtwork ?
-                                <Button variant="contained" color="primary" onClick={() => deleteAlbumArtwork()}>Delete Photo</Button>
+                                <Button variant="contained" color="default" onClick={() => deleteAlbumArtwork()}>Delete Photo</Button>
 
                                 :
 
@@ -160,6 +181,81 @@ function UploadMusicModal({ artistUsername }) {
                                 </Button>
 
                             }
+                        </Grid>
+
+                        <Grid item>
+                            <Divider light={false} style={{ width: "230px" }} />
+                        </Grid>
+
+                        <Grid item>
+                            <FormLabel>
+                                Track 1
+                            </FormLabel>
+                        </Grid>
+                        <Grid item>
+
+                            <TextField label="Track 1 Title" variant="filled" color='primary' type="text" required />
+
+                        </Grid>
+                        <Grid item>
+
+                            {formData.tracks[0].audioFile ?
+                                <Button variant="contained" color="default" onClick={() => deleteAudioFile(0)}>Delete Audio File</Button>
+
+                                :
+
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        component="label"
+                                        color="primary"
+
+                                    >
+                                        Upload Audio File
+                                        <input
+                                            type="file"
+                                            accept=".wav,.mp3"
+                                            hidden
+                                            onChange={(event) => onAudioFileChange(event, 0)}
+                                        />
+                                    </Button>
+
+                                </>
+
+                            }
+
+
+                        </Grid>
+
+                        <Grid item>
+                            <FormHelperText style={inputLabelStyle}>{formData.tracks[0].audioFile ? formData.tracks[0].audioFile.name : ""}</FormHelperText>
+                        </Grid>
+                       
+                        <Grid item>
+                            <FormControl>
+                                <FormLabel id="demo-radio-buttons-group-label">Is this track an instrumental?</FormLabel>
+                                <RadioGroup>
+                                    <FormControlLabel value={false} control={<Radio />} label="Nope, this song contains lyrics" />
+                                    <FormControlLabel value={true} control={<Radio />} label="Yes, this track does not contain lyrics" />                                    
+                                </RadioGroup>
+                            </FormControl>
+
+                        </Grid>
+                        <Grid item>
+                            <FormControl>
+                                <FormLabel id="demo-radio-buttons-group-label">Is this track a cover song?</FormLabel>
+                                <RadioGroup>
+                                    <FormControlLabel value={true} control={<Radio />} label="Nope, I wrote this song" />
+                                    <FormControlLabel value={false} control={<Radio />} label="Yes, another artist wrote this song" />                                    
+                                </RadioGroup>
+                            </FormControl>
+
+                        </Grid>
+
+                        <Grid item>
+
+                            <TextField label="Songwriter's Real Name" placeholder='First Middle Lastname' variant="filled" color='primary' type="text" required />
+
                         </Grid>
 
 
