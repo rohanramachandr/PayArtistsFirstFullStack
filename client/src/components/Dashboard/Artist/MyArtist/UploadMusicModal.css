@@ -1,0 +1,8 @@
+.formContainer {
+    margin-top: 15px !important;
+    padding: 0 10%;
+}
+
+.formContainer .gridItem {
+    width: 100%;
+}

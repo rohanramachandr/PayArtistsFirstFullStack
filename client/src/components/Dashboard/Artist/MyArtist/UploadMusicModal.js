@@ -5,7 +5,7 @@ import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Av
 import CloseIcon from '@mui/icons-material/Close';
 
 import { DashboardContext } from '../../DashboardContext';
-
+import './UploadMusicModal.css'
 
 const style = {
     position: 'absolute',
@@ -32,7 +32,7 @@ const closeIconStyle = {
 
 const inputLabelStyle = {
     marginTop: '-11px',
-    textAlign: 'center'
+    textAlign: 'left'
 }
 
 function UploadMusicModal({ artistUsername, artistName }) {
@@ -111,21 +111,32 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
             return (
                 <Fragment key={index}>
-                    <Grid item>
-                        <Divider light={false} style={{ width: "230px" }} />
+                    <Grid item className="gridItem">
+                        <Divider light={false} fullWidth />
                     </Grid>
 
-                    <Grid item>
+                    <Grid item className="gridItem">
                         <FormLabel>
                             {`Track ${index + 1}`}
                         </FormLabel>
                     </Grid>
-                    <Grid item>
+                    <Grid item className="gridItem">
 
-                        <TextField label="Track Title" variant="filled" color='primary' type="text" required />
+                        <TextField label="Track Title" variant="filled" color='primary' type="text" required fullWidth />
 
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={12} md={4}>
+		<Typography variant="subtitle1" gutterBottom={true}>Price USD $/Stream</Typography>
+		<TextField
+			label="Amount"
+			variant="filled"
+			type="number"
+            defaultValue={0.00}
+			placeholder="$"
+			// onChange={(event, value)=> setValue(value)}
+		/>
+	</Grid>
+                    <Grid item className="gridItem">
 
                         {formData.tracks[index].audioFile ?
                             <Button variant="contained" color="default" onClick={() => deleteAudioFile(index)}>Delete Audio File</Button>
@@ -155,11 +166,11 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
                     </Grid>
 
-                    <Grid item>
+                    <Grid item className="gridItem">
                         <FormHelperText style={inputLabelStyle}>{formData.tracks[index].audioFile ? formData.tracks[index].audioFile.name : ""}</FormHelperText>
                     </Grid>
 
-                    <Grid item>
+                    <Grid item className="gridItem">
                         <FormControl>
                             <FormLabel id="demo-radio-buttons-group-label">Is this track an instrumental?</FormLabel>
                             <RadioGroup>
@@ -169,7 +180,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
                         </FormControl>
 
                     </Grid>
-                    <Grid item>
+                    <Grid item className="gridItem">
                         <FormControl>
                             <FormLabel id="demo-radio-buttons-group-label">Is this track a cover song?</FormLabel>
                             <RadioGroup>
@@ -216,44 +227,54 @@ function UploadMusicModal({ artistUsername, artistName }) {
                 </IconButton>
 
 
-                    <Typography id="transition-modal-title" variant="h6" style={{ textAlign: "center" }} >
-                        Upload Music
-                    </Typography>
+
                     <form onSubmit={() => alert("saved")}>
                         <Grid container
                             direction="column"
                             justifyContent="center"
-                            alignItems="center"
+                            alignItems="left"
                             spacing={2}
-                            style={{ marginTop: "15px" }}
+
+                            className="formContainer"
                         >
 
+                            <Grid item className="gridItem">
+                                <Typography id="transition-modal-title" variant="h6" style={{ textAlign: "center" }} >
+                                    Upload Music
+                                </Typography>
+                            </Grid>
+                            <Grid item className="gridItem">
+                                <FormLabel>
+                                    General Info
+                                </FormLabel>
+                            </Grid>
 
-                            <Grid item>
+                            <Grid item className="gridItem">
                                 <TextField label="Album/Single Name" variant="filled" color='primary' type="text" required value={formData.albumName} onChange={(e) => {
                                     setFormData({ ...formData, albumName: e.currentTarget.value });
-                                }} />
+                                }} fullWidth />
                             </Grid>
-                            <Grid item>
+                            <Grid item className="gridItem">
                                 <TextField label="Number Of Tracks" variant="filled" color='primary' type="number" defaultValue={1} required onChange={(e) => {
                                     setFormData({ ...formData, numberOfTracks: parseInt(e.currentTarget.value) });
-                                }} />
+                                }} fullWidth />
                             </Grid>
-                            <Grid item>
-                                <TextField variant="filled" label="Artist Name" value={artistName} color='primary' type="text" disabled />
+                            <Grid item className="gridItem">
+                                <TextField variant="filled" label="Artist Name" value={artistName} color='primary' type="text" disabled fullWidth />
                             </Grid>
-                            <Grid item>
-                                <TextField variant="filled" label="Artist Username" value={artistUsername} color='primary' type="text" disabled />
+                            <Grid item className="gridItem">
+                                <TextField variant="filled" label="Artist Username" value={artistUsername} color='primary' type="text" disabled fullWidth />
                             </Grid>
-                            <Grid item>
-                                <Divider light={false} style={{ width: "230px" }} />
+                            <Grid item className="gridItem">
+                                <Divider light={false} fullWidth />
                             </Grid>
-                            <Grid item>
+                            <Grid item className="gridItem">
                                 <FormLabel>
                                     Album Artwork
                                 </FormLabel>
                             </Grid>
-                            {<Grid item >
+
+                            {<Grid item className="gridItem">
                                 <Avatar label="Album Artwork" src={formData.albumArtworkUrl} variant="square" style={{
                                     width: "215px",
                                     height: "215px",
@@ -263,9 +284,9 @@ function UploadMusicModal({ artistUsername, artistName }) {
                                 }} ><FileUploadIcon sx={{ fontSize: 80 }} /></Avatar>
                             </Grid>}
 
-                            <Grid item>
+                            <Grid item className="gridItem">
                                 {formData.albumArtwork ?
-                                    <Button variant="contained" color="default" onClick={() => deleteAlbumArtwork()}>Delete Photo</Button>
+                                    <Button variant="contained" color="default" onClick={() => deleteAlbumArtwork()} >Delete Photo</Button>
 
                                     :
 
@@ -286,9 +307,24 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
                                 }
                             </Grid>
-
+                            <Grid item className="gridItem">
+                                <FormHelperText style={inputLabelStyle}>{formData.albumArtwork ? formData.albumArtwork.name : ""}</FormHelperText>
+                            </Grid>
 
                             {mapTrackForms()}
+
+                            <Grid item className="gridItem">
+                                <Divider light={false} fullWidth />
+                            </Grid>
+
+                            <Grid item style={{ alignSelf: 'center' }}>
+
+                                <Button variant="contained" color="primary">Upload Music</Button>
+
+
+
+                            </Grid>
+
 
 
 
