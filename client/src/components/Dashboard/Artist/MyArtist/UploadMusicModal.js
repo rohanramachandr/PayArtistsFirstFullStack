@@ -1,9 +1,9 @@
 import React, { Fragment, useContext, useEffect, useState, useRef } from 'react';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Avatar, Button, FormLabel, Divider, FormHelperText, FormControl, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
-
+import { Autocomplete } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
+import axios from 'axios';
 import { DashboardContext } from '../../DashboardContext';
 import './UploadMusicModal.css'
 
@@ -44,8 +44,20 @@ function UploadMusicModal({ artistUsername, artistName }) {
     // const [errorFlag, setErrorFlag] = useState(true);
 
     const [formData, setFormData] = useState({ albumName: "", numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null, tracks: [{ title: null, audioFile: null, cover: null, isSongwriter: null }] });
-
+    const [genreLabels, setGenreLabels] = useState([]);
     const curTracksRef = useRef(formData.tracks);
+
+    useEffect(() => {
+
+
+        const getGenreLabels = async () => {
+            const { data } = await axios.get("/api/genre/labels");
+            setGenreLabels([...data]);
+        };
+
+        getGenreLabels();
+
+    }, []);
 
 
     useEffect(() => {
@@ -126,16 +138,19 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
                     </Grid>
                     <Grid item xs={12} md={4}>
-		<Typography variant="subtitle1" gutterBottom={true}>Price USD $/Stream</Typography>
-		<TextField
-			label="Amount"
-			variant="filled"
-			type="number"
-            defaultValue={0.00}
-			placeholder="$"
-			// onChange={(event, value)=> setValue(value)}
-		/>
-	</Grid>
+                        {/* <Typography variant="subtitle1" gutterBottom={true}></Typography> */}
+                        <TextField
+                            label="Price USD $/Stream"
+                            variant="filled"
+                            type='number'
+                            placeholder="$"
+                            defaultValue={0.00}
+                            inputProps={{
+                                step: ".01"
+                            }}
+                        // onChange={(event, value)=> setValue(value)}
+                        />
+                    </Grid>
                     <Grid item className="gridItem">
 
                         {formData.tracks[index].audioFile ?
@@ -248,7 +263,12 @@ function UploadMusicModal({ artistUsername, artistName }) {
                                     General Info
                                 </FormLabel>
                             </Grid>
-
+                            <Grid item className="gridItem">
+                                <TextField variant="filled" label="Artist Name" value={artistName} color='primary' type="text" disabled fullWidth />
+                            </Grid>
+                            <Grid item className="gridItem">
+                                <TextField variant="filled" label="Artist Username" value={artistUsername} color='primary' type="text" disabled fullWidth />
+                            </Grid>
                             <Grid item className="gridItem">
                                 <TextField label="Album/Single Name" variant="filled" color='primary' type="text" required value={formData.albumName} onChange={(e) => {
                                     setFormData({ ...formData, albumName: e.currentTarget.value });
@@ -259,11 +279,17 @@ function UploadMusicModal({ artistUsername, artistName }) {
                                     setFormData({ ...formData, numberOfTracks: parseInt(e.currentTarget.value) });
                                 }} fullWidth />
                             </Grid>
-                            <Grid item className="gridItem">
-                                <TextField variant="filled" label="Artist Name" value={artistName} color='primary' type="text" disabled fullWidth />
-                            </Grid>
-                            <Grid item className="gridItem">
-                                <TextField variant="filled" label="Artist Username" value={artistUsername} color='primary' type="text" disabled fullWidth />
+                            
+                            <Grid item xs={12} md={4}>
+                                {/* <Typography variant="subtitle1" gutterBottom={true}></Typography> */}
+
+                                <Autocomplete
+                                    disablePortal
+
+                                    options={genreLabels}
+                                    fullWidth
+                                    renderInput={(params) => <TextField {...params} label="Genre" variant="filled" color='primary' type="text"/>}
+                                />
                             </Grid>
                             <Grid item className="gridItem">
                                 <Divider light={false} fullWidth />
