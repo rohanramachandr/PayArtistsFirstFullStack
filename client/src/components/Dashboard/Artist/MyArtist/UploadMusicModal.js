@@ -43,9 +43,21 @@ function UploadMusicModal({ artistUsername, artistName }) {
     // const [errors, setErrors] = useState({ artistUsername: [], artistName: [] });
     // const [errorFlag, setErrorFlag] = useState(true);
 
-    const [formData, setFormData] = useState({ albumName: "", numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null, tracks: [{ title: null, audioFile: null, cover: null, isSongwriter: null }] });
+    const [formData, setFormData] = useState({ albumName: "", numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null, tracks: [{ title: null, audioFile: null, cover: null, isSongwriter: null, price: 0, duration: null }] });
     const [genreLabels, setGenreLabels] = useState([]);
     const curTracksRef = useRef(formData.tracks);
+    var audio = document.createElement('audio');
+
+    audio.onloadedmetadata = () => {
+        // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
+        var duration = audio.duration;
+
+        // example 12.3234 seconds
+        console.log("The duration of the song is of: " + duration + " seconds");
+        // Alternatively, just display the integer value with
+        // parseInt(duration)
+        // 12 seconds
+    };
 
     useEffect(() => {
 
@@ -56,6 +68,8 @@ function UploadMusicModal({ artistUsername, artistName }) {
         };
 
         getGenreLabels();
+
+
 
     }, []);
 
@@ -106,12 +120,37 @@ function UploadMusicModal({ artistUsername, artistName }) {
         setFormData({ ...formData, albumArtwork: event.target.files[0], albumArtworkUrl: URL.createObjectURL(event.target.files[0]) })
     };
 
+    const formatTime = (seconds) => {
+        var time = Math.round(seconds);
+        var minutes = Math.floor(time / 60);
+        seconds = time - minutes * 60;
+
+        var extraZero = "";
+
+        if (seconds < 10) {
+            extraZero = "0";
+        }
+        return minutes + ":" + extraZero + seconds;
+    };
+
 
     const onAudioFileChange = (event, index) => {
 
 
         var copyTracks = formData.tracks.slice();
         copyTracks[index].audioFile = event.target.files[0];
+        audio.src = event.target.files[0];
+        console.log("set audio src");
+        // audio.onloadedmetadata = (event) => {
+        //     // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
+        //     var duration = formatTime(audio.duration);
+
+        //     // example 12.3234 seconds
+        //     console.log("The duration of the song is of: " + duration);
+        //     copyTracks[index].duration = duration;
+        // };
+
+
         setFormData({ ...formData, tracks: [...copyTracks] })
     };
 
@@ -279,7 +318,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
                                     setFormData({ ...formData, numberOfTracks: parseInt(e.currentTarget.value) });
                                 }} fullWidth />
                             </Grid>
-                            
+
                             <Grid item xs={12} md={4}>
                                 {/* <Typography variant="subtitle1" gutterBottom={true}></Typography> */}
 
@@ -288,7 +327,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
                                     options={genreLabels}
                                     fullWidth
-                                    renderInput={(params) => <TextField {...params} label="Genre" variant="filled" color='primary' type="text"/>}
+                                    renderInput={(params) => <TextField {...params} label="Genre" variant="filled" color='primary' type="text" />}
                                 />
                             </Grid>
                             <Grid item className="gridItem">
