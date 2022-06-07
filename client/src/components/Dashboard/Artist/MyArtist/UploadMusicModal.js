@@ -46,18 +46,20 @@ function UploadMusicModal({ artistUsername, artistName }) {
     const [formData, setFormData] = useState({ albumName: "", numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null, tracks: [{ title: null, audioFile: null, cover: null, isSongwriter: null, price: 0, duration: null }] });
     const [genreLabels, setGenreLabels] = useState([]);
     const curTracksRef = useRef(formData.tracks);
-    var audio = document.createElement('audio');
+    const [currentMusicFile, setCurrentMusicFile] = useState({index: null, file: null, mediaType: null});
+    const audioPlayer = useRef(null);
+    const player = audioPlayer.current;
 
-    audio.onloadedmetadata = () => {
-        // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
-        var duration = audio.duration;
+    // audio.onloadedmetadata = () => {
+    //     // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
+    //     var duration = audio.duration;
 
-        // example 12.3234 seconds
-        console.log("The duration of the song is of: " + duration + " seconds");
-        // Alternatively, just display the integer value with
-        // parseInt(duration)
-        // 12 seconds
-    };
+    //     // example 12.3234 seconds
+    //     console.log("The duration of the song is of: " + duration + " seconds");
+    //     // Alternatively, just display the integer value with
+    //     // parseInt(duration)
+    //     // 12 seconds
+    // };
 
     useEffect(() => {
 
@@ -120,6 +122,15 @@ function UploadMusicModal({ artistUsername, artistName }) {
         setFormData({ ...formData, albumArtwork: event.target.files[0], albumArtworkUrl: URL.createObjectURL(event.target.files[0]) })
     };
 
+    useEffect(() => {
+        if (audioPlayer.current) {
+             audioPlayer.current.pause();
+            audioPlayer.current.load();
+        }
+       
+
+    }, [currentMusicFile])
+
     const formatTime = (seconds) => {
         var time = Math.round(seconds);
         var minutes = Math.floor(time / 60);
@@ -133,23 +144,34 @@ function UploadMusicModal({ artistUsername, artistName }) {
         return minutes + ":" + extraZero + seconds;
     };
 
+    const updateDuration = () => {
+        var copyTracks = formData.tracks.slice();
+        copyTracks[currentMusicFile.index].duration = formatTime(audioPlayer.current.duration);
+        setFormData({ ...formData, tracks: [...copyTracks] })
 
+    }
     const onAudioFileChange = (event, index) => {
 
 
         var copyTracks = formData.tracks.slice();
         copyTracks[index].audioFile = event.target.files[0];
-        audio.src = event.target.files[0];
-        console.log("set audio src");
-        // audio.onloadedmetadata = (event) => {
-        //     // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
-        //     var duration = formatTime(audio.duration);
+        //audio.src = event.target.files[0];
+        //console.log("file music type",event.target.files[0].name.split('.').pop());
+        const fileType = event.target.files[0].name.split('.').pop();
+        var mediaType = "";
+        if (fileType === 'wav') {
+            mediaType = 'audio/wav';
 
-        //     // example 12.3234 seconds
-        //     console.log("The duration of the song is of: " + duration);
-        //     copyTracks[index].duration = duration;
-        // };
+        }
+        else {
+            mediaType = 'audio/mpeg';
+        }
 
+        setCurrentMusicFile({index, file: URL.createObjectURL(event.target.files[0]), mediaType});
+        
+        
+
+    
 
         setFormData({ ...formData, tracks: [...copyTracks] })
     };
@@ -163,7 +185,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
             return (
                 <Fragment key={index}>
                     <Grid item className="gridItem">
-                        <Divider light={false} fullWidth />
+                        <Divider light={false} />
                     </Grid>
 
                     <Grid item className="gridItem">
@@ -176,7 +198,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
                         <TextField label="Track Title" variant="filled" color='primary' type="text" required fullWidth />
 
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={3}>
                         {/* <Typography variant="subtitle1" gutterBottom={true}></Typography> */}
                         <TextField
                             label="Price USD $/Stream"
@@ -187,19 +209,20 @@ function UploadMusicModal({ artistUsername, artistName }) {
                             inputProps={{
                                 step: ".01"
                             }}
+                            fullWidth
                         // onChange={(event, value)=> setValue(value)}
                         />
                     </Grid>
                     <Grid item className="gridItem">
 
                         {formData.tracks[index].audioFile ?
-                            <Button variant="contained" color="default" onClick={() => deleteAudioFile(index)}>Delete Audio File</Button>
+                            <Button variant="outlined" color="default" onClick={() => deleteAudioFile(index)}>Delete Audio File</Button>
 
                             :
 
                             <>
                                 <Button
-                                    variant="contained"
+                                    variant="outlined"
                                     component="label"
                                     color="primary"
 
@@ -286,7 +309,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
                         <Grid container
                             direction="column"
                             justifyContent="center"
-                            alignItems="left"
+                            
                             spacing={2}
 
                             className="formContainer"
@@ -327,11 +350,12 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
                                     options={genreLabels}
                                     fullWidth
+                                    blurOnSelect
                                     renderInput={(params) => <TextField {...params} label="Genre" variant="filled" color='primary' type="text" />}
                                 />
                             </Grid>
                             <Grid item className="gridItem">
-                                <Divider light={false} fullWidth />
+                                <Divider light={false} />
                             </Grid>
                             <Grid item className="gridItem">
                                 <FormLabel>
@@ -351,12 +375,12 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
                             <Grid item className="gridItem">
                                 {formData.albumArtwork ?
-                                    <Button variant="contained" color="default" onClick={() => deleteAlbumArtwork()} >Delete Photo</Button>
+                                    <Button variant="outlined" color="default" onClick={() => deleteAlbumArtwork()} >Delete Photo</Button>
 
                                     :
 
                                     <Button
-                                        variant="contained"
+                                        variant="outlined"
                                         component="label"
                                         color="primary"
 
@@ -379,12 +403,12 @@ function UploadMusicModal({ artistUsername, artistName }) {
                             {mapTrackForms()}
 
                             <Grid item className="gridItem">
-                                <Divider light={false} fullWidth />
+                                <Divider light={false}  />
                             </Grid>
 
                             <Grid item style={{ alignSelf: 'center' }}>
 
-                                <Button variant="contained" color="primary">Upload Music</Button>
+                                <Button variant="contained" color="primary" onClick={() => console.log(formData)}>Upload Music</Button>
 
 
 
@@ -404,9 +428,21 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
 
 
+                    <audio
+                    
+                   onLoadedMetadata={() => updateDuration()}
+                    ref={audioPlayer}
+                    
+                >
+<source
+          src={currentMusicFile.file}
+          type={currentMusicFile.mediaType}
+        />
 
+                </audio>
                 </Box>
             </Fade>
+      
         </Modal>
 
     );
