@@ -52,6 +52,16 @@ function UploadMusicModal({ artistUsername, artistName }) {
     const audioPlayer = useRef(null);
 
 
+    const [errors, setErrors] = useState({ albumName: [], numberOfTracks: [], genre: [], albumArtwork: [], tracks: [] });//array for each active step
+    const [errorFlag, setErrorFlag] = useState(true);
+
+
+
+
+
+
+
+
     useEffect(() => {
         setFormData(formData => { return { ...formData, general: { ...formData.general, artistName } } });
 
@@ -76,7 +86,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
 
     useEffect(() => {
-      
+
         var i = 0;
         if (!isNaN(formData.general.numberOfTracks) && formData.general.numberOfTracks > 0) {
             let newTracks = [...curTracksRef.current];
@@ -111,6 +121,73 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
 
     }, [currentMusicFile]);
+
+
+    const submitForm = () => {
+        let tempErrors = { albumName: [], numberOfTracks: [], genre: [], albumArtwork: [], tracks: [] };
+
+        if (formData.general.albumName.trim().length === 0) {
+            tempErrors.albumName.push("Album name is required");
+        }
+        
+        if (formData.general.albumName.trim().length >= 40) {
+            tempErrors.albumName.push("Album name must be less than 40 characters");
+        }
+        if (!formData.general.genre) {
+            tempErrors.genre.push("Genre is required");
+        }
+        if (isNaN(formData.general.numberOfTracks)) {
+            tempErrors.numberOfTracks.push("Number of tracks is required");
+        }
+        if (!isNaN(formData.general.numberOfTracks) && (formData.general.numberOfTracks <= 0 || formData.general.numberOfTracks > 40)) {
+            tempErrors.numberOfTracks.push("Number of tracks must be greater than 0 and less than 40");
+        }
+        if (!formData.general.albumArtwork) {
+            tempErrors.albumArtwork.push("Album artwork is required");
+        }
+        let numTrackErrors = 0;
+        formData.tracks.forEach((track, index) => {
+            let trackError = { title: [], audioFile: [], cover: [], hasLyrics: [], price: [] };
+            if (track.title === "") {
+                trackError.title.push(`Track ${index + 1} must have a title`);
+            }
+            if (!track.audioFile) {
+                trackError.audioFile.push(`Track ${index + 1} must have an audio file`);
+            }
+            if (track.cover === null) {
+                trackError.cover.push(`This field is required`);
+            }
+            if (track.hasLyrics === null) {
+                trackError.hasLyrics.push(`This field is required`);
+            }
+            if (isNaN(track.price)) {
+                trackError.price.push(`Track price must be a number`);
+            }
+            if (!isNaN(track.price) && track.price < 0) {
+                trackError.price.push(`Track price cannot be negative`);
+            }
+
+            if (trackError.title.length || trackError.audioFile.length || trackError.cover.length || trackError.hasLyrics.length || trackError.price.length) {
+                numTrackErrors++;
+                tempErrors.tracks.push({ ...trackError });
+            }
+            else {
+                tempErrors.tracks.push(null);
+            }
+        });
+
+
+        if (tempErrors.albumName.length || tempErrors.genre.length || tempErrors.numberOfTracks.length || tempErrors.albumArtwork.length || numTrackErrors) {
+            console.log("tempErrors", tempErrors);
+            setErrors({ ...tempErrors });
+
+            return;
+        }
+
+        //post request
+
+     
+    };
 
     const handleClose = () => {
         setUploadMusicOpen(false);
@@ -179,7 +256,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
     const findGenreIdFromLabel = (name) => {
         var id = ""
-         genreLabels.forEach(genre => {
+        genreLabels.forEach(genre => {
             if (genre.label === name) {
                 id = genre.id
             }
@@ -209,13 +286,13 @@ function UploadMusicModal({ artistUsername, artistName }) {
                     </Grid>
                     <Grid item className="gridItem">
 
-                        <TextField label="Track Title" variant="filled" color='primary' type="text" value={track.title} required fullWidth onChange={ (e) => {
+                        <TextField label="Track Title" variant="filled" color='primary' type="text" value={track.title} required fullWidth onChange={(e) => {
                             var copyTracks = formData.tracks.slice();
                             copyTracks[index].title = e.currentTarget.value;
-                            setFormData({ ...formData, tracks: [...copyTracks]});
-                        
+                            setFormData({ ...formData, tracks: [...copyTracks] });
+
                         }
-                        }/>
+                        } />
 
                     </Grid>
                     <Grid item xs={12} md={3}>
@@ -230,11 +307,11 @@ function UploadMusicModal({ artistUsername, artistName }) {
                                 step: ".01"
                             }}
                             fullWidth
-                            onChange={ (e) => {
+                            onChange={(e) => {
                                 var copyTracks = formData.tracks.slice();
                                 copyTracks[index].price = parseFloat(e.currentTarget.value);
-                                setFormData({ ...formData, tracks: [...copyTracks]});
-                            
+                                setFormData({ ...formData, tracks: [...copyTracks] });
+
                             }
                             }
                         />
@@ -277,18 +354,18 @@ function UploadMusicModal({ artistUsername, artistName }) {
                         <FormControl>
                             <FormLabel>Is this track an instrumental?</FormLabel>
                             <RadioGroup
-                            value={track.hasLyrics}
-                            onChange={(e) => {
-                                var copyTracks = formData.tracks.slice();
-                                copyTracks[index].hasLyrics = e.currentTarget.value === 'true';
-                                setFormData({ ...formData, tracks: [...copyTracks]});
+                                value={track.hasLyrics}
+                                onChange={(e) => {
+                                    var copyTracks = formData.tracks.slice();
+                                    copyTracks[index].hasLyrics = e.currentTarget.value === 'true';
+                                    setFormData({ ...formData, tracks: [...copyTracks] });
 
-                            }}
-                            
+                                }}
+
                             >
                                 <FormControlLabel value={false} control={<Radio />} label="Yes, this track does not contain lyrics" />
                                 <FormControlLabel value={true} control={<Radio />} label="Nope, this song contains lyrics" />
-                                
+
                             </RadioGroup>
                         </FormControl>
 
@@ -301,13 +378,13 @@ function UploadMusicModal({ artistUsername, artistName }) {
                                 onChange={(e) => {
                                     var copyTracks = formData.tracks.slice();
                                     copyTracks[index].cover = e.currentTarget.value === 'true';
-                                    setFormData({ ...formData, tracks: [...copyTracks]});
-    
+                                    setFormData({ ...formData, tracks: [...copyTracks] });
+
                                 }}
                             >
                                 <FormControlLabel value={true} control={<Radio />} label="Yes, another artist wrote this song" />
                                 <FormControlLabel value={false} control={<Radio />} label="Nope, I wrote this song" />
-                                
+
                             </RadioGroup>
                         </FormControl>
 
@@ -350,7 +427,6 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
 
 
-                    <form onSubmit={() => alert("saved")}>
                         <Grid container
                             direction="column"
                             justifyContent="center"
@@ -371,7 +447,9 @@ function UploadMusicModal({ artistUsername, artistName }) {
                                 </FormLabel>
                             </Grid>
                             <Grid item className="gridItem">
-                                <TextField variant="filled" label="Artist Name" value={artistName} color='primary' type="text" disabled fullWidth />
+                                <TextField variant="filled" label="Artist Name" value={artistName} color='primary' type="text" disabled fullWidth
+
+                                />
                             </Grid>
                             <Grid item className="gridItem">
                                 <TextField variant="filled" label="Artist Username" value={artistUsername} color='primary' type="text" disabled fullWidth />
@@ -379,10 +457,12 @@ function UploadMusicModal({ artistUsername, artistName }) {
                             <Grid item className="gridItem">
                                 <TextField label="Album/Single Name" variant="filled" color='primary' type="text" required value={formData.general.albumName} onChange={(e) => {
                                     setFormData({ ...formData, general: { ...formData.general, albumName: e.currentTarget.value } });
-                                }} fullWidth />
+                                }}
+
+                                    fullWidth />
                             </Grid>
                             <Grid item className="gridItem">
-                                <TextField label="Number Of Tracks" variant="filled" color='primary' type="number" value={formData.general.numberOfTracks} required onChange={(e) => {
+                                <TextField label="Number Of Tracks" variant="filled" color='primary' type="number" defaultValue={1} required onChange={(e) => {
                                     setFormData({ ...formData, general: { ...formData.general, numberOfTracks: parseInt(e.currentTarget.value) } });
                                 }} fullWidth />
                             </Grid>
@@ -396,13 +476,13 @@ function UploadMusicModal({ artistUsername, artistName }) {
                                     options={genreLabels}
                                     fullWidth
                                     blurOnSelect
-                              
+
                                     onInputChange={(e, value) => {
                                         console.log("auto complete event", e, value)
                                         setFormData({ ...formData, general: { ...formData.general, genre: findGenreIdFromLabel(`${value}`) } });
                                     }}
                                     renderInput={(params) => <TextField {...params} label="Genre" variant="filled" color='primary' type="text" />}
-                                    
+
                                 />
                             </Grid>
                             <Grid item className="gridItem">
@@ -459,7 +539,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
                             <Grid item style={{ alignSelf: 'center' }}>
 
-                                <Button variant="contained" color="primary" onClick={() => console.log(formData)}>Upload Music</Button>
+                                <Button variant="contained" color="primary" onClick={() => submitForm()}>Upload Music</Button>
 
 
 
@@ -471,8 +551,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
                         </Grid>
 
 
-                    </form>
-
+                  
 
 
 
