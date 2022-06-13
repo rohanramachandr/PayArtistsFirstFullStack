@@ -47,15 +47,14 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
     const [formData, setFormData] = useState({ general: { artistUsername, artistName: "", albumName: "", genre: null, numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null }, tracks: [{ title: "", audioFile: null, cover: null, hasLyrics: null, price: 0, duration: null, mediaType: null }] });
     const [genreLabels, setGenreLabels] = useState([]);
-    const curTracksRef = useRef(formData.tracks);
+ 
 
     const [currentMusicFile, setCurrentMusicFile] = useState({ index: null, file: null, mediaType: null });
     const audioPlayer = useRef(null);
 
 
     const [errors, setErrors] = useState({ albumName: [], numberOfTracks: [], genre: [], albumArtwork: [], tracks: [{ title: [], audioFile: [], cover: [], hasLyrics: [], price: [] }] });//array for each active step
-    const [errorFlag, setErrorFlag] = useState(true);
-    const trackErrorsRef = useRef(errors.tracks);
+    
 
 
 
@@ -102,7 +101,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
                 }
             }
             else {
-                const numRemovedTracks = curTracksRef.current.length - formData.general.numberOfTracks;
+                const numRemovedTracks = formData.tracks.length - formData.general.numberOfTracks;
                 for (i = 0; i < numRemovedTracks; i++) {
                     newTracks.pop();
                     newErrorTracks.pop();
@@ -121,6 +120,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
 
     useEffect(() => {
+        console.log("calling update tracks");
         updateTracks();
 
     }, [formData.general.numberOfTracks]);
