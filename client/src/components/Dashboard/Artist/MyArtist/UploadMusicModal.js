@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState, useRef } from 'react';
+import React, { Fragment, useContext, useEffect, useState, useRef, useCallback } from 'react';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Avatar, Button, FormLabel, Divider, FormHelperText, FormControl, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { Autocomplete } from '@mui/material';
@@ -48,13 +48,14 @@ function UploadMusicModal({ artistUsername, artistName }) {
     const [formData, setFormData] = useState({ general: { artistUsername, artistName: "", albumName: "", genre: null, numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null }, tracks: [{ title: "", audioFile: null, cover: null, hasLyrics: null, price: 0, duration: null, mediaType: null }] });
     const [genreLabels, setGenreLabels] = useState([]);
     const curTracksRef = useRef(formData.tracks);
+
     const [currentMusicFile, setCurrentMusicFile] = useState({ index: null, file: null, mediaType: null });
     const audioPlayer = useRef(null);
 
 
-    const [errors, setErrors] = useState({ albumName: [], numberOfTracks: [], genre: [], albumArtwork: [], tracks: [] });//array for each active step
+    const [errors, setErrors] = useState({ albumName: [], numberOfTracks: [], genre: [], albumArtwork: [], tracks: [{ title: [], audioFile: [], cover: [], hasLyrics: [], price: [] }] });//array for each active step
     const [errorFlag, setErrorFlag] = useState(true);
-
+    const trackErrorsRef = useRef(errors.tracks);
 
 
 
@@ -85,15 +86,18 @@ function UploadMusicModal({ artistUsername, artistName }) {
     }, []);
 
 
-    useEffect(() => {
-
+    const updateTracks = useCallback(() => {
+        
         var i = 0;
         if (!isNaN(formData.general.numberOfTracks) && formData.general.numberOfTracks > 0) {
-            let newTracks = [...curTracksRef.current];
-            if (formData.general.numberOfTracks > curTracksRef.current.length) {
-                const numNewTracks = formData.general.numberOfTracks - curTracksRef.current.length;
+            let newTracks = [...formData.tracks];
+            console.log("newTrakcs", newTracks.slice())
+            let newErrorTracks = [...errors.tracks];
+            if (formData.general.numberOfTracks > formData.tracks.length) {
+                const numNewTracks = formData.general.numberOfTracks - formData.tracks.length;
                 for (i = 0; i < numNewTracks; i++) {
                     newTracks.push({ title: "", audioFile: null, cover: null, hasLyrics: null, price: 0, duration: null, mediaType: null });
+                    newErrorTracks.push({ title: [], audioFile: [], cover: [], hasLyrics: [], price: [] });
 
                 }
             }
@@ -101,6 +105,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
                 const numRemovedTracks = curTracksRef.current.length - formData.general.numberOfTracks;
                 for (i = 0; i < numRemovedTracks; i++) {
                     newTracks.pop();
+                    newErrorTracks.pop();
 
                 }
 
@@ -108,8 +113,15 @@ function UploadMusicModal({ artistUsername, artistName }) {
             }
 
             setFormData(formData => { return { ...formData, tracks: [...newTracks] } });
+            setErrors(errors => { return { ...errors, tracks: [...newErrorTracks] } })
 
         }
+
+    }, [formData, errors.tracks]);
+
+
+    useEffect(() => {
+        updateTracks();
 
     }, [formData.general.numberOfTracks]);
 
@@ -129,7 +141,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
         if (formData.general.albumName.trim().length === 0) {
             tempErrors.albumName.push("Album name is required");
         }
-        
+
         if (formData.general.albumName.trim().length >= 40) {
             tempErrors.albumName.push("Album name must be less than 40 characters");
         }
@@ -172,7 +184,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
                 tempErrors.tracks.push({ ...trackError });
             }
             else {
-                tempErrors.tracks.push(null);
+                tempErrors.tracks.push({title: [], audioFile: [], cover: [], hasLyrics: [], price: []});
             }
         });
 
@@ -186,7 +198,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
         //post request
 
-     
+
     };
 
     const handleClose = () => {
@@ -286,13 +298,16 @@ function UploadMusicModal({ artistUsername, artistName }) {
                     </Grid>
                     <Grid item className="gridItem">
 
-                        <TextField label="Track Title" variant="filled" color='primary' type="text" value={track.title} required fullWidth onChange={(e) => {
+                        <TextField label="Track Title" variant="filled" color='primary' type="text" value={formData.tracks[index].title} required fullWidth onChange={(e) => {
                             var copyTracks = formData.tracks.slice();
                             copyTracks[index].title = e.currentTarget.value;
                             setFormData({ ...formData, tracks: [...copyTracks] });
 
                         }
-                        } />
+                        }
+                            error={errors.tracks[index].title.length > 0}
+                            helperText={errors.tracks[index].title.length > 0 ? errors.tracks[index].title[0] : null}
+                        />
 
                     </Grid>
                     <Grid item xs={12} md={3}>
@@ -302,7 +317,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
                             variant="filled"
                             type='number'
                             placeholder="$"
-                            defaultValue={0.00}
+                            value={formData.tracks[index].price}
                             inputProps={{
                                 step: ".01"
                             }}
@@ -314,6 +329,8 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
                             }
                             }
+                            error={errors.tracks[index].price.length > 0}
+                            helperText={errors.tracks[index].price.length > 0 ? errors.tracks[index].price[0] : null}
                         />
                     </Grid>
                     <Grid item className="gridItem">
@@ -347,12 +364,13 @@ function UploadMusicModal({ artistUsername, artistName }) {
                     </Grid>
 
                     <Grid item className="gridItem">
-                        <FormHelperText style={inputLabelStyle}>{formData.tracks[index].audioFile ? formData.tracks[index].audioFile.name : ""}</FormHelperText>
+                        <FormHelperText style={{ ...inputLabelStyle, color: formData.tracks[index].audioFile ? "rgba(0, 0, 0, 0.54)" : "red" }}>{formData.tracks[index].audioFile ? formData.tracks[index].audioFile.name : errors.tracks[index].audioFile.length > 0 ? errors.tracks[index].audioFile[0] : ""}</FormHelperText>
                     </Grid>
 
                     <Grid item className="gridItem">
-                        <FormControl>
+                        <FormControl error={errors.tracks[index].hasLyrics.length > 0}>
                             <FormLabel>Is this track an instrumental?</FormLabel>
+                            <FormHelperText>{errors.tracks[index].hasLyrics.length > 0 ? errors.tracks[index].hasLyrics[0] : null}</FormHelperText>
                             <RadioGroup
                                 value={track.hasLyrics}
                                 onChange={(e) => {
@@ -367,12 +385,14 @@ function UploadMusicModal({ artistUsername, artistName }) {
                                 <FormControlLabel value={true} control={<Radio />} label="Nope, this song contains lyrics" />
 
                             </RadioGroup>
+                            
                         </FormControl>
 
                     </Grid>
                     <Grid item className="gridItem">
-                        <FormControl>
+                        <FormControl error={errors.tracks[index].cover.length > 0}>
                             <FormLabel>Is this track a cover song?</FormLabel>
+                            <FormHelperText>{errors.tracks[index].cover.length > 0 ? errors.tracks[index].cover[0] : null}</FormHelperText>
                             <RadioGroup
                                 value={track.cover}
                                 onChange={(e) => {
@@ -427,131 +447,133 @@ function UploadMusicModal({ artistUsername, artistName }) {
 
 
 
-                        <Grid container
-                            direction="column"
-                            justifyContent="center"
+                    <Grid container
+                        direction="column"
+                        justifyContent="center"
 
-                            spacing={2}
+                        spacing={2}
 
-                            className="formContainer"
-                        >
+                        className="formContainer"
+                    >
 
-                            <Grid item className="gridItem">
-                                <Typography id="transition-modal-title" variant="h6" style={{ textAlign: "center" }} >
-                                    Upload Music
-                                </Typography>
-                            </Grid>
-                            <Grid item className="gridItem">
-                                <FormLabel>
-                                    General Info
-                                </FormLabel>
-                            </Grid>
-                            <Grid item className="gridItem">
-                                <TextField variant="filled" label="Artist Name" value={artistName} color='primary' type="text" disabled fullWidth
+                        <Grid item className="gridItem">
+                            <Typography id="transition-modal-title" variant="h6" style={{ textAlign: "center" }} >
+                                Upload Music
+                            </Typography>
+                        </Grid>
+                        <Grid item className="gridItem">
+                            <FormLabel>
+                                General Info
+                            </FormLabel>
+                        </Grid>
+                        <Grid item className="gridItem">
+                            <TextField variant="filled" label="Artist Name" value={artistName} color='primary' type="text" disabled fullWidth
 
-                                />
-                            </Grid>
-                            <Grid item className="gridItem">
-                                <TextField variant="filled" label="Artist Username" value={artistUsername} color='primary' type="text" disabled fullWidth />
-                            </Grid>
-                            <Grid item className="gridItem">
-                                <TextField label="Album/Single Name" variant="filled" color='primary' type="text" required value={formData.general.albumName} onChange={(e) => {
-                                    setFormData({ ...formData, general: { ...formData.general, albumName: e.currentTarget.value } });
+                            />
+                        </Grid>
+                        <Grid item className="gridItem">
+                            <TextField variant="filled" label="Artist Username" value={artistUsername} color='primary' type="text" disabled fullWidth />
+                        </Grid>
+                        <Grid item className="gridItem">
+                            <TextField label="Album/Single Name" variant="filled" color='primary' type="text" required value={formData.general.albumName} error={errors.albumName.length > 0} helperText={errors.albumName.length > 0 ? errors.albumName[0] : null} onChange={(e) => {
+                                setFormData({ ...formData, general: { ...formData.general, albumName: e.currentTarget.value } });
+                            }}
+
+                                fullWidth />
+                        </Grid>
+                        <Grid item className="gridItem">
+                            <TextField label="Number Of Tracks" variant="filled" color='primary' type="number" defaultValue={1} error={errors.numberOfTracks.length > 0} helperText={errors.numberOfTracks.length > 0 ? errors.numberOfTracks[0] : null} required onChange={(e) => {
+                                setFormData({ ...formData, general: { ...formData.general, numberOfTracks: parseInt(e.currentTarget.value) } });
+                            }} fullWidth />
+                        </Grid>
+
+                        <Grid item xs={12} md={4}>
+                            {/* <Typography variant="subtitle1" gutterBottom={true}></Typography> */}
+
+                            <Autocomplete
+                                disablePortal
+
+                                options={genreLabels}
+                                fullWidth
+                                blurOnSelect
+
+                                onInputChange={(e, value) => {
+                                    console.log("auto complete event", e, value)
+                                    setFormData({ ...formData, general: { ...formData.general, genre: findGenreIdFromLabel(`${value}`) } });
                                 }}
 
-                                    fullWidth />
-                            </Grid>
-                            <Grid item className="gridItem">
-                                <TextField label="Number Of Tracks" variant="filled" color='primary' type="number" defaultValue={1} required onChange={(e) => {
-                                    setFormData({ ...formData, general: { ...formData.general, numberOfTracks: parseInt(e.currentTarget.value) } });
-                                }} fullWidth />
-                            </Grid>
+                                renderInput={(params) => <TextField {...params} label="Genre" variant="filled" color='primary' type="text" error={errors.genre.length > 0} helperText={errors.genre.length > 0 ? errors.genre[0] : null} />}
 
-                            <Grid item xs={12} md={4}>
-                                {/* <Typography variant="subtitle1" gutterBottom={true}></Typography> */}
+                            />
+                        </Grid>
+                        <Grid item className="gridItem">
+                            <Divider light={false} />
+                        </Grid>
+                        <Grid item className="gridItem">
+                            <FormLabel>
+                                Album Artwork
+                            </FormLabel>
+                        </Grid>
 
-                                <Autocomplete
-                                    disablePortal
+                        {<Grid item className="gridItem">
+                            <Avatar label="Album Artwork" src={formData.general.albumArtworkUrl} variant="square" style={{
+                                width: "215px",
+                                height: "215px",
+                                border: `${formData.general.albumArtworkUrl ? '2px solid #ec148c' : 'none'}`,
+                                borderRadius: '12px'
 
-                                    options={genreLabels}
-                                    fullWidth
-                                    blurOnSelect
+                            }} ><FileUploadIcon sx={{ fontSize: 80 }} /></Avatar>
+                        </Grid>}
 
-                                    onInputChange={(e, value) => {
-                                        console.log("auto complete event", e, value)
-                                        setFormData({ ...formData, general: { ...formData.general, genre: findGenreIdFromLabel(`${value}`) } });
-                                    }}
-                                    renderInput={(params) => <TextField {...params} label="Genre" variant="filled" color='primary' type="text" />}
+                        <Grid item className="gridItem">
+                            {formData.general.albumArtwork ?
+                                <Button variant="outlined" color="default" onClick={() => deleteAlbumArtwork()} >Delete Photo</Button>
 
-                                />
-                            </Grid>
-                            <Grid item className="gridItem">
-                                <Divider light={false} />
-                            </Grid>
-                            <Grid item className="gridItem">
-                                <FormLabel>
-                                    Album Artwork
-                                </FormLabel>
-                            </Grid>
+                                :
 
-                            {<Grid item className="gridItem">
-                                <Avatar label="Album Artwork" src={formData.general.albumArtworkUrl} variant="square" style={{
-                                    width: "215px",
-                                    height: "215px",
-                                    border: `${formData.general.albumArtworkUrl ? '2px solid #ec148c' : 'none'}`,
-                                    borderRadius: '12px'
-
-                                }} ><FileUploadIcon sx={{ fontSize: 80 }} /></Avatar>
-                            </Grid>}
-
-                            <Grid item className="gridItem">
-                                {formData.general.albumArtwork ?
-                                    <Button variant="outlined" color="default" onClick={() => deleteAlbumArtwork()} >Delete Photo</Button>
-
-                                    :
-
-                                    <Button
-                                        variant="outlined"
-                                        component="label"
-                                        color="primary"
-
-                                    >
-                                        Upload Image
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            hidden
-                                            onChange={(event) => onImageFileChange(event)}
-                                        />
-                                    </Button>
-
-                                }
-                            </Grid>
-                            <Grid item className="gridItem">
-                                <FormHelperText style={inputLabelStyle}>{formData.general.albumArtwork ? formData.general.albumArtwork.name : ""}</FormHelperText>
-                            </Grid>
-
-                            {mapTrackForms()}
-
-                            <Grid item className="gridItem">
-                                <Divider light={false} />
-                            </Grid>
-
-                            <Grid item style={{ alignSelf: 'center' }}>
-
-                                <Button variant="contained" color="primary" onClick={() => submitForm()}>Upload Music</Button>
+                                <Button
+                                    variant="outlined"
+                                    component="label"
+                                    color="primary"
 
 
+                                >
+                                    Upload Image
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        hidden
+                                        onChange={(event) => onImageFileChange(event)}
+                                    />
+                                </Button>
 
-                            </Grid>
+                            }
+                        </Grid>
+                        <Grid item className="gridItem">
+                            <FormHelperText style={{ ...inputLabelStyle, color: formData.general.albumArtwork ? "rgba(0, 0, 0, 0.54)" : "red" }}>{formData.general.albumArtwork ? formData.general.albumArtwork.name : errors.albumArtwork.length > 0 ? errors.albumArtwork[0] : ""}</FormHelperText>
+                        </Grid>
 
+                        {mapTrackForms()}
+
+                        <Grid item className="gridItem">
+                            <Divider light={false} />
+                        </Grid>
+
+                        <Grid item style={{ alignSelf: 'center' }}>
+
+                            <Button variant="contained" color="primary" onClick={() => submitForm()}>Upload Music</Button>
 
 
 
                         </Grid>
 
 
-                  
+
+
+                    </Grid>
+
+
+
 
 
 

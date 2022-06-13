@@ -12,6 +12,7 @@ const theme = createTheme({
           
           main:'#ec148c'
         },
+       
          
         
         secondary: {
