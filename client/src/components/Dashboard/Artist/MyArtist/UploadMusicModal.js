@@ -188,7 +188,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
             }
         });
 
-
+        console.log("formData", formData);
         if (tempErrors.albumName.length || tempErrors.genre.length || tempErrors.numberOfTracks.length || tempErrors.albumArtwork.length || numTrackErrors) {
             console.log("tempErrors", tempErrors);
             setErrors({ ...tempErrors });
@@ -197,7 +197,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
         }
 
         //post request
-
+        
 
     };
 
