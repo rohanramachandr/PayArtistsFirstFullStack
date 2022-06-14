@@ -557,7 +557,7 @@ const ResponsivePlayingBar = ({
                             direction="row"
                             justifyContent="space-evenly"
                             alignItems="center"
-                            style={{ maxWidth: '290px', height: '80px', margin: '0 auto' }}
+                            style={{ maxWidth: '290px', height: '80px', margin: '0 auto', marginTop: '-60px' }}
                         >
                             <PreviousButton playPrevious={playPrevious} />
                             <PlayPauseButton player={player} audioState={audioState} />

@@ -46,7 +46,7 @@ const MusicArt = ({ data, rating, audioEl, setPlayerState }) => {
 
   const artContainerStyle = {
 
-    padding: "18px",
+    padding: "5px 18px",
     position: "relative",
     zIndex: "1"
   };
