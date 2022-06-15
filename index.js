@@ -32,6 +32,7 @@ require('./routes/albumRoutes')(app);
 require('./routes/songRoutes')(app);
 require('./routes/artistRoutes')(app);
 require('./routes/genreRoutes')(app);
+require('./routes/uploadRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
     // Express will serve up production assets

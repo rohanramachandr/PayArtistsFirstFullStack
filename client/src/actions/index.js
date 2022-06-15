@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID, FETCH_USER_ARTIST_USERNAME } from './types';
+import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, UPDATE_SONG_PLAYS, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID, FETCH_USER_ARTIST_USERNAME } from './types';
 
 export const fetchUser = () => async dispatch => {
 
@@ -71,7 +71,7 @@ export const setCurrentSongID = (id) => {
         type: SET_CURRENT_SONG_ID,
         payload: id
     }
-}; 
+};
 
 
 
@@ -106,10 +106,28 @@ export const fetchArtistAlbums = (artistUsername) => async dispatch => {
 
 
 export const createArtist = (artistName, artistUsername) => async dispatch => {
-    const values = {artistName, artistUsername};
+    const values = { artistName, artistUsername };
     const res = await axios.post('/api/artists/create', values);
     dispatch({ type: FETCH_USER, payload: res.data });
-   
+
+};
+
+
+export const uploadMusic = (formData) => async dispatch => {
+    console.log("uploading music artwork", formData.general.albumArtwork);
+    const uploadConfig = await axios.get('/api/upload');
+    await axios.put(uploadConfig.data.url, formData.general.albumArtwork, {
+        headers: {
+            'Content-Type': formData.general.albumArtwork.type
+        }
+    });
+
+
+    // artworkPath for post Album : uploadConfig.data.key 
+    // const values = {artistName, artistUsername};
+    // const res = await axios.post('/api/artists/create', values);
+    // dispatch({ type: FETCH_USER, payload: res.data });
+
 };
 
 
@@ -122,6 +140,9 @@ export const resetArtistPage = () => {
         payload: null
     };
 };
+
+
+
 
 
 

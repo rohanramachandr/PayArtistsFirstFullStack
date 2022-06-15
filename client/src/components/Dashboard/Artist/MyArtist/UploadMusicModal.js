@@ -1,4 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState, useRef, useCallback } from 'react';
+import * as actions from "../../../../actions";
+import { connect } from "react-redux";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Avatar, Button, FormLabel, Divider, FormHelperText, FormControl, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { Autocomplete } from '@mui/material';
@@ -35,7 +37,7 @@ const inputLabelStyle = {
     textAlign: 'left'
 }
 
-function UploadMusicModal({ artistUsername, artistName }) {
+function UploadMusicModal({ artistUsername, artistName, uploadMusic }) {
     const { uploadMusicOpen, setUploadMusicOpen } = useContext(DashboardContext);
     // const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished or error
     // const [formData, setFormData] = useState({ artistUsername: "", artistName: "" });
@@ -197,6 +199,7 @@ function UploadMusicModal({ artistUsername, artistName }) {
         }
 
         //post request
+        uploadMusic(formData);
         
 
     };
@@ -601,5 +604,4 @@ function UploadMusicModal({ artistUsername, artistName }) {
 };
 
 
-
-export default UploadMusicModal;
+export default connect(null, actions)(UploadMusicModal);
