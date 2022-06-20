@@ -114,11 +114,19 @@ export const createArtist = (artistName, artistUsername) => async dispatch => {
 
 
 export const uploadMusic = (formData) => async dispatch => {
-    console.log("uploading music artwork", formData.general.albumArtwork);
-    const uploadConfig = await axios.get('/api/upload');
-    await axios.put(uploadConfig.data.url, formData.general.albumArtwork, {
+    // console.log("uploading music", formData.tracks[0].audioFile.type);
+    // const uploadConfig = await axios.get('/api/music/upload');
+    // await axios.put(uploadConfig.data.url, formData.tracks[0].audioFile, {
+    //     headers: {
+    //         'Content-Type': 'audio/wav'
+    //     }
+    // });
+
+    console.log("uploading music", formData.tracks[0].audioFile);
+    const uploadConfig = await axios.get('/api/music/upload');
+    await axios.put(uploadConfig.data.url, formData.tracks[0].audioFile, {
         headers: {
-            'Content-Type': formData.general.albumArtwork.type
+            'Content-Type': formData.tracks[0].audioFile.type
         }
     });
 
