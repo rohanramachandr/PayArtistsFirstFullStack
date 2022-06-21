@@ -114,6 +114,8 @@ export const createArtist = (artistName, artistUsername) => async dispatch => {
 
 
 export const uploadMusic = (formData) => async dispatch => {
+
+    //console.log("upload music form data", formData)
     // console.log("uploading music", formData.tracks[0].audioFile.type);
     // const uploadConfig = await axios.get('/api/music/upload');
     // await axios.put(uploadConfig.data.url, formData.tracks[0].audioFile, {
@@ -121,14 +123,30 @@ export const uploadMusic = (formData) => async dispatch => {
     //         'Content-Type': 'audio/wav'
     //     }
     // });
+     // upload album
 
-    console.log("uploading music", formData.tracks[0].audioFile);
-    const uploadConfig = await axios.get('/api/music/upload');
-    await axios.put(uploadConfig.data.url, formData.tracks[0].audioFile, {
-        headers: {
-            'Content-Type': formData.tracks[0].audioFile.type
-        }
-    });
+   //  prefetch artwork signed url
+     let uploadConfig = await axios.get('/api/artwork/upload', { imageType: formData.general.albumArtwork.type });
+     console.log(uploadConfig.data.url,formData.general.albumArtwork);
+     await axios.put(uploadConfig.data.url, formData.general.albumArtwork, {
+         headers: {
+             'Content-Type': formData.general.albumArtwork.type
+         }
+     });
+
+     let res = await axios.post('/api/albums', {
+        albumTitle: formData.general.albumName,
+        _artist: formData.general.artistId,
+        _genre: formData.general.genre,
+        artworkPath: uploadConfig.data.key
+      });
+
+
+
+
+
+
+ 
 
 
     // artworkPath for post Album : uploadConfig.data.key 

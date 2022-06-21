@@ -11,7 +11,7 @@ import { DashboardContext } from '../../DashboardContext'
 import "../Artist.css";
 import UploadMusicModal from "./UploadMusicModal";
 
-const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage, albums, info, songs, currentSongId }) => {
+const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage, albums, info, songs, currentSongId, artistId }) => {
 
     const { artistUsername } = useParams();
     const { setUploadMusicOpen } = useContext(DashboardContext);
@@ -131,7 +131,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
 
     return (
         <>
-        <UploadMusicModal artistName={info ? info.artistName : ""} artistUsername={artistUsername}/>
+        <UploadMusicModal artistName={info ? info.artistName : ""} artistUsername={artistUsername} artistId={info ? info._id : ""}/>
             <div id="mainViewContainer">
                 <div id="mainContent">
                     <div className="entityInfo borderBottom">
@@ -175,7 +175,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
 };
 
 function mapStateToProps({ artist: { albums, info, songs }, song }) {
-    return { albums, info, songs, currentSongId: song.currentSongId };
+    return {albums, info, songs, currentSongId: song.currentSongId };
 }
 
 

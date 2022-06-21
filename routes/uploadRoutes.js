@@ -18,10 +18,17 @@ const s3Music = new AWS.S3({
 module.exports = app => {
 
     app.get('/api/artwork/upload', requireLogin, (req, res) => {
+
+        const { imageType }  = req.body; 
+console.log("imageType", imageType, req.body)
+        if (imageType !== 'image/jpeg' && imageType !== 'image/png') {
+            return res.send(400, "Image type not valid");
+        }
+
         const key = `${req.user.id}/${uuid.v1()}.jpeg`
         s3Artwork.getSignedUrl('putObject', {
             Bucket: 'release-radar-album-artwork',
-            ContentType: 'image/jpeg',
+            ContentType: imageType,
             Key: key
 
         }, 

@@ -37,7 +37,7 @@ const inputLabelStyle = {
     textAlign: 'left'
 }
 
-function UploadMusicModal({ artistUsername, artistName, uploadMusic }) {
+function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId }) {
     const { uploadMusicOpen, setUploadMusicOpen } = useContext(DashboardContext);
     // const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished or error
     // const [formData, setFormData] = useState({ artistUsername: "", artistName: "" });
@@ -47,7 +47,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic }) {
 
 
 
-    const [formData, setFormData] = useState({ general: { artistUsername, artistName: "", albumName: "", genre: null, numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null }, tracks: [{ title: "", audioFile: null, cover: null, hasLyrics: null, price: 0, duration: null, mediaType: null }] });
+    const [formData, setFormData] = useState({ general: { artistId: "", artistUsername, artistName: "", albumName: "", genre: null, numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null }, tracks: [{ title: "", audioFile: null, cover: null, hasLyrics: null, price: 0, duration: null, mediaType: null }] });
     const [genreLabels, setGenreLabels] = useState([]);
  
 
@@ -68,6 +68,11 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic }) {
         setFormData(formData => { return { ...formData, general: { ...formData.general, artistName } } });
 
     }, [artistName]);
+
+    useEffect(() => {
+        setFormData(formData => { return { ...formData, general: { ...formData.general, artistId } } });
+
+    }, [artistId]);
 
 
 

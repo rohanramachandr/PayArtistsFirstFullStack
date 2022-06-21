@@ -4,6 +4,7 @@ const initState = {albums: [], info: null, songs: []};
 export default function artistReducer(state=initState, action) {
     switch (action.type) {
         case FETCH_ARTIST_INFO:
+          
             return {...state, info: action.payload};
         case FETCH_ARTIST_ALBUMS:
             return {...state, albums: action.payload};
