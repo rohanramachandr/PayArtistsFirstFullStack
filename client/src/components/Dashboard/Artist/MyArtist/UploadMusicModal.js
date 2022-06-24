@@ -257,6 +257,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
         copyTracks[index].audioFile = event.target.files[0];
         const fileType = event.target.files[0].name.split('.').pop();
         var mediaType = "";
+        //TODO add more complex upload checking
         if (fileType === 'wav') {
             mediaType = 'audio/wav';
 

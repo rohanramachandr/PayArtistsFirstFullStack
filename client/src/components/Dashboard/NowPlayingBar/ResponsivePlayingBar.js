@@ -657,7 +657,7 @@ const ResponsivePlayingBar = ({
                     onEnded={songEnded}
                     autoPlay
                     ref={audioPlayer}
-                    type="audio/mp4"
+                    type="audio/mpeg"
                 />
         </div>
     );

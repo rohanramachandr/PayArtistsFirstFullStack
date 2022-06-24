@@ -24,10 +24,10 @@ module.exports = app => {
 
             res.send({ _id, _album, songTitle, artistName, artistUsername, albumTitle, artworkPath, duration, songPath, plays, albumOrder });
         }
-        catch(err) {
+        catch (err) {
             res.status(404).send(err);
-        }   
-        
+        }
+
 
     });
 
@@ -35,9 +35,9 @@ module.exports = app => {
 
 
         try {
-           
+
             Song.updateOne(
-                { _id: req.params.songId }, 
+                { _id: req.params.songId },
                 {
                     $inc: { 'plays': 1 }
 
@@ -45,25 +45,43 @@ module.exports = app => {
             ).exec();
 
             res.send({});
-            
+
         }
-        catch(err) {
+        catch (err) {
             res.status(404).send(err);
-        }   
-        
+        }
+
 
     });
 
-      app.get('/api/songs/playlist', requireLogin, async (req, res) => { 
-      try {
-          const songIds = await Song.find({}, '_id');
-          res.send(songIds);
-      }
+    app.get('/api/songs/playlist', requireLogin, async (req, res) => {
+        try {
+            const songIds = await Song.find({}, '_id');
+            res.send(songIds);
+        }
 
-      catch(err) {
-          res.status(404).send(err);
-      }
-  });
+        catch (err) {
+            res.status(404).send(err);
+        }
+    });
+
+    app.post('/api/songs', requireLogin, async (req, res) => {
+
+
+        const song = new Song({
+        ...req.body
+        });
+    
+        try {
+          await song.save();
+          res.send(song);
+    
+        } catch (err) {
+          res.send(400, err);
+        }
+    
+       
+      });
 
 
 
