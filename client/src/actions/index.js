@@ -176,7 +176,7 @@ export const uploadMusic = (formData) => async dispatch => {
             duration: track.duration,
             songPath: uploadConfig.data.key,
             price: track.price,
-            mediaType: track.mediaType,
+            mediaType: track.audioFile.type,
             albumOrder: index+1,
 
 

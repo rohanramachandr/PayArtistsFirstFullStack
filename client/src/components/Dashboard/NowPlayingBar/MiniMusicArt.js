@@ -22,8 +22,8 @@ const MiniMuiscArt = ({ playPause, data, playNext, emptyPlayer }) => {
       <div className={"overflow-hidden"}>
         <div className="details">
          
-          <Typography variant="body1" style={{ width: "fit-content"}}>{data.title}</Typography>
-          <Typography variant="body2" style={{ width: "fit-content"}}>{data.artistName}</Typography>
+          <Typography variant="body1" style={{ width: "38%"}}>{data.title}</Typography>
+          <Typography variant="body2" style={{ width: "38%"}}>{data.artistName}</Typography>
           
         </div>
         <div className="buttons">

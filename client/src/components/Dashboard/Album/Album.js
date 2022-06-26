@@ -34,7 +34,7 @@ const Album = ({
 
   const renderArtwork = () => {
     return album.album ? (
-      <img src={album.album.artworkPath} alt="album art" />
+      <img src={'https://release-radar-album-artwork.s3.amazonaws.com/' + album.album.artworkPath} alt="album art" />
     ) : null;
   };
 

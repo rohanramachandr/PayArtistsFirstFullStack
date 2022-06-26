@@ -137,9 +137,9 @@ const ResponsivePlayingBar = ({
         const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
         const {albumOrder, albumTitle, artistUsername, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id} = res.data
         setCurrentSongID(_id);
-        const songInfo = {audio: songPath, title: songTitle, artistName, artistUsername, thumbnail: artworkPath, _id, _album};
+        const songInfo = {audio: 'https://release-radar-music.s3.amazonaws.com/' + songPath, title: songTitle, artistName, artistUsername, thumbnail: 'https://release-radar-album-artwork.s3.amazonaws.com/' + artworkPath, _id, _album};
         setCurrentlyPlaying(songInfo);
-        audioPlayer.current.src = songPath;
+        audioPlayer.current.src = 'https://release-radar-music.s3.amazonaws.com/' + songPath;
         playAudio(songInfo);
 
     
@@ -330,7 +330,7 @@ const ResponsivePlayingBar = ({
                 );
           
                 if (currentIndex !== -1 && currentIndex !== 0) {
-                    const prevIndex = currentIndex - 1; //we will play the next song
+                    const prevIndex = currentIndex - 1; 
                     await getSongInfo({detail:{playlist: currentPlaylist, clickIndex: prevIndex}})
                 } else {
                     player.currentTime = 0;
