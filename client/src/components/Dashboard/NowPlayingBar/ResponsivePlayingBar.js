@@ -135,11 +135,12 @@ const ResponsivePlayingBar = ({
         setAudioState('loading');
         setCurrentPlaylist(playlist);
         const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
-        const {albumOrder, albumTitle, artistUsername, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id} = res.data
+        const {albumOrder, albumTitle, artistUsername, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id, mediaType} = res.data
         setCurrentSongID(_id);
         const songInfo = {audio: 'https://release-radar-music.s3.amazonaws.com/' + songPath, title: songTitle, artistName, artistUsername, thumbnail: 'https://release-radar-album-artwork.s3.amazonaws.com/' + artworkPath, _id, _album};
         setCurrentlyPlaying(songInfo);
         audioPlayer.current.src = 'https://release-radar-music.s3.amazonaws.com/' + songPath;
+        audioPlayer.current.type = mediaType;
         playAudio(songInfo);
 
     
@@ -657,7 +658,7 @@ const ResponsivePlayingBar = ({
                     onEnded={songEnded}
                     autoPlay
                     ref={audioPlayer}
-                    type="audio/mpeg"
+                  
                 />
         </div>
     );

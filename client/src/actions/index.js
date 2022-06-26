@@ -116,88 +116,71 @@ export const createArtist = (artistName, artistUsername) => async dispatch => {
 
 export const uploadMusic = (formData) => async dispatch => {
 
-    //console.log("upload music form data", formData)
-    // console.log("uploading music", formData.tracks[0].audioFile.type);
-    // const uploadConfig = await axios.get('/api/music/upload');
-    // await axios.put(uploadConfig.data.url, formData.tracks[0].audioFile, {
-    //     headers: {
-    //         'Content-Type': 'audio/wav'
-    //     }
-    // });
-    // upload album
+    try {
 
-    //  prefetch artwork signed url
-    //imageType: formData.general.albumArtwork.type
-
-
-    let uploadConfig = await axios.get(`/api/artwork/upload/${formData.general.albumArtwork.type}`);
-    console.log(uploadConfig.data.url, formData.general.albumArtwork);
-    await axios.put(uploadConfig.data.url, formData.general.albumArtwork, {
-        headers: {
-            'Content-Type': formData.general.albumArtwork.type
-        }
-    });
-
-    let res = await axios.post('/api/albums', {
-        albumTitle: formData.general.albumName,
-        _artist: formData.general.artistId,
-        _genre: formData.general.genre,
-        artworkPath: uploadConfig.data.key
-    });
-
-    console.log("res album", res)
-    const albumId = res.data._id;
-    //   songTitle: String,
-    //   _artist: { type: Schema.Types.ObjectId, ref: 'Artist' },
-    //   _album: { type: Schema.Types.ObjectId, ref: 'Album' },
-    //   _genre: { type: Schema.Types.ObjectId, ref: 'Genre' },
-    //   duration: String,
-    //   songPath: String,
-        //price: String,
-        //mediaType: String
-
-    //   albumOrder: { type: Number, default: 1 },
-    //   plays: { type: Number, default: 0 }
-
-
-    formData.tracks.forEach(async (track, index) => {
-        let uploadConfig = await axios.get(`/api/music/upload/${track.audioFile.type}`);
-        await axios.put(uploadConfig.data.url, track.audioFile, {
+        let uploadConfig = await axios.get(`/api/artwork/upload/${formData.general.albumArtwork.type}`);
+        console.log(uploadConfig.data.url, formData.general.albumArtwork);
+        await axios.put(uploadConfig.data.url, formData.general.albumArtwork, {
             headers: {
-                'Content-Type': track.audioFile.type
+                'Content-Type': formData.general.albumArtwork.type
             }
         });
 
-        await axios.post('/api/songs', {
-            songTitle: track.title,
+        let res = await axios.post('/api/albums', {
+            albumTitle: formData.general.albumName,
             _artist: formData.general.artistId,
-            _album: albumId,
             _genre: formData.general.genre,
-            duration: track.duration,
-            songPath: uploadConfig.data.key,
-            price: track.price,
-            mediaType: track.audioFile.type,
-            albumOrder: index+1,
+            artworkPath: uploadConfig.data.key
+        });
+
+        const albumId = res.data._id;
+        //   songTitle: String,
+        //   _artist: { type: Schema.Types.ObjectId, ref: 'Artist' },
+        //   _album: { type: Schema.Types.ObjectId, ref: 'Album' },
+        //   _genre: { type: Schema.Types.ObjectId, ref: 'Genre' },
+        //   duration: String,
+        //   songPath: String,
+        //price: String,
+        //mediaType: String
+
+        //   albumOrder: { type: Number, default: 1 },
+        //   plays: { type: Number, default: 0 }
 
 
+        formData.tracks.forEach(async (track, index) => {
+            let uploadConfig = await axios.get(`/api/music/upload/${track.audioFile.type}`);
+            await axios.put(uploadConfig.data.url, track.audioFile, {
+                headers: {
+                    'Content-Type': track.audioFile.type
+                }
+            });
 
+            await axios.post('/api/songs', {
+                songTitle: track.title,
+                _artist: formData.general.artistId,
+                _album: albumId,
+                _genre: formData.general.genre,
+                duration: track.duration,
+                songPath: uploadConfig.data.key,
+                price: track.price,
+                mediaType: track.audioFile.type,
+                albumOrder: index + 1
+
+            });
 
         });
 
-    });
+    }
+    catch (err) {
+        return  -1;
+    }
+
+    return 0;
 
 
 
 
 
-
-
-
-
-    // artworkPath for post Album : uploadConfig.data.key 
-    // const values = {artistName, artistUsername};
-    // const res = await axios.post('/api/artists/create', values);
-    // dispatch({ type: FETCH_USER, payload: res.data });
 
 };
 
