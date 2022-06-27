@@ -44,7 +44,7 @@ module.exports = (app) => {
 
   app.get("/api/albums/:albumId/songs", requireLogin, async (req, res) => {
     try {
-      const songs = await Song.find({ _album: req.params.albumId });
+      const songs = await Song.find({ _album: req.params.albumId }).sort({ albumOrder: 1 });
       res.send(songs);
     } catch (err) {
       res.status(404).send(err);

@@ -20,7 +20,7 @@ const style = {
     width: '95%',
     bgcolor: 'background.paper',
     border: '2px solid black',
-    overflow: 'scroll',
+    overflowY: 'scroll',
     boxShadow: 24,
     p: 4
 };
@@ -42,15 +42,15 @@ const inputLabelStyle = {
 const graphicStyle = {
     width: '200px',
     height: '200px'
-   
-  
-   
+
+
+
 
 
 };
 
 
-function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId }) {
+function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, fetchArtistAlbums, fetchArtistSongs }) {
     const { uploadMusicOpen, setUploadMusicOpen } = useContext(DashboardContext);
     // const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished or error
     // const [formData, setFormData] = useState({ artistUsername: "", artistName: "" });
@@ -59,7 +59,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
     // const [errorFlag, setErrorFlag] = useState(true);
 
 
-    const [formState, setFormState] = useState("finished"); //initial, uploading, error, finished
+    const [formState, setFormState] = useState("initial"); //initial, uploading, error, finished
     const [formData, setFormData] = useState({ general: { artistId: "", artistUsername, artistName: "", albumName: "", genre: null, numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null }, tracks: [{ title: "", audioFile: null, cover: null, hasLyrics: null, price: 0, duration: null, mediaType: null }] });
     const [genreLabels, setGenreLabels] = useState([]);
 
@@ -157,7 +157,9 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
     }, [currentMusicFile]);
 
 
-    const submitForm = () => {
+
+
+    const submitForm = async () => {
         let tempErrors = { albumName: [], numberOfTracks: [], genre: [], albumArtwork: [], tracks: [] };
 
         if (formData.general.albumName.trim().length === 0) {
@@ -219,13 +221,32 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
         }
 
         //post request
-        uploadMusic(formData);
+        setFormState("uploading");
+        const errorCheck = await uploadMusic(formData);
+        if (errorCheck === 0) {
+            await fetchArtistAlbums(artistUsername);
+            await fetchArtistSongs(artistUsername);
+        }
+        setFormState(errorCheck === 0 ? "finished" : "error");
+
+       
 
 
     };
 
     const handleClose = () => {
+
+        
         setUploadMusicOpen(false);
+        setTimeout(() => {
+            if (formState === "finished" || formState === "error") {
+                setFormData({ general: { artistId: "", artistUsername, artistName: "", albumName: "", genre: null, numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null }, tracks: [{ title: "", audioFile: null, cover: null, hasLyrics: null, price: 0, duration: null, mediaType: null }] });
+                setErrors({ albumName: [], numberOfTracks: [], genre: [], albumArtwork: [], tracks: [{ title: [], audioFile: [], cover: [], hasLyrics: [], price: [] }] });
+                setFormState("initial")
+            }
+        }, 1000);
+
+
     };
 
     const deleteAlbumArtwork = () => {
@@ -467,82 +488,116 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
                         </Grid>
 
                         <Grid item>
-                           <CircularProgress style={graphicStyle}/> 
+                            <CircularProgress style={graphicStyle} />
                         </Grid>
 
 
                         <Grid item className="gridItem" style={{ textAlign: "center" }}>
-                        <Typography id="transition-modal-title" variant="h7" style={{ textAlign: "center" }} >
-                               This will take a few moments
+                            <Typography id="transition-modal-title" variant="h7" style={{ textAlign: "center" }} >
+                                This will take a few moments
                             </Typography>
                         </Grid>
 
-                       
+
 
 
                     </Grid>
 
 
+                );
+
+            case 'error':
+                return (
+
+
+                    <Grid container
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={8}
+
+                        className="formContainer"
+                    >
+                        <Grid item className="gridItem">
+                            <Typography id="transition-modal-title" variant="h5" style={{ textAlign: "center" }} >
+                                Error!
+                            </Typography>
+                        </Grid>
+
+                        <Grid item>
+                            <Typography id="transition-modal-title" variant="h6" style={{ textAlign: "center" }} >
+                                Sorry, there was an error on our end.
+                            </Typography>
+                            <Typography id="transition-modal-title" variant="h6" style={{ textAlign: "center", marginTop: '10px' }} >
+                                Please return to the dashboard and try again in a few moments
+                            </Typography>
+
+
+                        </Grid>
+
+
+                        <Grid item >
+
+                            <Button variant="contained" color="primary" onClick={handleClose}>Return To Dashboard</Button>
+
+
+                        </Grid>
 
 
 
 
-
-
-
-
-
-
+                    </Grid>
 
 
                 );
 
-        
+
+
 
             case 'finished':
                 return (
 
 
                     <Grid container
-                    direction="column"
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={8}
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={8}
 
-                    className="formContainer"
-                >
-                    <Grid item className="gridItem">
-                        <Typography id="transition-modal-title" variant="h5" style={{ textAlign: "center" }} >
-                            Upload Successful!
-                        </Typography>
+                        className="formContainer"
+                    >
+                        <Grid item className="gridItem">
+                            <Typography id="transition-modal-title" variant="h5" style={{ textAlign: "center" }} >
+                                Upload Successful!
+                            </Typography>
+                        </Grid>
+
+                        <Grid item>
+                            <img src={logo} style={graphicStyle} />
+
+
+                        </Grid>
+
+
+                        <Grid item >
+
+                            <Button variant="contained" color="primary" onClick={handleClose}>Return To Dashboard</Button>
+
+
+
+                        </Grid>
+
+
+
+
                     </Grid>
-
-                    <Grid item>
-                        <img src={logo} style={graphicStyle}/>
-
-                        
-                    </Grid>
-
-
-                    <Grid item >
-
-<Button variant="contained" color="primary">Return To Dashboard</Button>
-
-
-
-</Grid>
-
-                   
-
-
-                </Grid>
 
 
                 );
 
 
 
-            default:
+            default://initial
                 return (
                     <Grid container
                         direction="column"
@@ -694,6 +749,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
             BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500,
+
             }}
             color="primary"
         >
