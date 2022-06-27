@@ -2,12 +2,14 @@ import React, { Fragment, useContext, useEffect, useState, useRef, useCallback }
 import * as actions from "../../../../actions";
 import { connect } from "react-redux";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Avatar, Button, FormLabel, Divider, FormHelperText, FormControl, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
+import { Box, Modal, Fade, Typography, Backdrop, IconButton, Grid, TextField, Avatar, Button, FormLabel, Divider, FormHelperText, FormControl, RadioGroup, FormControlLabel, Radio, CircularProgress } from '@material-ui/core';
 import { Autocomplete } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { DashboardContext } from '../../DashboardContext';
+import logo from '../../../../images/logo.png';
 import './UploadMusicModal.css'
+
 
 const style = {
     position: 'absolute',
@@ -37,6 +39,17 @@ const inputLabelStyle = {
     textAlign: 'left'
 }
 
+const graphicStyle = {
+    width: '200px',
+    height: '200px'
+   
+  
+   
+
+
+};
+
+
 function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId }) {
     const { uploadMusicOpen, setUploadMusicOpen } = useContext(DashboardContext);
     // const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished or error
@@ -46,17 +59,17 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
     // const [errorFlag, setErrorFlag] = useState(true);
 
 
-
+    const [formState, setFormState] = useState("finished"); //initial, uploading, error, finished
     const [formData, setFormData] = useState({ general: { artistId: "", artistUsername, artistName: "", albumName: "", genre: null, numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null }, tracks: [{ title: "", audioFile: null, cover: null, hasLyrics: null, price: 0, duration: null, mediaType: null }] });
     const [genreLabels, setGenreLabels] = useState([]);
- 
+
 
     const [currentMusicFile, setCurrentMusicFile] = useState({ index: null, file: null, mediaType: null });
     const audioPlayer = useRef(null);
 
 
     const [errors, setErrors] = useState({ albumName: [], numberOfTracks: [], genre: [], albumArtwork: [], tracks: [{ title: [], audioFile: [], cover: [], hasLyrics: [], price: [] }] });//array for each active step
-    
+
 
 
 
@@ -92,8 +105,10 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
     }, []);
 
 
+
+
     const updateTracks = useCallback(() => {
-        
+
         var i = 0;
         if (!isNaN(formData.general.numberOfTracks) && formData.general.numberOfTracks > 0) {
             let newTracks = [...formData.tracks];
@@ -191,7 +206,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
                 tempErrors.tracks.push({ ...trackError });
             }
             else {
-                tempErrors.tracks.push({title: [], audioFile: [], cover: [], hasLyrics: [], price: []});
+                tempErrors.tracks.push({ title: [], audioFile: [], cover: [], hasLyrics: [], price: [] });
             }
         });
 
@@ -205,7 +220,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
 
         //post request
         uploadMusic(formData);
-        
+
 
     };
 
@@ -301,9 +316,10 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
                     </Grid>
 
                     <Grid item className="gridItem">
-                        <FormLabel>
+                        <Typography variant="h6" >
                             {`Track ${index + 1}`}
-                        </FormLabel>
+                        </Typography>
+
                     </Grid>
                     <Grid item className="gridItem">
 
@@ -394,7 +410,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
                                 <FormControlLabel value={true} control={<Radio />} label="Nope, this song contains lyrics" />
 
                             </RadioGroup>
-                            
+
                         </FormControl>
 
                     </Grid>
@@ -429,33 +445,105 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
     };
 
 
+    const renderContent = () => {
+        switch (formState) {
+
+
+            case 'uploading':
+                return (
+
+                    <Grid container
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={8}
+
+                        className="formContainer"
+                    >
+                        <Grid item className="gridItem">
+                            <Typography id="transition-modal-title" variant="h5" style={{ textAlign: "center" }} >
+                                Uploading Your Music
+                            </Typography>
+                        </Grid>
+
+                        <Grid item>
+                           <CircularProgress style={graphicStyle}/> 
+                        </Grid>
+
+
+                        <Grid item className="gridItem" style={{ textAlign: "center" }}>
+                        <Typography id="transition-modal-title" variant="h7" style={{ textAlign: "center" }} >
+                               This will take a few moments
+                            </Typography>
+                        </Grid>
+
+                       
+
+
+                    </Grid>
 
 
 
 
 
-    return (
-
-
-        <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            open={uploadMusicOpen}
-            onClose={handleClose}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-                timeout: 500,
-            }}
-            color="primary"
-        >
-            <Fade in={uploadMusicOpen}>
-                <Box sx={style}><IconButton aria-label="delete" style={closeIconStyle} onClick={handleClose}>
-                    <CloseIcon />
-                </IconButton>
 
 
 
+
+
+
+
+
+
+                );
+
+        
+
+            case 'finished':
+                return (
+
+
+                    <Grid container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={8}
+
+                    className="formContainer"
+                >
+                    <Grid item className="gridItem">
+                        <Typography id="transition-modal-title" variant="h5" style={{ textAlign: "center" }} >
+                            Upload Successful!
+                        </Typography>
+                    </Grid>
+
+                    <Grid item>
+                        <img src={logo} style={graphicStyle}/>
+
+                        
+                    </Grid>
+
+
+                    <Grid item >
+
+<Button variant="contained" color="primary">Return To Dashboard</Button>
+
+
+
+</Grid>
+
+                   
+
+
+                </Grid>
+
+
+                );
+
+
+
+            default:
+                return (
                     <Grid container
                         direction="column"
                         justifyContent="center"
@@ -465,15 +553,18 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
                         className="formContainer"
                     >
 
+
+
                         <Grid item className="gridItem">
-                            <Typography id="transition-modal-title" variant="h6" style={{ textAlign: "center" }} >
+                            <Typography id="transition-modal-title" variant="h5" style={{ textAlign: "center" }} >
                                 Upload Music
                             </Typography>
                         </Grid>
                         <Grid item className="gridItem">
-                            <FormLabel>
+                            <Typography variant="h6" >
                                 General Info
-                            </FormLabel>
+                            </Typography>
+
                         </Grid>
                         <Grid item className="gridItem">
                             <TextField variant="filled" label="Artist Name" value={artistName} color='primary' type="text" disabled fullWidth
@@ -519,9 +610,10 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
                             <Divider light={false} />
                         </Grid>
                         <Grid item className="gridItem">
-                            <FormLabel>
+
+                            <Typography variant="h6" >
                                 Album Artwork
-                            </FormLabel>
+                            </Typography>
                         </Grid>
 
                         {<Grid item className="gridItem">
@@ -577,9 +669,47 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId })
                         </Grid>
 
 
-
-
                     </Grid>
+
+                );
+
+        }
+    };
+
+
+
+
+
+
+
+    return (
+
+
+        <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={uploadMusicOpen}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 500,
+            }}
+            color="primary"
+        >
+            <Fade in={uploadMusicOpen}>
+                <Box sx={style}><IconButton aria-label="delete" style={closeIconStyle} onClick={handleClose}>
+                    <CloseIcon />
+                </IconButton>
+
+
+
+
+                    {renderContent()}
+
+
+
+
 
 
 

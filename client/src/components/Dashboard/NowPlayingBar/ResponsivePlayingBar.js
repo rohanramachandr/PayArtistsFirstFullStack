@@ -140,7 +140,7 @@ const ResponsivePlayingBar = ({
         const songInfo = {audio: 'https://release-radar-music.s3.amazonaws.com/' + songPath, title: songTitle, artistName, artistUsername, thumbnail: 'https://release-radar-album-artwork.s3.amazonaws.com/' + artworkPath, _id, _album};
         setCurrentlyPlaying(songInfo);
         audioPlayer.current.src = 'https://release-radar-music.s3.amazonaws.com/' + songPath;
-        audioPlayer.current.type = mediaType;
+        // audioPlayer.current.type = mediaType;
         playAudio(songInfo);
 
     
