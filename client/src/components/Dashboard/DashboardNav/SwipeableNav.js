@@ -62,7 +62,7 @@ const SwipeableNavBar = ({ isArtist, artistUsername }) => {
 
         return (
             <>
-                {artistUsername !== "" && <Link to={`/${artistUsername}`} style={styles.link}>
+                {artistUsername !== "" && artistUsername !== undefined && <Link to={`/${artistUsername}`} style={styles.link}>
                 <ListItem button key="My Music">
                     <ListItemIcon>
                         <AlbumIcon fontSize="large" style={styles.icon} />
