@@ -4,15 +4,11 @@ const requireLogin = require('../middlewares/requireLogin');
 const keys = require('../config/keys');
 
 
-const s3Artwork = new AWS.S3({
-    accessKeyId: keys.artworkAccessKeyId,
-    secretAccessKey: keys.artworkSecretAccessKey
+const s3 = new AWS.S3({
+    accessKeyId: keys.accessKeyId,
+    secretAccessKey: keys.secretAccessKey
 });
 
-const s3Music = new AWS.S3({
-    accessKeyId: keys.musicAccessKeyId,
-    secretAccessKey: keys.musicSecretAccessKeyId
-});
 
 
 module.exports = app => {
@@ -25,8 +21,8 @@ module.exports = app => {
         }
 
         const key = `${req.user.id}/${uuid.v1()}.${imageType}`
-        s3Artwork.getSignedUrl('putObject', {
-            Bucket: 'release-radar-album-artwork',
+        s3.getSignedUrl('putObject', {
+            Bucket: keys.artworkBucketName,
             ContentType: `image/${imageType}`,
             Key: key
 
@@ -41,8 +37,8 @@ module.exports = app => {
             return res.send(400, "audio type not valid");
         }
         const key = `${req.user.id}/${uuid.v1()}.${audioType}`
-        s3Music.getSignedUrl('putObject', {
-            Bucket: 'release-radar-music',
+        s3.getSignedUrl('putObject', {
+            Bucket: keys.musicBucketName,
             ContentType: `audio/${audioType}`,
             Key: key
         },

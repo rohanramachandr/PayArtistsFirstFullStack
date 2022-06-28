@@ -137,9 +137,9 @@ const ResponsivePlayingBar = ({
         const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
         const {albumOrder, albumTitle, artistUsername, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id, mediaType} = res.data
         setCurrentSongID(_id);
-        const songInfo = {audio: 'https://release-radar-music.s3.amazonaws.com/' + songPath, title: songTitle, artistName, artistUsername, thumbnail: 'https://release-radar-album-artwork.s3.amazonaws.com/' + artworkPath, _id, _album};
+        const songInfo = {audio: process.env.REACT_APP_MUSIC_BUCKET_URL + songPath, title: songTitle, artistName, artistUsername, thumbnail: process.env.REACT_APP_ARTWORK_BUCKET_URL + artworkPath, _id, _album};
         setCurrentlyPlaying(songInfo);
-        audioPlayer.current.src = 'https://release-radar-music.s3.amazonaws.com/' + songPath;
+        audioPlayer.current.src =  process.env.REACT_APP_MUSIC_BUCKET_URL + songPath;
         // audioPlayer.current.type = mediaType;
         playAudio(songInfo);
 
