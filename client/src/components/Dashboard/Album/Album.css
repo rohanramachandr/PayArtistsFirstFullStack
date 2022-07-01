@@ -47,6 +47,7 @@ body {
 
 .entityInfo .leftSection {
     width: 30%;
+    height: 30%;
     float: left;
     max-width: 250px;
 }

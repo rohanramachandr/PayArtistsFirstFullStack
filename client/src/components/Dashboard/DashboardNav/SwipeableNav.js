@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import axios from 'axios';
 import { DashboardContext } from "../DashboardContext";
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { connect } from 'react-redux';
@@ -12,9 +13,9 @@ import MusicNoteIcon from '@mui/icons-material/MusicNote';
 
 
 
-const SwipeableNavBar = ({ isArtist, artistUsername }) => {
+const SwipeableNavBar = ({ isArtist}) => {
 
-    const { menuOpen, setMenuOpen, setBecomeArtistOpen } = useContext(DashboardContext);
+    const { menuOpen, setMenuOpen, setBecomeArtistOpen, userArtistUsername, setUserArtistUsername } = useContext(DashboardContext);
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     const styles = {
@@ -41,6 +42,21 @@ const SwipeableNavBar = ({ isArtist, artistUsername }) => {
 
     };
 
+    useEffect(() => {
+
+        const fetchUserArtistUsername = async () => {
+
+            const res = await axios.get('/api/current_artist');
+
+            setUserArtistUsername(res.data);
+
+        };
+
+
+        fetchUserArtistUsername();
+
+    }, [setUserArtistUsername]);
+
 
    
 
@@ -62,7 +78,7 @@ const SwipeableNavBar = ({ isArtist, artistUsername }) => {
 
         return (
             <>
-                {artistUsername !== "" && artistUsername !== undefined && <Link to={`/${artistUsername}`} style={styles.link}>
+                {userArtistUsername !== "" && userArtistUsername !== undefined && <Link to={`/${userArtistUsername}`} style={styles.link}>
                 <ListItem button key="My Music">
                     <ListItemIcon>
                         <AlbumIcon fontSize="large" style={styles.icon} />
