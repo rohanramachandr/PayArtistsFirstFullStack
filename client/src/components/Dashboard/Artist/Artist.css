@@ -146,8 +146,8 @@
 .gridViewItem {
     display: inline-block;
     margin-right: 20px;
-    width: 10rem;
-    height: 10rem;
+    width: 8rem;
+    height: 8rem;
     color: #fff;
     text-decoration: none; 
 }
