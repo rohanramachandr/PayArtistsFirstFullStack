@@ -5,6 +5,13 @@
     
 }
 
+#mainContainer {
+    overflow: hidden;
+}
+
+
+
+
 body {
     background-color: #181818;
     font-size: 14px;

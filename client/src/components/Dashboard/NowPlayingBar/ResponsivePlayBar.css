@@ -92,7 +92,6 @@
   /* main media player container style */
   .mediaPlayerContainer {
     position: fixed;
-    top:0;
     right: 0;
     bottom: 0;
     background: #fff;
@@ -100,7 +99,7 @@
     height: 100%;
     z-index: 1400;
     display: inline-block;
-    transition: all 0.3s ease;
+    transition: all .3s ease;
   }
   
   .playerMinimized {
@@ -110,6 +109,7 @@
   }
 
   .playerNotPlaying {
+    
     transform: translateY(calc(100% - -50px));
     z-index: 0;
     background-color: #ec148c;
