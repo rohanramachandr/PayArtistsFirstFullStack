@@ -223,10 +223,6 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
         //post request
         setFormState("uploading");
         const errorCheck = await uploadMusic(formData);
-        if (errorCheck === 0) {
-            await fetchArtistAlbums(artistUsername);
-            await fetchArtistSongs(artistUsername);
-        }
         setFormState(errorCheck === 0 ? "finished" : "error");
 
        

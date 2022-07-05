@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, UPDATE_SONG_PLAYS, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID } from './types';
+import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, UPDATE_SONG_PLAYS, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID, UPLOAD_ALBUM, UPLOAD_SONG } from './types';
 
 export const fetchUser = () => async dispatch => {
 
@@ -107,6 +107,8 @@ export const createArtist = (artistName, artistUsername) => async dispatch => {
 };
 
 
+
+
 export const uploadMusic = (formData) => async dispatch => {
 
     try {
@@ -125,6 +127,8 @@ export const uploadMusic = (formData) => async dispatch => {
             _genre: formData.general.genre,
             artworkPath: uploadConfig.data.key
         });
+
+        dispatch({ type: UPLOAD_ALBUM, payload: res.data });
 
         const albumId = res.data._id;
         //   songTitle: String,
@@ -148,7 +152,7 @@ export const uploadMusic = (formData) => async dispatch => {
                 }
             });
 
-            await axios.post('/api/songs', {
+            res = await axios.post('/api/songs', {
                 songTitle: track.title,
                 _artist: formData.general.artistId,
                 _album: albumId,
@@ -160,6 +164,8 @@ export const uploadMusic = (formData) => async dispatch => {
                 albumOrder: index + 1
 
             });
+
+            dispatch({ type: UPLOAD_SONG, payload: res.data });
 
         });
 
