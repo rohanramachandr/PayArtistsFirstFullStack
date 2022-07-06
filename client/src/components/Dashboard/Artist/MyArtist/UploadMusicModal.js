@@ -294,7 +294,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
             mediaType = 'audio/wav';
 
         }
-        else {
+        else if (fileType === 'mp3'  || fileType === 'mp4'  || fileType === 'm4a'  || fileType === 'aac') {
             mediaType = 'audio/mpeg';
         }
         copyTracks[index].mediaType = mediaType;
@@ -392,7 +392,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
                                     Upload Audio File
                                     <input
                                         type="file"
-                                        accept=".wav,.mp3"
+                                        accept=".wav,.mp3,.mp4,.m4a,.aac"
                                         hidden
                                         onChange={(event) => onAudioFileChange(event, index)}
                                     />

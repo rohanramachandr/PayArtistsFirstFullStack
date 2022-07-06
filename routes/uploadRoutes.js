@@ -33,7 +33,7 @@ module.exports = app => {
 
     app.get('/api/music/upload/audio/:audioType', requireLogin, (req, res) => {
         const audioType = req.params.audioType;
-        if (audioType !== 'wav' && audioType !== 'mpeg' && audioType !== 'mp3') {
+        if (audioType !== 'wav' && audioType !== 'mpeg' && audioType !== 'x-m4a' && audioType !== 'mp3') {
             return res.send(400, "audio type not valid");
         }
         const key = `${req.user.id}/${uuid.v1()}.${audioType}`

@@ -28,6 +28,10 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
         };
     }, [artistUsername, fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArtistPage]);
 
+    useEffect(() => {
+        console.log("artistInfo", info)
+    }, [info])
+
 
 
 
@@ -131,7 +135,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
 
     return (
         <>
-        <UploadMusicModal artistName={info ? info.artistName : ""} artistUsername={artistUsername} artistId={info ? info._id : ""}/>
+        {info ? <UploadMusicModal artistName={info.artistName} artistUsername={info.artistUsername} artistId={info._id}/> : null}
             <div id="mainViewContainer">
                 <div id="mainContent">
                     <div className="entityInfo borderBottom">
@@ -141,7 +145,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
                                 <h1 className="artistUsername">{renderArtistName()}</h1>
 
                                 <div className="headerButtons">
-                                    <button className="button pink" onClick={() => setUploadMusicOpen(true)}>UPLOAD MUSIC</button>
+                                    {info ? <button className="button pink" onClick={() => setUploadMusicOpen(true)}>UPLOAD MUSIC</button> : null}
                                 </div>
 
                             </div>

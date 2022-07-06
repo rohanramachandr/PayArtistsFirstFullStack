@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, UPDATE_SONG_PLAYS, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID, UPLOAD_ALBUM, UPLOAD_SONG } from './types';
+import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, UPDATE_SONG_PLAYS, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID, UPLOAD_ALBUM, UPLOAD_SONGS } from './types';
 
 export const fetchUser = () => async dispatch => {
 
@@ -120,7 +120,7 @@ export const uploadMusic = (formData) => async dispatch => {
                 'Content-Type': formData.general.albumArtwork.type
             }
         });
-
+        console.log("uploadConfig artwork", uploadConfig)
         let res = await axios.post('/api/albums', {
             albumTitle: formData.general.albumName,
             _artist: formData.general.artistId,
@@ -142,35 +142,50 @@ export const uploadMusic = (formData) => async dispatch => {
 
         //   albumOrder: { type: Number, default: 1 },
         //   plays: { type: Number, default: 0 }
+        let newSongs = [];
+        for (let i = 0; i < formData.tracks.length; i++) {
+            const fileType = formData.tracks[i].audioFile.name.split('.').pop();
+            let mediaType = "";
+            //TODO add more complex upload checking
+            if (fileType === 'wav') {
+                mediaType = 'audio/wav';
+    
+            }
+            else if (fileType === 'mp3'  || fileType === 'mp4'  || fileType === 'm4a'  || fileType === 'aac') {
+                mediaType = 'audio/mpeg';
+            }
 
-
-        formData.tracks.forEach(async (track, index) => {
-            let uploadConfig = await axios.get(`/api/music/upload/${track.audioFile.type}`);
-            await axios.put(uploadConfig.data.url, track.audioFile, {
+            let uploadConfig = await axios.get(`/api/music/upload/${mediaType}`);
+            console.log("uploadConfig song", uploadConfig)
+            await axios.put(uploadConfig.data.url, formData.tracks[i].audioFile, {
                 headers: {
-                    'Content-Type': track.audioFile.type
+                    'Content-Type': mediaType
                 }
             });
 
             res = await axios.post('/api/songs', {
-                songTitle: track.title,
+                songTitle: formData.tracks[i].title,
                 _artist: formData.general.artistId,
                 _album: albumId,
                 _genre: formData.general.genre,
-                duration: track.duration,
+                duration: formData.tracks[i].duration,
                 songPath: uploadConfig.data.key,
-                price: track.price,
-                mediaType: track.audioFile.type,
-                albumOrder: index + 1
+                price: formData.tracks[i].price,
+                mediaType,
+                albumOrder: i + 1
 
             });
 
-            dispatch({ type: UPLOAD_SONG, payload: res.data });
+            newSongs.push(res.data)
+            
+        }
 
-        });
+        dispatch({ type: UPLOAD_SONGS, payload: newSongs });
+
+   
 
     }
-    catch (err) {
+    catch (err) { //TODO create different errors and add fixes for each error for instance if error in uploading songs delete album and then return 
         return  -1;
     }
 

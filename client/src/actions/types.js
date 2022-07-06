@@ -13,4 +13,4 @@ export const FETCH_ARTIST_ALBUMS = 'fetch_artist_albums';
 export const RESET_ARTIST_PAGE = 'reset_artist_page';
 export const FETCH_USER_ARTIST_USERNAME = 'fetch_user_artist_username';
 export const UPLOAD_ALBUM = 'upload_album';
-export const UPLOAD_SONG = 'upload_song';
+export const UPLOAD_SONGS = 'upload_song';
