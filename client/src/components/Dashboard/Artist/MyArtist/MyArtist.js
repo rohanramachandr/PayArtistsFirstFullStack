@@ -93,13 +93,17 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
                         <span className="trackName">{song.songTitle}</span>
                         <span className="artistUsername">{renderArtistName()}</span>
                     </div>
-                    <div className="trackOptions">
+                    {/* <div className="trackOptions">
                         <div className="optionsIcon">
                             <MoreHorizRoundedIcon color="inherit" />
+                           
                         </div>
-                    </div>
-                    <div className="trackDuration">
-                        <span className="duration">{song.duration}</span>
+                    </div> */}
+                    <div className="trackDetails">
+                         <span className="trackPrice">{'$' + song.price}</span>
+                         <span className="duration">{song.duration}</span>
+                       
+                    
                     </div>
                 </li>
             );

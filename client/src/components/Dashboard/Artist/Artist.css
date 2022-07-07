@@ -101,7 +101,7 @@
     display: block;
 }
 
-.tracklistRow .trackOptions {
+/* .tracklistRow .trackOptions {
     width: 5%;
     float: left;
     text-align: right;
@@ -109,18 +109,30 @@
 
 .tracklistRow .trackOptions .optionsIcon {
     width: 15%;
-    visibility: hidden;
+    visibility: hidden !important;
 
-}
+} */
 
-.tracklistRow:hover .trackOptions .optionsIcon {
-    visibility: visible;
-}
 
-.tracklistRow .trackDuration {
+
+
+
+
+
+
+.tracklistRow .trackDetails {
     width: 12%;
     float: left;
-    text-align: right
+    text-align: right;
+    padding-left: 5%;
+}
+.tracklistRow .trackDetails span {
+    display: block;
+}
+
+.tracklistRow .trackDetails .trackPrice {
+    color: #ec148c;
+    margin-bottom: 7px;
 }
 
 .tracklistRow .trackInfo .trackName {
