@@ -47,7 +47,7 @@ const Album = ({
   };
 
   const renderNumSongs = () => {
-    return album.songs ? <span>{`${album.songs.length} songs`}</span> : null;
+    return album.songs ? <span>{album.songs.length !== 1 ? `${album.songs.length} songs` : `${album.songs.length} song`}</span> : null;
   };
 
 
