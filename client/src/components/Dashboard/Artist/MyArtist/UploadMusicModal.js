@@ -63,7 +63,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
     const [formData, setFormData] = useState({ general: { artistId: "", artistUsername, artistName: "", albumName: "", genre: null, numberOfTracks: 1, albumArtwork: null, albumArtworkUrl: null }, tracks: [{ title: "", audioFile: null, cover: null, hasLyrics: null, price: 0, duration: null, mediaType: null }] });
     const [genreLabels, setGenreLabels] = useState([]);
 
-
+    const [submitClick, setSubmitClick] = useState(false);
     const [currentMusicFile, setCurrentMusicFile] = useState({ index: null, file: null, mediaType: null });
     const audioPlayer = useRef(null);
 
@@ -157,6 +157,11 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
     }, [currentMusicFile]);
 
 
+    const checkIfFormError = () => {
+        return errors.albumName.length + errors.numberOfTracks.length + errors.genre.length + errors.albumArtwork.length + errors.tracks.length > 0;
+    };
+
+
 
 
     const submitForm = async () => {
@@ -190,6 +195,9 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
             if (!track.audioFile) {
                 trackError.audioFile.push(`Track ${index + 1} must have an audio file`);
             }
+            if (track.duration === null) {
+                trackError.audioFile.push(`Track ${index + 1} file compatibility is being verified`)
+            }
             if (track.cover === null) {
                 trackError.cover.push(`This field is required`);
             }
@@ -212,6 +220,8 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
             }
         });
 
+        setSubmitClick(true);
+
         console.log("formData", formData);
         if (tempErrors.albumName.length || tempErrors.genre.length || tempErrors.numberOfTracks.length || tempErrors.albumArtwork.length || numTrackErrors) {
             console.log("tempErrors", tempErrors);
@@ -225,14 +235,14 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
         const errorCheck = await uploadMusic(formData);
         setFormState(errorCheck === 0 ? "finished" : "error");
 
-       
+
 
 
     };
 
     const handleClose = () => {
 
-        
+
         setUploadMusicOpen(false);
         setTimeout(() => {
             if (formState === "finished" || formState === "error") {
@@ -294,7 +304,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
             mediaType = 'audio/wav';
 
         }
-        else if (fileType === 'mp3'  || fileType === 'mp4'  || fileType === 'm4a'  || fileType === 'aac') {
+        else if (fileType === 'mp3' || fileType === 'mp4' || fileType === 'm4a' || fileType === 'aac') {
             mediaType = 'audio/mpeg';
         }
         copyTracks[index].mediaType = mediaType;
@@ -714,10 +724,14 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
                         <Grid item style={{ alignSelf: 'center' }}>
 
                             <Button variant="contained" color="primary" onClick={() => submitForm()}>Upload Music</Button>
-
-
-
+                           
                         </Grid>
+                        <Grid item style={{ alignSelf: 'center' }}>
+
+                        {submitClick && checkIfFormError() && <FormHelperText style={{textAlign: 'center', color: "red" }}>Please fix form errors and resubmit</FormHelperText>}
+                           
+                        </Grid>
+
 
 
                     </Grid>
