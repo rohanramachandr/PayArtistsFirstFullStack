@@ -113,6 +113,12 @@ export const uploadMusic = (formData) => async dispatch => {
 
     try {
 
+        for (let i = 0; i < formData.tracks.length; i++) {
+            if (formData.tracks[i].duration === null) {
+                throw new Error("song type not valid");
+            }
+
+        }
         let uploadConfig = await axios.get(`/api/artwork/upload/${formData.general.albumArtwork.type}`);
         console.log(uploadConfig.data.url, formData.general.albumArtwork);
         await axios.put(uploadConfig.data.url, formData.general.albumArtwork, {

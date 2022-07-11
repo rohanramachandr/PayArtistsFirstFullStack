@@ -69,19 +69,22 @@ module.exports = app => {
 
 
         const song = new Song({
-        ...req.body
+            ...req.body
         });
-    
+
         try {
-          await song.save();
-          res.send(song);
-    
+            if (req.body.duration === null) {
+                throw new Error("song type not valid");
+            }
+            await song.save();
+            res.send(song);
+
         } catch (err) {
-          res.send(400, err);
+            res.send(400, err);
         }
-    
-       
-      });
+
+
+    });
 
 
 
