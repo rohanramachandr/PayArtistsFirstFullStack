@@ -3,6 +3,7 @@ import "./Album.css";
 import * as actions from "../../../actions";
 import { connect } from "react-redux";
 import React ,{ useEffect } from "react";
+import { Link } from "react-router-dom";
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
@@ -43,7 +44,7 @@ const Album = ({
   };
 
   const renderArtistName = () => {
-    return album.artist ? <span>{`By ${album.artist}`}</span> : null;
+    return album.artist?.artistUsername ? <Link className='link' to={`/${album.artist.artistUsername}`}><span>{`By ${album.artist.artistName}`}</span></Link> : null;
   };
 
   const renderNumSongs = () => {
@@ -99,7 +100,9 @@ const Album = ({
           </div>
           <div className="trackInfo">
             <span className="trackName">{song.songTitle}</span>
-            <span className="artistName">{album.artist}</span>
+          
+              <span className="artistName">{album.artist?.artistName}</span>
+      
           </div>
           {/* <div className="trackOptions">
             <div className="optionsIcon">

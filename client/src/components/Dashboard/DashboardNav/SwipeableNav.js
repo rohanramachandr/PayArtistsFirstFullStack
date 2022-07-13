@@ -9,6 +9,8 @@ import AlbumIcon from '@mui/icons-material/Album';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+
 
 
 
@@ -137,6 +139,13 @@ const SwipeableNavBar = ({ isArtist}) => {
                     </Link>
 
                     {renderMyMusicOrBecomeArtist()}
+
+                    <ListItem button key="Settings">
+                        <ListItemIcon>
+                            <AttachMoneyIcon fontSize="large" style={styles.icon} />
+                        </ListItemIcon>
+                        <ListItemText primary="Balance" />
+                    </ListItem>
                     <ListItem button key="Settings">
                         <ListItemIcon>
                             <SettingsIcon fontSize="large" style={styles.icon} />
