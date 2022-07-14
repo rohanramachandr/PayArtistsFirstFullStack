@@ -8,7 +8,7 @@ export default function albumReducer(state=initState, action) {
         case FETCH_ALBUM_GENRE:
             return {...state, genre: action.payload.genreName};
         case FETCH_ALBUM_ARTIST:
-            return {...state, artist: action.payload.artistName};
+            return {...state, artist: action.payload};
         case FETCH_ALBUM_SONGS:
             return {...state, songs: action.payload};
         case RESET_ALBUM_PAGE:

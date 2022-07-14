@@ -12,6 +12,7 @@ const theme = createTheme({
           
           main:'#ec148c'
         },
+       
          
         
         secondary: {
@@ -20,7 +21,11 @@ const theme = createTheme({
         neutral: {
           main: "#fff"
 
-        }
+        },
+        default: {
+          main: '#bdbdbd'
+
+        },
     }
 
   

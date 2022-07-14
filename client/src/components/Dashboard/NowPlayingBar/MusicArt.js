@@ -4,7 +4,6 @@ import { useSwipeable } from "react-swipeable";
 import { motion } from "framer-motion";
 import { Avatar, Grid, Typography } from "@material-ui/core";
 import { FavoriteTwoTone } from "@material-ui/icons";
-import circleSvg from "./dottedCircle.svg";
 // import { rateSong } from "../../external/saveSong";
 
 const dblTouchTapMaxDelay = 300;
@@ -46,8 +45,8 @@ const MusicArt = ({ data, rating, audioEl, setPlayerState }) => {
   // });
 
   const artContainerStyle = {
-    background: `url(${circleSvg}) no-repeat`,
-    padding: "18px",
+
+    padding: "5px 18px",
     position: "relative",
     zIndex: "1"
   };
@@ -125,10 +124,10 @@ const MusicArt = ({ data, rating, audioEl, setPlayerState }) => {
         {/* <FavoriteTwoTone className={"songHeart left"} style={heartStyle} />
         <FavoriteTwoTone className={"songHeart right"} style={heartStyle} /> */}
         <Avatar
-          className="searchThumb"
+          variant="square"
           style={{
-            width: "215px",
-            height: "215px",
+            width: "40vh",
+            height: "40vh",
             boxShadow: "#0000008c 1px 3px 8px"
           }}
           alt="music thumbnail"

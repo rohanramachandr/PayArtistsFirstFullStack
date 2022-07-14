@@ -21,7 +21,7 @@ const Browse = (props) => {
     return props.albums.map(({ _id, albumTitle, artworkPath }) => {
       return (
         <Link to={`/album/${_id}`} key={_id} className="gridViewItem">
-          <img src={artworkPath} alt={albumTitle} />
+          <img src={process.env.REACT_APP_ARTWORK_BUCKET_URL + artworkPath} alt={albumTitle} />
 
           <div className="gridViewInfo">{albumTitle}</div>
         </Link>

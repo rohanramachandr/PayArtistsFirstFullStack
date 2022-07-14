@@ -9,6 +9,8 @@ const songSchema = new Schema({
     _genre: { type: Schema.Types.ObjectId, ref: 'Genre' },
     duration: String,
     songPath: String,
+    price: String,
+    mediaType: String,
     albumOrder: { type: Number, default: 1 },
     plays: { type: Number, default: 0 }
 

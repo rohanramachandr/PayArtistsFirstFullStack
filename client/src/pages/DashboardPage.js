@@ -12,7 +12,7 @@ import SwipeableNavBar from "../components/Dashboard/DashboardNav/SwipeableNav";
 import { DashboardContextProvider } from "../components/Dashboard/DashboardContext";
 import ResponsivePlayingBar from "../components/Dashboard/NowPlayingBar/ResponsivePlayingBar";
 import BecomeArtistModal from "../components/Dashboard/BecomeArtist/BecomeArtistModal";
-import AddAlbumModal from "../components/Dashboard/Artist/MyArtist/AddAlbumModal"
+
 import { connect } from 'react-redux';
 
 const DashboardPage = ({auth}) => {
@@ -31,7 +31,7 @@ const DashboardPage = ({auth}) => {
           <ResponsivePlayingBar />
         </div>
         <BecomeArtistModal/>
-        <AddAlbumModal />
+       
       </DashboardContextProvider>
     </ThemeProvider>
 

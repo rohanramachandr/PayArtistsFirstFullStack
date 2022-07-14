@@ -87,13 +87,16 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
                         <span className="trackName">{song.songTitle}</span>
                         <span className="artistUsername">{renderArtistName()}</span>
                     </div>
-                    <div className="trackOptions">
+                    {/* <div className="trackOptions">
                         <div className="optionsIcon">
                             <MoreHorizRoundedIcon color="inherit"/>
                         </div>
-                    </div>
-                    <div className="trackDuration">
-                        <span className="duration">{song.duration}</span>
+                    </div> */}
+                    <div className="trackDetails">
+                         <span className="trackPrice">{'$' + song.price}</span>
+                         <span className="duration">{song.duration}</span>
+                       
+                    
                     </div>
                 </li>
             );
@@ -116,7 +119,7 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
         return albums.map(({ _id, albumTitle, artworkPath }) => {
           return (
             <Link to={`/album/${_id}`} key={_id} className="gridViewItem">
-              <img src={artworkPath} alt={albumTitle} />
+              <img src={process.env.REACT_APP_ARTWORK_BUCKET_URL + artworkPath} alt={albumTitle} />
     
               <div className="gridViewInfo">{albumTitle}</div>
             </Link>

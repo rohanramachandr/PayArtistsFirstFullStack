@@ -3,6 +3,7 @@ import "./Album.css";
 import * as actions from "../../../actions";
 import { connect } from "react-redux";
 import React ,{ useEffect } from "react";
+import { Link } from "react-router-dom";
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
@@ -34,7 +35,7 @@ const Album = ({
 
   const renderArtwork = () => {
     return album.album ? (
-      <img src={album.album.artworkPath} alt="album art" />
+      <img src={process.env.REACT_APP_ARTWORK_BUCKET_URL + album.album.artworkPath} alt="album art" />
     ) : null;
   };
 
@@ -43,11 +44,11 @@ const Album = ({
   };
 
   const renderArtistName = () => {
-    return album.artist ? <span>{`By ${album.artist}`}</span> : null;
+    return album.artist?.artistUsername ? <Link className='link' to={`/${album.artist.artistUsername}`}><span>{`By ${album.artist.artistName}`}</span></Link> : null;
   };
 
   const renderNumSongs = () => {
-    return album.songs ? <span>{`${album.songs.length} songs`}</span> : null;
+    return album.songs ? <span>{album.songs.length !== 1 ? `${album.songs.length} songs` : `${album.songs.length} song`}</span> : null;
   };
 
 
@@ -99,15 +100,20 @@ const Album = ({
           </div>
           <div className="trackInfo">
             <span className="trackName">{song.songTitle}</span>
-            <span className="artistName">{album.artist}</span>
+          
+              <span className="artistName">{album.artist?.artistName}</span>
+      
           </div>
-          <div className="trackOptions">
+          {/* <div className="trackOptions">
             <div className="optionsIcon">
               <MoreHorizRoundedIcon color="inherit"/>
             </div>
-          </div>
-          <div className="trackDuration">
-            <span className="duration">{song.duration}</span>
+          </div> */}
+          <div className="trackDetails">
+                         <span className="trackPrice">{'$' + song.price}</span>
+                         <span className="duration">{song.duration}</span>
+                       
+                    
           </div>
         </li>
       );

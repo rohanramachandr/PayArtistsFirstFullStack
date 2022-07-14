@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, FETCH_SONG_DETAILS, UPDATE_SONG_PLAYS, FETCH_PLAYLIST, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID, FETCH_USER_ARTIST_USERNAME } from './types';
+import { FETCH_ALBUMS, FETCH_USER, RESET_ARTIST_PAGE, FETCH_ALBUM, FETCH_ALBUM_GENRE, FETCH_ALBUM_ARTIST, FETCH_ALBUM_SONGS, UPDATE_SONG_PLAYS, RESET_ALBUM_PAGE, FETCH_ARTIST_INFO, FETCH_ARTIST_SONGS, FETCH_ARTIST_ALBUMS, SET_CURRENT_SONG_ID, UPLOAD_ALBUM, UPLOAD_SONGS } from './types';
 
 export const fetchUser = () => async dispatch => {
 
@@ -9,13 +9,7 @@ export const fetchUser = () => async dispatch => {
 
 };
 
-export const fetchUserArtistUsername = () => async dispatch => {
 
-    const res = await axios.get('/api/current_artist');
-
-    dispatch({ type: FETCH_USER_ARTIST_USERNAME, payload: res.data });
-
-};
 
 export const fetchAlbums = () => async dispatch => {
 
@@ -71,7 +65,7 @@ export const setCurrentSongID = (id) => {
         type: SET_CURRENT_SONG_ID,
         payload: id
     }
-}; 
+};
 
 
 
@@ -106,10 +100,108 @@ export const fetchArtistAlbums = (artistUsername) => async dispatch => {
 
 
 export const createArtist = (artistName, artistUsername) => async dispatch => {
-    const values = {artistName, artistUsername};
+    const values = { artistName, artistUsername };
     const res = await axios.post('/api/artists/create', values);
     dispatch({ type: FETCH_USER, payload: res.data });
+
+};
+
+
+
+
+export const uploadMusic = (formData) => async dispatch => {
+
+    try {
+
+        for (let i = 0; i < formData.tracks.length; i++) {
+            if (formData.tracks[i].duration === null) {
+                throw new Error("song type not valid");
+            }
+
+        }
+        let uploadConfig = await axios.get(`/api/artwork/upload/${formData.general.albumArtwork.type}`);
+        console.log(uploadConfig.data.url, formData.general.albumArtwork);
+        await axios.put(uploadConfig.data.url, formData.general.albumArtwork, {
+            headers: {
+                'Content-Type': formData.general.albumArtwork.type
+            }
+        });
+        console.log("uploadConfig artwork", uploadConfig)
+        let res = await axios.post('/api/albums', {
+            albumTitle: formData.general.albumName,
+            _artist: formData.general.artistId,
+            _genre: formData.general.genre,
+            artworkPath: uploadConfig.data.key
+        });
+
+        dispatch({ type: UPLOAD_ALBUM, payload: res.data });
+
+        const albumId = res.data._id;
+        //   songTitle: String,
+        //   _artist: { type: Schema.Types.ObjectId, ref: 'Artist' },
+        //   _album: { type: Schema.Types.ObjectId, ref: 'Album' },
+        //   _genre: { type: Schema.Types.ObjectId, ref: 'Genre' },
+        //   duration: String,
+        //   songPath: String,
+        //price: String,
+        //mediaType: String
+
+        //   albumOrder: { type: Number, default: 1 },
+        //   plays: { type: Number, default: 0 }
+        let newSongs = [];
+        for (let i = 0; i < formData.tracks.length; i++) {
+            const fileType = formData.tracks[i].audioFile.name.split('.').pop();
+            let mediaType = "";
+            //TODO add more complex upload checking
+            if (fileType === 'wav') {
+                mediaType = 'audio/wav';
+    
+            }
+            else if (fileType === 'mp3'  || fileType === 'mp4'  || fileType === 'm4a'  || fileType === 'aac') {
+                mediaType = 'audio/mpeg';
+            }
+
+            let uploadConfig = await axios.get(`/api/music/upload/${mediaType}`);
+            console.log("uploadConfig song", uploadConfig)
+            await axios.put(uploadConfig.data.url, formData.tracks[i].audioFile, {
+                headers: {
+                    'Content-Type': mediaType
+                }
+            });
+
+            res = await axios.post('/api/songs', {
+                songTitle: formData.tracks[i].title,
+                _artist: formData.general.artistId,
+                _album: albumId,
+                _genre: formData.general.genre,
+                duration: formData.tracks[i].duration,
+                songPath: uploadConfig.data.key,
+                price: formData.tracks[i].price,
+                mediaType,
+                albumOrder: i + 1
+
+            });
+
+            newSongs.push(res.data)
+            
+        }
+
+        dispatch({ type: UPLOAD_SONGS, payload: newSongs });
+
    
+
+    }
+    catch (err) { //TODO create different errors and add fixes for each error for instance if error in uploading songs delete album and then return 
+        return  -1;
+    }
+
+    return 0;
+
+
+
+
+
+
 };
 
 
@@ -122,6 +214,9 @@ export const resetArtistPage = () => {
         payload: null
     };
 };
+
+
+
 
 
 

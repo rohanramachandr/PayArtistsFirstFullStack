@@ -135,11 +135,12 @@ const ResponsivePlayingBar = ({
         setAudioState('loading');
         setCurrentPlaylist(playlist);
         const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
-        const {albumOrder, albumTitle, artistUsername, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id} = res.data
+        const {albumOrder, albumTitle, artistUsername, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id, mediaType} = res.data
         setCurrentSongID(_id);
-        const songInfo = {audio: songPath, title: songTitle, artistName, artistUsername, thumbnail: artworkPath, _id, _album};
+        const songInfo = {audio: process.env.REACT_APP_MUSIC_BUCKET_URL + songPath, title: songTitle, artistName, artistUsername, thumbnail: process.env.REACT_APP_ARTWORK_BUCKET_URL + artworkPath, _id, _album};
         setCurrentlyPlaying(songInfo);
-        audioPlayer.current.src = songPath;
+        audioPlayer.current.src =  process.env.REACT_APP_MUSIC_BUCKET_URL + songPath;
+        // audioPlayer.current.type = mediaType;
         playAudio(songInfo);
 
     
@@ -330,7 +331,7 @@ const ResponsivePlayingBar = ({
                 );
           
                 if (currentIndex !== -1 && currentIndex !== 0) {
-                    const prevIndex = currentIndex - 1; //we will play the next song
+                    const prevIndex = currentIndex - 1; 
                     await getSongInfo({detail:{playlist: currentPlaylist, clickIndex: prevIndex}})
                 } else {
                     player.currentTime = 0;
@@ -557,7 +558,7 @@ const ResponsivePlayingBar = ({
                             direction="row"
                             justifyContent="space-evenly"
                             alignItems="center"
-                            style={{ maxWidth: '290px', height: '80px', margin: '0 auto' }}
+                            style={{ maxWidth: '290px', height: '80px', margin: '0 auto', marginTop: '-60px' }}
                         >
                             <PreviousButton playPrevious={playPrevious} />
                             <PlayPauseButton player={player} audioState={audioState} />
@@ -657,7 +658,7 @@ const ResponsivePlayingBar = ({
                     onEnded={songEnded}
                     autoPlay
                     ref={audioPlayer}
-                    type="audio/mp4"
+                  
                 />
         </div>
     );

@@ -8,7 +8,7 @@ const Song = mongoose.model("songs");
 
 module.exports = (app) => {
   app.get("/api/albums", requireLogin, async (req, res) => {
-    const albums = await Album.find({}).limit(2);
+    const albums = await Album.find({}).limit();
 
     res.send(albums);
   });
@@ -44,11 +44,30 @@ module.exports = (app) => {
 
   app.get("/api/albums/:albumId/songs", requireLogin, async (req, res) => {
     try {
-      const songs = await Song.find({ _album: req.params.albumId });
+      const songs = await Song.find({ _album: req.params.albumId }).sort({ albumOrder: 1 });
       res.send(songs);
     } catch (err) {
       res.status(404).send(err);
     }
+  });
+
+
+  app.post('/api/albums', requireLogin, async (req, res) => {
+
+
+    const album = new Album({
+    ...req.body
+    });
+
+    try {
+      await album.save();
+      res.send(album);
+
+    } catch (err) {
+      res.send(400, err);
+    }
+
+   
   });
 
 

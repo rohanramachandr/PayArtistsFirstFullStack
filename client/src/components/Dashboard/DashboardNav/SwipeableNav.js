@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import axios from 'axios';
 import { DashboardContext } from "../DashboardContext";
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { connect } from 'react-redux';
@@ -8,13 +9,15 @@ import AlbumIcon from '@mui/icons-material/Album';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import * as actions from '../../../actions';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 
 
-const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUsername }) => {
 
-    const { menuOpen, setMenuOpen, setBecomeArtistOpen } = useContext(DashboardContext);
+
+const SwipeableNavBar = ({ isArtist}) => {
+
+    const { menuOpen, setMenuOpen, setBecomeArtistOpen, userArtistUsername, setUserArtistUsername } = useContext(DashboardContext);
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     const styles = {
@@ -41,14 +44,23 @@ const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUserna
 
     };
 
-
     useEffect(() => {
 
+        const fetchUserArtistUsername = async () => {
+
+            const res = await axios.get('/api/current_artist');
+
+            setUserArtistUsername(res.data);
+
+        };
 
 
-        console.log("auth", auth);
+        fetchUserArtistUsername();
 
-    }, [auth])
+    }, [setUserArtistUsername]);
+
+
+   
 
 
     const renderMyMusicOrBecomeArtist = () => {
@@ -67,7 +79,8 @@ const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUserna
 
 
         return (
-            <Link to={`/${artistUsername}`} style={styles.link}>
+            <>
+                {userArtistUsername !== "" && userArtistUsername !== undefined && <Link to={`/${userArtistUsername}`} style={styles.link}>
                 <ListItem button key="My Music">
                     <ListItemIcon>
                         <AlbumIcon fontSize="large" style={styles.icon} />
@@ -75,7 +88,9 @@ const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUserna
                     <ListItemText primary="My Music" />
                 </ListItem>
 
-            </Link>
+            </Link>}
+            </>
+        
         );
 
     };
@@ -124,6 +139,13 @@ const SwipeableNavBar = ({ auth, fetchUserArtistUsername, isArtist, artistUserna
                     </Link>
 
                     {renderMyMusicOrBecomeArtist()}
+
+                    <ListItem button key="Settings">
+                        <ListItemIcon>
+                            <AttachMoneyIcon fontSize="large" style={styles.icon} />
+                        </ListItemIcon>
+                        <ListItemText primary="My Balance" />
+                    </ListItem>
                     <ListItem button key="Settings">
                         <ListItemIcon>
                             <SettingsIcon fontSize="large" style={styles.icon} />
@@ -157,4 +179,4 @@ function mapStateToProps({ auth }) {
     return { auth };
 }
 
-export default connect(mapStateToProps, actions)(SwipeableNavBar);
+export default connect(mapStateToProps, null)(SwipeableNavBar);
