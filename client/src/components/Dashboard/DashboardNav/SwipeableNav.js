@@ -144,7 +144,7 @@ const SwipeableNavBar = ({ isArtist}) => {
                         <ListItemIcon>
                             <AttachMoneyIcon fontSize="large" style={styles.icon} />
                         </ListItemIcon>
-                        <ListItemText primary="Balance" />
+                        <ListItemText primary="My Balance" />
                     </ListItem>
                     <ListItem button key="Settings">
                         <ListItemIcon>
