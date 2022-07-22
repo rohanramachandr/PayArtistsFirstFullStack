@@ -134,12 +134,15 @@ const ResponsivePlayingBar = ({
         
         setAudioState('loading');
         setCurrentPlaylist(playlist);
-        const res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
+        let res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
         const {albumOrder, albumTitle, artistUsername, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id, mediaType} = res.data
         setCurrentSongID(_id);
-        const songInfo = {audio: process.env.REACT_APP_MUSIC_CF_URL + songPath, title: songTitle, artistName, artistUsername, thumbnail: process.env.REACT_APP_ARTWORK_BUCKET_URL + artworkPath, _id, _album};
+        res = await axios.get(`/api/songs/stream/${playlist[clickIndex]}`)
+        const signedUrl = res.data;
+        const songInfo = {audio: signedUrl, title: songTitle, artistName, artistUsername, thumbnail: process.env.REACT_APP_ARTWORK_BUCKET_URL + artworkPath, _id, _album};
+        
         setCurrentlyPlaying(songInfo);
-        audioPlayer.current.src =  process.env.REACT_APP_MUSIC_CF_URL + songPath;
+        audioPlayer.current.src =  signedUrl;
         // audioPlayer.current.type = mediaType;
         playAudio(songInfo);
 
