@@ -11,6 +11,6 @@ module.exports = {
     musicBucketName: process.env.MUSIC_BUCKET_NAME,
     cloudfrontUrl: process.env.CLOUD_FRONT_URL,
     cloudfrontPublicKey: process.env.CLOUD_FRONT_PUBLIC_KEY_ID,
-    cloudfrontPrivateKey: JSON.parse(process.env.RSA_PRIVATE_KEY).replace(/\\n/g, '\n')
+    cloudfrontPrivateKey: process.env.RSA_PRIVATE_KEY.replace(/\\n/g, '\n')
 
 };
