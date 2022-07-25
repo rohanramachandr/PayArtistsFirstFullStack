@@ -12,4 +12,5 @@ module.exports = {
     cloudfrontUrl: process.env.CLOUD_FRONT_URL,
     cloudfrontPublicKey: process.env.CLOUD_FRONT_PUBLIC_KEY_ID,
     cloudfrontPrivateKey: process.env.RSA_PRIVATE_KEY_CF.replace(/\\n/g, '\n')
+    
 };
