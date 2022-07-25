@@ -94,7 +94,7 @@ module.exports = app => {
     app.get('/api/songs/stream/:songId', requireLogin, async (req, res) => {
 
         try {
-
+        console.log("private key", keys.cloudfrontPrivateKey)
         const cloudFront = new AWS.CloudFront.Signer(keys.cloudfrontPublicKey,  keys.cloudfrontPrivateKey);
 
         const { songPath } = await Song.findOne({ _id: req.params.songId });
