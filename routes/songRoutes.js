@@ -7,9 +7,8 @@ const Genre = mongoose.model('genres');
 const Artist = mongoose.model('artists');
 const Song = mongoose.model('songs');
 
-//console.log(keys.cloudfrontKeyPairId, keys.cloudfrontPrivateKey)
 
-const cloudFront = new AWS.CloudFront.Signer(keys.cloudfrontPublicKey,  keys.cloudfrontPrivateKey);
+
 
 module.exports = app => {
 
@@ -96,11 +95,11 @@ module.exports = app => {
 
         try {
 
-       
+        const cloudFront = new AWS.CloudFront.Signer(keys.cloudfrontPublicKey,  keys.cloudfrontPrivateKey);
+
         const { songPath } = await Song.findOne({ _id: req.params.songId });
-        console.log("cloudfront url", keys.cloudfrontUrl + songPath)
         const signedUrl = cloudFront.getSignedUrl({
-            url: 'https://d1y3hcp3cg8qbg.cloudfront.net/' + songPath,
+            url:  keys.cloudfrontUrl + songPath,
             expires: Math.floor((new Date()).getTime() / 1000) + (30) // Current Time in UTC + time in seconds, (60 * 60 * 1 = 1 hour)
         });
 

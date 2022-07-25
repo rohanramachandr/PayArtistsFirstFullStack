@@ -4,7 +4,7 @@ import * as actions from "../../../actions";
 import { connect } from "react-redux";
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+
 
 import "./Artist.css";
 
@@ -34,7 +34,6 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
 
    
 
-    const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 
     const renderPlayingButtons = (artistSongs, index, order) => {
