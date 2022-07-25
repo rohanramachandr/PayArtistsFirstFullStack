@@ -8,6 +8,18 @@ const Artist = mongoose.model('artists');
 const Song = mongoose.model('songs');
 
 
+const calulateNumSecondsForStreaming = (duration) => {
+    const minutesAndSeconds = duration.split(':')
+    const minutes = parseInt(minutesAndSeconds[0]);
+    const seconds = parseInt(minutesAndSeconds[1]);
+
+    const totalSeconds = (minutes * 60) + seconds;
+    console.log("totalSeconds", totalSeconds)
+    return totalSeconds * 2;
+
+}
+
+
 
 
 module.exports = app => {
@@ -97,10 +109,10 @@ module.exports = app => {
         console.log("private key", keys.cloudfrontPrivateKey)
         const cloudFront = new AWS.CloudFront.Signer(keys.cloudfrontPublicKey,  keys.cloudfrontPrivateKey);
 
-        const { songPath } = await Song.findOne({ _id: req.params.songId });
+        const { songPath, duration } = await Song.findOne({ _id: req.params.songId });
         const signedUrl = cloudFront.getSignedUrl({
             url:  keys.cloudfrontUrl + songPath,
-            expires: Math.floor((new Date()).getTime() / 1000) + (30) // Current Time in UTC + time in seconds, (60 * 60 * 1 = 1 hour)
+            expires: Math.floor((new Date()).getTime() / 1000) + (calulateNumSecondsForStreaming(duration)) // Current Time in UTC + time in seconds, (60 * 60 * 1 = 1 hour)
         });
 
             res.send(signedUrl)
