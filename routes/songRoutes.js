@@ -14,7 +14,7 @@ const calulateNumSecondsForStreaming = (duration) => {
     const seconds = parseInt(minutesAndSeconds[1]);
 
     const totalSeconds = (minutes * 60) + seconds;
-    console.log("totalSeconds", totalSeconds)
+    //console.log("totalSeconds", totalSeconds)
     return totalSeconds * 2;
 
 }
@@ -106,7 +106,7 @@ module.exports = app => {
     app.get('/api/songs/stream/:songId', requireLogin, async (req, res) => {
 
         try {
-        console.log("private key", keys.cloudfrontPrivateKey)
+        
         const cloudFront = new AWS.CloudFront.Signer(keys.cloudfrontPublicKey,  keys.cloudfrontPrivateKey);
 
         const { songPath, duration } = await Song.findOne({ _id: req.params.songId });
