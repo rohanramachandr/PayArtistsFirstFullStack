@@ -28,8 +28,8 @@ module.exports = app => {
 
 
         try {
+            
             const { _id, songTitle, _artist, duration, songPath, albumOrder, plays, _album } = await Song.findOne({ _id: req.params.songId });
-
 
             const { artistName, artistUsername } = await Artist.findOne({ _id: _artist });
 

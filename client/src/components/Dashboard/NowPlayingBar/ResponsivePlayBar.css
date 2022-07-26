@@ -97,14 +97,14 @@
     background: #fff;
     width: 100%;
     height: 100%;
-    z-index: 1400;
+    z-index: 1300;
     display: inline-block;
     transition: all .3s ease;
   }
   
   .playerMinimized {
     transform: translateY(calc(100% - 106px));
-    z-index: 0;
+
     background-color: #ec148c;
   }
 
@@ -155,11 +155,7 @@
     box-shadow: #06060640 0px 2px 3px;
   }
   
-  .searchPopper {
-    width: 100%;
-    height: 93%;
-    background: #fff;
-  }
+
   
   .playlistHeader h6 {
     margin-right: 50px;
