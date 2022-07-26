@@ -8,8 +8,6 @@ import MusicArt from './MusicArt';
 import TimelineController from './TimelineController';
 import TopBar from './TopBar';
 import MiniMusicArt from './MiniMusicArt';
-import getAudioLink from './getAudioLink';
-import youtubeSearch from './youtubeSearch';
 import axios from 'axios';
 import { connect } from "react-redux";
 import * as actions from "../../../actions/index";
@@ -32,21 +30,11 @@ const ResponsivePlayingBar = ({
     updateSongPlays,
     setCurrentSongID
    }) => {
-    //   let params = new URLSearchParams(location.search);
 
-    //   const { currentVideoSnippet, themeSelectValue } = useContext(
-    //     GlobalContext
-    //   );
-    // let history = useHistory();
-    // let location = useLocation();
-    const dispatch = (data) => { return null };
 
-    const setCurrentVideoSnippet = (data) => {
-        dispatch({ type: 'setCurrentVideoSnippet', snippet: data });
-    };
 
-    // const [relatedVideos, setRelatedVideos] = useState([]);
-    //const [isItFromPlaylist, setIsItFromPlaylist] = useState(false);
+
+
     //
     const [audioState, setAudioState] = useState(null);
     // there will be 4 states
@@ -57,11 +45,11 @@ const ResponsivePlayingBar = ({
     // maximized, minimized, playlist, or 'notPlaying'
 
     const [minimized, setMinimized] = useState(true);
-    const [isRepeatOn, setIsRepeatOn] = useState(false);
-    const [rating, setRating] = useState('none');
-    const [isNextFromMini, setIsNextFromMini] = useState(false);
-    const [audioURL, setAudioURL] = useState(null);
-    const body = document.querySelector('body');
+    //const [isRepeatOn, setIsRepeatOn] = useState(false);
+    const isRepeatOn = false;
+
+    
+
     const currentVideoSnippet = { audio: "", title: "", artist: "", id: "" };
     const [currentlyPlaying, setCurrentlyPlaying] = useState({ audio: "", title: "", artist: "", id: "", thumbnail: "", _id: "", _album: "", artistName: "", artistUsername: ""});
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
@@ -135,7 +123,7 @@ const ResponsivePlayingBar = ({
         setAudioState('loading');
         setCurrentPlaylist(playlist);
         let res = await axios.get(`/api/song/details/${playlist[clickIndex]}`);
-        const {albumOrder, albumTitle, artistUsername, artistName, artworkPath, duration, plays, songPath, songTitle, _album, _id, mediaType} = res.data
+        const {artistUsername, artistName, artworkPath, songTitle, _album, _id} = res.data
         setCurrentSongID(_id);
         res = await axios.get(`/api/songs/stream/${playlist[clickIndex]}`)
         const signedUrl = res.data;
@@ -161,129 +149,10 @@ const ResponsivePlayingBar = ({
         
         
 
-    },[]);
+    }, []);
 
-    // useEffect(() => {
-    //     // console.log("state changed triggedred");
-    //     const getAudio = async (data) => {
-    //         // audioPlayer.current.src = "";
-    //         // maximize the player every time id changes
-    //         // only if playlist is not open
-    //         if (playerState !== 'playlist' && !isNextFromMini) {
-    //             setPlayerState('maximized');
-    //             //
-    //             // console.log("maximizing here yar and state is", playerState);
-    //         }
+    
 
-    //         setTimeout(() => {
-    //             setIsNextFromMini(false);
-    //             // change it back to false
-    //         }, 200);
-
-    //         setAudioState('loading');
-    //         const res = await getAudioLink.get('/song', {
-    //             params: { id: data },
-    //         });
-
-    //         // set the audio data
-    //         const proxyURL = 'https://server.ylight.xyz/proxy/';
-    //         audioPlayer.current.src = res.data;
-    //         playAudio();
-
-    //         // var audioContext = new AudioContext();
-
-    //         // var track = audioContext.createMediaElementSource(audioPlayer.current);
-    //         // track.connect(audioContext.destination);
-    //     };
-
-    //     if (currentVideoSnippet.audio) {
-    //         // console.log("yes its downloaded we will play from local file");
-    //         // maximize the player every time id changes
-
-    //         setPlayerState('maximized');
-    //         setAudioState('loading');
-    //         audioPlayer.current.src = window.URL.createObjectURL(
-    //             currentVideoSnippet.audio
-    //         );
-    //         playAudio();
-    //     } else if (currentVideoSnippet.id) {
-    //         getAudio(currentVideoSnippet.id);
-    //     }
-
-    //     if (currentVideoSnippet.id) {
-    //         const searchRelated = async () => {
-    //             const res = await youtubeSearch.get('/search', {
-    //                 params: {
-    //                     relatedToVideoId: currentVideoSnippet.id,
-    //                     maxResults: 10,
-    //                 },
-    //             });
-    //             setRelatedVideos(res.data.items);
-    //         };
-
-    //         // if its not from the mini next button then only change history
-    //         if (!isNextFromMini) {
-    //             // if the click is not from playlist then only we will search for realated video
-    //             if (!isItFromPlaylist) {
-    //                 // // console.log("searching for related vids", relatedVideos);
-    //                 // if player is in playlist mode we will just replace history else push it
-    //                 //   if (location.pathname !== '/play') {
-    //                 //     // prevent duplicating history
-    //                 //     history.push(`/play?id=${currentVideoSnippet.id}`);
-    //                 //   }
-
-    //                 searchRelated();
-    //             } else {
-    //                 //   history.replace(`/play?id=${currentVideoSnippet.id}`);
-    //                 setIsItFromPlaylist(false);
-    //             }
-    //         }
-
-    //         // console.log(currentVideoSnippet);
-    //     }
-
-    //     // set rating to none when we load new song
-    //     setRating('none');
-    // }, [currentVideoSnippet, setIsItFromPlaylist]);
-
-    // useEffect(() => {
-    //   // console.log("from playlist", isItFromPlaylist);
-    // }, [isItFromPlaylist]);
-
-    // useEffect(() => {
-    //     relatedVideosVar = relatedVideos;
-    //     // console.log("related", relatedVideos);
-    // }, [relatedVideos]);
-
-    // useEffect(() => {
-    //     // console.log("isnext state", isNextFromMini);
-    // }, [isNextFromMini]);
-
-    const setAudioSrcAndPlay = async (id) => {
-        const res = await getAudioLink.get('/song', {
-            params: { id: id },
-        });
-
-        // set the audio data
-        audioPlayer.current.src = res.data;
-        playAudio();
-    };
-
-    const setVideoSnippet = (video) => {
-        setCurrentVideoSnippet({
-            id: video.id.videoId,
-            title: video.snippet.title,
-            channelTitle: video.snippet.channelTitle,
-            maxThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/hqdefault.jpg`,
-            sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/sddefault.jpg`,
-            // this is the url of the max resolution of thumbnail
-        });
-
-        // if window is minimized then only we will run this function
-        if (document.hidden) {
-            setAudioSrcAndPlay(video.id.videoId);
-        }
-    };
 
     const playNext = async () => {
         if (currentPlaylist) {
@@ -343,17 +212,6 @@ const ResponsivePlayingBar = ({
         }
     };
 
-    let playerStyle = {
-        position: 'fixed',
-        right: 0,
-        bottom: 0,
-        background: '#fff',
-        width: '100%',
-        height: '100%',
-        zIndex: 1400,
-        display: 'inline block',
-        transition: 'all .3s ease',
-    };
 
     // if (playerState === 'minimized') {
     //     playerStyle.transform = 'translateY(calc(100% - 106px))';
@@ -393,21 +251,9 @@ const ResponsivePlayingBar = ({
         }
     };
 
-    const toggleMaxPlaylist = () => {
-        if (playerState === 'playlist') {
-            setPlayerState('maximized');
-        } else {
-            setPlayerState('playlist');
-        }
-        // console.log("Maximize the playlist");
-    };
 
-    const updateSongDB = async () => {
-        // const rating = await updatePlayingSong(currentVideoSnippet);
-        //  it will update song on db and return the rating
-        setRating(rating);
-        // console.log(rating);
-    };
+
+
 
     // this will be fired when song is ended
     const songEnded = () => {
@@ -549,7 +395,7 @@ const ResponsivePlayingBar = ({
                         <div {...swipeHandlerMaximized} className="musicArtContainer">
                             <MusicArt
                                 data={currentlyPlaying}
-                                rating={rating}
+                                rating={"none"}
                                 audioEl={player}
                                 setPlayerState={setPlayerState}
                             />
@@ -587,7 +433,7 @@ const ResponsivePlayingBar = ({
                         }}
                         playNext={(e) => {
                             e.stopPropagation();
-                            setIsNextFromMini(true);
+                        
                             playNext();
                         }}
                         data={currentlyPlaying}
@@ -610,26 +456,7 @@ const ResponsivePlayingBar = ({
         }
     };
 
-    const fetchAndSetCurrentVideoSnippet = (id) => {
-        youtubeSearch
-            .get('videos', {
-                params: {
-                    id: id,
-                },
-            })
-            .then((res) => {
-                const item = res.data.items[0];
-                // console.log(currentVideoSnippet);
-                setCurrentVideoSnippet({
-                    id: item.id,
-                    title: item.snippet.title,
-                    channelTitle: item.snippet.channelTitle,
-                    maxThumbnail: `https://img.youtube.com/vi/${item.id}/maxresdefault.jpg`,
-                    sdThumbnail: `https://img.youtube.com/vi/${item.id}/sddefault.jpg`,
-                    // this is the url of the max resolution of thumbnail
-                });
-            });
-    };
+
 
     // if (!currentVideoSnippet.id) {
     //     return null;

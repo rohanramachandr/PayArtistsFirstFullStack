@@ -6,7 +6,7 @@ import React ,{ useEffect } from "react";
 import { Link } from "react-router-dom";
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+
 
 const Album = ({
   album,

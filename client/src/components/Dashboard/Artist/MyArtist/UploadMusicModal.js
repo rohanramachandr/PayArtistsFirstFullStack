@@ -579,7 +579,7 @@ function UploadMusicModal({ artistUsername, artistName, uploadMusic, artistId, f
                         </Grid>
 
                         <Grid item>
-                            <img src={logo} style={graphicStyle} />
+                            <img src={logo} style={graphicStyle} alt="logo"/>
 
 
                         </Grid>
