@@ -155,7 +155,11 @@
 
 }
 
-.gridViewItem {
+#albumHeader {
+    padding-bottom: 15px;
+}
+
+/* .gridViewItem {
     display: inline-block;
     margin-right: 20px;
     width: 8rem;
@@ -175,7 +179,7 @@
 }
 .gridViewItem:hover {
     cursor: pointer;
-}
+} */
 
 
 

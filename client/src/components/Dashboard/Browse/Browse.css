@@ -12,6 +12,9 @@
     #mainViewContainer {
         width: 98%
     }
+
+
+   
     
 }
 
@@ -26,17 +29,28 @@
 
 }
 
+
+.gridViewContainer {
+    display: grid;
+width: fit-content;
+margin: 0 auto;
+grid-template-columns: 8rem 8rem;
+grid-column-gap: 23px;
+}
+
 .gridViewItem {
     display: inline-block;
-    margin-right: 20px;
+    
     width: 8rem;
-    height: 8rem;
+  
     color: #fff;
     text-decoration: none; 
 }
 
 .gridViewItem img {
-    width: 100%;
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
 }
 
 
