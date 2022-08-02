@@ -1,27 +1,7 @@
-#mainViewContainer {
-    padding-bottom: 106px;
-    width: 80%;
-    margin: 0 auto;
-
-    
-   
-}
-
-@media (max-width: 820px) {
-
-    #mainViewContainer {
-        width: 98%
-    }
 
 
-   
-    
-}
 
 
-#mainContent {
-    align-content: center;
-}
 
 .pageHeadingBig {
     padding: 20px;
@@ -30,42 +10,5 @@
 }
 
 
-.gridViewContainer {
-    display: grid;
-width: fit-content;
-margin: 0 auto;
-grid-template-columns: 8rem 8rem;
-grid-column-gap: 23px;
-}
-
-.gridViewItem {
-    display: inline-block;
-    
-    width: 8rem;
-  
-    color: #fff;
-    text-decoration: none; 
-}
-
-.gridViewItem img {
-    width: 8rem;
-    height: 8rem;
-    object-fit: cover;
-}
 
 
-
-.gridViewInfo {
-    font-weight: 300;
-    text-align: center;
-    padding: 5px 0;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    
-}
-
-.trackListContainer h2, .gridViewContainer h2 {
-    text-align: center;
-    padding: 5px 0;
-}

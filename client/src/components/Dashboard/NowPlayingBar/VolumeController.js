@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Grid, Slider } from "@material-ui/core/";
 import { VolumeUp } from "@material-ui/icons/";
-
+import "./VolumeBar.css"
 
 const VolumeController = ({ player }) => {
   const [volume, setVolume] = useState(100);
@@ -15,7 +15,7 @@ const VolumeController = ({ player }) => {
 
   return (
 
-      <Grid container spacing={1} style={{ maxWidth: "320px" }}>
+      <Grid className="volumeBar" container spacing={1} style={{ maxWidth: "320px" }}>
         <Grid item  xs={1}>
           <VolumeUp color="primary" />
         </Grid>

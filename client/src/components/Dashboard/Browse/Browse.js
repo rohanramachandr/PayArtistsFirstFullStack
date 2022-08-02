@@ -34,7 +34,7 @@ const Browse = (props) => {
 
         <div id="mainViewContainer">
           <div id="mainContent">
-            <h1 className="pageHeadingBig">You Might Also Like</h1>
+            <h1 className="pageHeadingBig">Trending Now</h1>
             <div className="gridViewContainer">
               {props.albums.length > 0 && renderAlbums()}
             </div>

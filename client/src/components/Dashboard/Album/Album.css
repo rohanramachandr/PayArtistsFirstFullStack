@@ -11,27 +11,10 @@ body {
 }
 
 
-#mainViewContainer {
-    padding-bottom: 106px;
-    width: 80%;
-    margin: 0 auto;
-
-    
-   
-}
-
-@media (max-width: 820px) {
-
-    #mainViewContainer {
-        width: 98%
-    }
-    
-}
 
 
-#mainContent {
-    padding: 0 20px;
-}
+
+
 
 .pageHeadingBig {
     padding: 20px;
@@ -54,6 +37,7 @@ body {
 
 .entityInfo .leftSection img {
     width: 100%;
+
 }
 
 .entityInfo .rightSection {
