@@ -151,9 +151,9 @@ const Artist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetArt
                     <h2>Songs</h2>
                     <ul className="tracklist"> {renderSongs()}</ul>
                 </div>
-                
+                <h2 id="albumHeader">Albums</h2>
                 <div className="gridViewContainer">
-                    <h2 id="albumHeader">Albums</h2>
+                    
                     {albums.length > 0 && renderAlbums()}
             </div>
 
