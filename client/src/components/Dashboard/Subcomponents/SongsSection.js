@@ -54,7 +54,7 @@ const SongsSection = ({ songs, artistName, currentSongId }) => {
           }}
         >
           <div className="trackCount">
-            {renderPlayingButtons(listOfSongIds, index, song.albumOrder)}
+            {renderPlayingButtons(listOfSongIds, index, index + 1)}
 
 
           </div>
