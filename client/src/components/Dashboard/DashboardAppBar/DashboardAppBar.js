@@ -1,7 +1,8 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import { DashboardContext } from '../DashboardContext';
 import SearchBox from './SearchBox';
-
+import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -38,14 +39,17 @@ const styles = {
 
 
 
-function DashboardAppBar(props) {
+function DashboardAppBar() {
 
-  const {setMenuOpen, searchState, setSearchState} = useContext(DashboardContext);
+ 
+  const location = useLocation();
+  const {setMenuOpen, searchState} = useContext(DashboardContext);
+
 
 
   const toggleSearch = () => {
 
-    if (searchState === 'closed') {
+    if (searchState.state === 'closed') {
 
       return (
         <>
@@ -63,13 +67,12 @@ function DashboardAppBar(props) {
 
           {/* <a href="/api/logout" style={styles.logout}><Button color="inherit">LOGOUT</Button></a>  */}
           
-          <IconButton
-            color="inherit"
-            onClick={() => setSearchState('clicked')}
-           
+          <Link
+            to="/search" state={{ prevPath: location.pathname }}
+            style={{color: "#fff"}}
           >
-            <Search/>
-          </IconButton>
+            <Search color="inherit"/>
+          </Link>
            
          
           
@@ -80,7 +83,7 @@ function DashboardAppBar(props) {
     }
 
 
-    return <SearchBox />;
+    return <SearchBox prevPath={searchState.prevPath}/>;
 
     
     

@@ -1,5 +1,6 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import { DashboardContext } from '../DashboardContext';
+import { useNavigate } from 'react-router-dom';
 import {
     InputBase,
     IconButton,
@@ -10,16 +11,17 @@ import {
 import './SearchBox.css';
 import { ArrowBack } from '@material-ui/icons';
 
-const SearchBox = () => {
+const SearchBox = ({prevPath}) => {
 
-    const {searchState, setSearchState} = useContext(DashboardContext);
+    const navigate = useNavigate();
+ 
 
 
     return (
 
         <>
             <IconButton
-                onClick={() => setSearchState('closed')}
+                onClick={() => {prevPath ? navigate(prevPath) : navigate('/browse')}}
                 color="inherit"
                 aria-label="Menu"
             >
@@ -41,21 +43,7 @@ const SearchBox = () => {
                 />
             </form>
 
-            <Popper
-                className="searchPopper"
-                open={true}
-                anchorEl={document.getElementById('navbar')}
-                popperOptions={{
-                    modifiers: {
-                        preventOverflow: {
-                            padding: 0,
-                        },
-                    },
-                }}
-                placement="bottom"
-            >
-                {/* {popperResult} */}
-            </Popper>
+            
         </>
 
     );

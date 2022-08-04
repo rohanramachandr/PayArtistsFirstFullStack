@@ -11,6 +11,7 @@ import Browse from './components/Dashboard/Browse/Browse';
 // import AlbumPage from './pages/AlbumPage';
 import RootGaurd from './guards/RootGuard';
 import ArtistPage from './components/Dashboard/Artist/ArtistPage';
+import Search from './components/Dashboard/Search/Search';
 
 
 
@@ -34,6 +35,7 @@ class App extends Component {
             <Route path="signin" element={<SignInPage />} />
             <Route path="" element={<DashboardPage />}>
               <Route path="browse" element={<Browse />} />
+              <Route path="search" element={<Search />} />
               <Route path="album/:albumId" element={<Album />} />
               <Route path=":artistUsername" element={<ArtistPage />} />
 

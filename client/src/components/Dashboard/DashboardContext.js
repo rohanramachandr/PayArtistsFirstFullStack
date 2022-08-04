@@ -6,7 +6,7 @@ export const DashboardContext = React.createContext();
 export const DashboardContextProvider = ({children}) => {
     
     const [menuOpen, setMenuOpen] = useState(false);
-    const [searchState, setSearchState] = useState('closed');//closed searching clicked completed
+    const [searchState, setSearchState] = useState({state:'closed', prevPath: null});//closed searching clicked completed
     const [becomeArtistOpen, setBecomeArtistOpen] = useState(false);
     const [uploadMusicOpen, setUploadMusicOpen] = useState(false);
     const [userArtistUsername, setUserArtistUsername] = useState("");
