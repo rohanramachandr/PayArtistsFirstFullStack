@@ -43,7 +43,7 @@ const closeIconStyle = {
 
 };
 
-function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername, auth }) {
+function BecomeArtistModal({ createArtist, auth }) {
     const { becomeArtistOpen, setBecomeArtistOpen } = useContext(DashboardContext);
     const [formState, setFormState] = useState("notSubmitted");//notSubmitted  or creating or finished or error
     const [formData, setFormData] = useState({ artistUsername: "", artistName: "" });
@@ -169,7 +169,7 @@ function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername, a
                             We created your artist profile!
                         </Typography>
 
-                        {auth && auth.isArtist && auth.artistUsername !== "" && <Link className="playingBarLink" to={`/${auth.artistUsername}`} onClick={() => handleClose()}>
+                        {auth && auth.isArtist && auth.artistUsername !== "" && <Link className="playingBarLink" to={`/${formData.artistUsername}`} onClick={() => handleClose()}>
                             <Button variant="contained" color="primary" xs={12} style={{ marginTop: '20px' }}>Go to my profile</Button>
                         </Link>}
 
@@ -202,8 +202,8 @@ function BecomeArtistModal({ createArtist, fetchUser, fetchUserArtistUsername, a
                             try {
                                 await createArtist(formData.artistName, formData.artistUsername)
                                 setFormState('finished');
-                                await fetchUser();
-                                await fetchUserArtistUsername();
+                               // await fetchUser();
+                               // await fetchUserArtistUsername();
                             }
                             catch (err) {
                                 setFormState('error');

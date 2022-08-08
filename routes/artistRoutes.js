@@ -1,3 +1,4 @@
+const { response } = require("express");
 const mongoose = require("mongoose");
 const requireLogin = require("../middlewares/requireLogin");
 
@@ -51,6 +52,34 @@ module.exports = (app) => {
     }
   });
 
+
+  app.get("/api/search", async (req, res) => {
+
+    try {
+
+      let result = await Artist.aggregate([
+        {
+          "$search": {
+            "index": "searchArtists",
+            "autocomplete": {
+              "query": `${req.query.term}`,
+              "path": "artistUsername",
+              "fuzzy": {
+                "maxEdits": 2
+              }
+            }
+          }
+        }
+      ]);
+
+      res.send(result);
+
+    } catch (e) {
+      res.status(500).send({ message: e.message })
+    }
+
+  });
+
   app.post('/api/artists/create', requireLogin, async (req, res) => {
 
 
@@ -58,34 +87,34 @@ module.exports = (app) => {
 
 
     try {
-      
+
       const { artistName, artistUsername } = req.body;
 
 
       let errors = []
       if (artistUsername.trim().length === 0) {
-          errors.push("Username is required")
+        errors.push("Username is required")
       }
       if (artistUsername.trim().length < 5) {
-          errors.push("Username must be at least 5 characters")
+        errors.push("Username must be at least 5 characters")
       }
       if (artistUsername.trim().length > 20) {
-          errors.push("Username must be less than 20 characters")
+        errors.push("Username must be less than 20 characters")
       }
       if (/\s/.test(artistUsername)) {
-          errors.push("Username must not contain any whitespace")
+        errors.push("Username must not contain any whitespace")
       }
       if (artistUsername.trim().length !== 0) {
-          const artists = await Artist.find({ artistUsername: req.params.artistUsername });
-          if (artists.length !== 0) {
-              errors.push("This username is already taken");
-          }
+        const artists = await Artist.find({ artistUsername: req.params.artistUsername });
+        if (artists.length !== 0) {
+          errors.push("This username is already taken");
+        }
       }
       if (artistName.trim().length > 30) {
-          errors.push("Artist name must be less than 30 characters")
+        errors.push("Artist name must be less than 30 characters")
       }
       if (artistName.trim().length === 0) {
-          errors.push("Artist name is required")
+        errors.push("Artist name is required")
       }
 
       if (errors.length > 0) {
@@ -95,7 +124,7 @@ module.exports = (app) => {
 
 
 
-      
+
 
       if (!req.user.isArtist) {
         const artist = new Artist({
@@ -125,7 +154,7 @@ module.exports = (app) => {
 
 
   });
- 
+
 
 
 };
