@@ -63,13 +63,16 @@ module.exports = (app) => {
             "index": "searchArtists",
             "autocomplete": {
               "query": `${req.query.term}`,
-              "path": "artistUsername",
+              "path": "artistName",
               "fuzzy": {
                 "maxEdits": 2
               }
+             
             }
           }
+      
         }
+       // ,{ $limit : 1 }
       ]);
 
       res.send(result);

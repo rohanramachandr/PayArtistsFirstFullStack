@@ -110,7 +110,7 @@ function BecomeArtistModal({ createArtist, auth }) {
                 setErrorFlag(false)
             }
             setErrors(tempErrors);
-            // Send Axios request here
+        
         }, 2000)
 
 
