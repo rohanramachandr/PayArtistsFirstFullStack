@@ -131,7 +131,7 @@ const ResponsivePlayingBar = ({
         
         setCurrentlyPlaying(songInfo);
         audioPlayer.current.src =  signedUrl;
-        // audioPlayer.current.type = mediaType;
+        // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
         playAudio(songInfo);
 
     
