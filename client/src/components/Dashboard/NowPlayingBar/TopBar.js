@@ -14,6 +14,7 @@ import VolumeController from "./VolumeController";
 
 
 
+
 const TopBar = ({ song, player, setPlayerState, history }) => {
 //   const { snackbarMsg } = useContext(GlobalContext);
 

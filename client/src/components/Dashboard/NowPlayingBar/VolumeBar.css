@@ -1,0 +1,13 @@
+.volumeBar {
+  visibility: visible !important;
+}
+  
+  /* fix on small screen */
+  @media (max-width: 820px) {
+
+
+    .volumeBar {
+      visibility: hidden !important;
+    }
+  }
+

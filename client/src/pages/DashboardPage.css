@@ -2,11 +2,15 @@
     min-height: 100%;
     width: 100%;
     color: #fff;
-    
+
 }
 
 #mainContainer {
     overflow: hidden;
+}
+
+#mainContent {
+    padding: 0 20px;
 }
 
 
@@ -19,3 +23,215 @@ body {
 }
 
 
+.gridViewContainer {
+    display: grid;
+    width: fit-content;
+    margin: 0 auto;
+    grid-template-columns: repeat(9, 8rem);
+    grid-column-gap: 23px;
+}
+
+
+
+
+.gridViewItem {
+    display: inline-block;
+
+    width: 8rem;
+
+    color: #fff;
+    text-decoration: none;
+}
+
+.gridViewItem img {
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+}
+
+
+
+.gridViewInfo {
+    font-weight: 300;
+    text-align: center;
+    padding: 2px 0 8px 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+}
+
+#mainViewContainer {
+    padding-bottom: 106px;
+    width: 80%;
+    margin: 0 auto;
+
+
+
+}
+
+@media (max-width: 820px) {
+
+    #mainViewContainer {
+        width: 98%
+    }
+
+
+    
+
+}
+
+@media (max-width: 1900px) {
+
+
+
+
+    .gridViewContainer {
+
+        grid-template-columns: repeat(7, 8rem);
+
+    }
+
+}
+@media (max-width: 1400px) {
+
+  
+
+
+    .gridViewContainer {
+
+        grid-template-columns: repeat(5, 8rem);
+
+    }
+
+}
+@media (max-width: 770px) {
+
+
+
+
+    .gridViewContainer {
+
+        grid-template-columns: repeat(4, 8rem);
+
+    }
+
+}
+@media (max-width: 480px) {
+
+ 
+    .gridViewContainer {
+
+        grid-template-columns: repeat(2, 8rem);
+
+    }
+
+}
+
+
+@media (hover: hover){ 
+
+    .tracklistRow:hover {
+        background-color: #282828;
+        cursor: pointer;
+    }
+
+    .tracklistRow:hover .trackCount .playIcon {
+        visibility: visible;  
+    }
+    
+
+    
+    .tracklistRow:hover .trackCount span {
+        visibility: hidden;  
+    }
+
+}
+
+.tracklist {
+    padding: 0;
+}
+
+.tracklistRow {
+    height: 62px;
+    padding: 15px 10px;
+    list-style: none;
+}
+
+
+
+
+
+.tracklistRow span {
+    color: #939393;
+    font-weight: 200;
+}
+
+
+
+.tracklistRow .trackCount {
+    width: 8%;
+    float: left;
+}
+
+.tracklistRow .trackCount .playIcon {
+    visibility: hidden;
+    position: absolute;
+    cursor: pointer;
+ 
+}
+
+.tracklistRow .trackCount .playingIcon {
+    width: 8%;
+    float: left;
+    color: #ec148c;
+ 
+}
+
+
+.tracklistRow .trackCount span {
+    visibility: visible;  
+}
+
+
+
+.tracklistRow .trackInfo {
+    width: 75%;
+    float: left;
+}
+
+.tracklistRow .trackInfo span {
+    display: block;
+}
+
+
+
+
+
+
+
+
+.tracklistRow .trackDetails {
+    width: 12%;
+    float: left;
+    text-align: right;
+    padding-left: 5%;
+}
+.tracklistRow .trackDetails span {
+    display: block;
+}
+
+.tracklistRow .trackDetails .trackPrice {
+    color: #ec148c;
+    margin-bottom: 7px;
+}
+
+.tracklistRow .trackInfo .trackName {
+    color: #fff;
+    margin-bottom: 7px;
+}
+
+.trackListContainer h2 {
+    text-align: center;
+    padding: 5px 0;
+}

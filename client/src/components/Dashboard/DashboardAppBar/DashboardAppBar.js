@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
 import { DashboardContext } from '../DashboardContext';
+import SearchBox from './SearchBox';
 
 
 
@@ -14,7 +15,7 @@ import {
 
 
 
-import { Menu } from '@material-ui/icons/';
+import { Menu, Search } from '@material-ui/icons/';
 
 const styles = {
   root: {
@@ -39,10 +40,12 @@ const styles = {
 
 function DashboardAppBar(props) {
 
-  const {setMenuOpen} = useContext(DashboardContext);
+  const {setMenuOpen, searchState, setSearchState} = useContext(DashboardContext);
 
 
   const toggleSearch = () => {
+
+    if (searchState === 'closed') {
 
       return (
         <>
@@ -57,13 +60,29 @@ function DashboardAppBar(props) {
           <Typography variant="h6" color="inherit" style={styles.title}>
             ReleaseRadar
           </Typography>
+
+          {/* <a href="/api/logout" style={styles.logout}><Button color="inherit">LOGOUT</Button></a>  */}
           
-          
+          <IconButton
+            color="inherit"
+            onClick={() => setSearchState('clicked')}
            
-          <a href="/api/logout" style={styles.logout}><Button color="inherit">LOGOUT</Button></a> 
+          >
+            <Search/>
+          </IconButton>
+           
+         
           
         </>
       );
+
+
+    }
+
+
+    return <SearchBox />;
+
+    
     
   };
 

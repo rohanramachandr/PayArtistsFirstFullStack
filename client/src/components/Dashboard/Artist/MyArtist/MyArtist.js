@@ -2,8 +2,7 @@ import React, { useEffect, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import * as actions from "../../../../actions";
 import { connect } from "react-redux";
-import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import SongsSection from "../../Subcomponents/SongsSection";
 import { DashboardContext } from '../../DashboardContext'
 
 
@@ -42,72 +41,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
 
 
 
-    const renderPlayingButtons = (artistSongs, index, order) => {
-        if (currentSongId === artistSongs[index]) {
-            return (
-                <div className="playingIcon">
-                    <VolumeUpRoundedIcon color="inherit" />
-                </div>
-            );
 
-
-        }
-
-        return (
-
-            <>
-                <div onClick={() => {
-
-                    const customEvent = new CustomEvent('songClicked', { detail: { playlist: artistSongs, clickIndex: index } });
-                    document.dispatchEvent(customEvent);
-
-
-                }} className="playIcon">
-                    <PlayArrowRoundedIcon color="inherit" />
-                </div>
-
-                <span className="trackNumber">{order}</span>
-            </>
-
-
-        );
-
-    };
-
-    const renderSongs = () => {
-        //TODO perhaps change to get artist name from song instead of album
-        var listOfSongIds = [];
-        songs.forEach((song) => { listOfSongIds.push(song._id) });
-        console.log("songs", songs);
-        return songs.map((song, index) => {
-
-            return (
-                <li className="tracklistRow" key={song._id}>
-                    <div className="trackCount">
-                        {renderPlayingButtons(listOfSongIds, index, index + 1)}
-
-
-                    </div>
-                    <div className="trackInfo">
-                        <span className="trackName">{song.songTitle}</span>
-                        <span className="artistUsername">{renderArtistName()}</span>
-                    </div>
-                    {/* <div className="trackOptions">
-                        <div className="optionsIcon">
-                            <MoreHorizRoundedIcon color="inherit" />
-                           
-                        </div>
-                    </div> */}
-                    <div className="trackDetails">
-                         <span className="trackPrice">{'$' + song.price}</span>
-                         <span className="duration">{song.duration}</span>
-                       
-                    
-                    </div>
-                </li>
-            );
-        });
-    };
 
     // const playFirstSong = () => {
     //     if (songs.length > 0) {
@@ -159,11 +93,11 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
 
                     <div className="trackListContainer borderBottom">
                         <h2>Songs</h2>
-                        <ul className="tracklist"> {renderSongs()}</ul>
+                        <SongsSection songs={songs} artistName={info?.artistName}/>
                     </div>
-
+                    <h2 id="albumHeader">Albums</h2>
                     <div className="gridViewContainer">
-                        <h2>Albums</h2>
+                      
                         {albums.length > 0 && renderAlbums()}
 
                     </div>
@@ -181,8 +115,8 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
 
 };
 
-function mapStateToProps({ artist: { albums, info, songs }, song }) {
-    return {albums, info, songs, currentSongId: song.currentSongId };
+function mapStateToProps({ artist: { albums, info, songs } }) {
+    return {albums, info, songs};
 }
 
 
