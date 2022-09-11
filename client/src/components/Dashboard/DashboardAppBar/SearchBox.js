@@ -1,25 +1,26 @@
 import React, {useContext} from 'react';
 import { DashboardContext } from '../DashboardContext';
+import { useNavigate } from 'react-router-dom';
 import {
     InputBase,
     IconButton,
-    Popper,
-    CircularProgress,
-    Grid,
 } from '@material-ui/core';
 import './SearchBox.css';
 import { ArrowBack } from '@material-ui/icons';
 
-const SearchBox = () => {
+const SearchBox = ({prevPath}) => {
 
-    const {searchState, setSearchState} = useContext(DashboardContext);
+    const navigate = useNavigate();
+
+    
+    const { searchTerm, setSearchTerm } = useContext(DashboardContext);
 
 
     return (
 
         <>
             <IconButton
-                onClick={() => setSearchState('closed')}
+                onClick={() => {prevPath ? navigate(prevPath) : navigate('/browse')}}
                 color="inherit"
                 aria-label="Menu"
             >
@@ -28,34 +29,17 @@ const SearchBox = () => {
             <form style={{ width: '100%' }} >
                 <InputBase
                     fullWidth
-                    placeholder="Search by @artistUsername"
+                    placeholder="Search by artist"
                     autoFocus
                     style={{ color: '#fff', paddingLeft: '16px' }}
-                    // value={searchQuery}
-                    // onChange={onChange}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     // on click we will show popper
-                    onClick={() => {
-                        //  setSearchState('clicked');
-                        //   setPopper(true);
-                    }}
+                
                 />
             </form>
 
-            <Popper
-                className="searchPopper"
-                open={true}
-                anchorEl={document.getElementById('navbar')}
-                popperOptions={{
-                    modifiers: {
-                        preventOverflow: {
-                            padding: 0,
-                        },
-                    },
-                }}
-                placement="bottom"
-            >
-                {/* {popperResult} */}
-            </Popper>
+            
         </>
 
     );
