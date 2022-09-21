@@ -55,7 +55,18 @@ const ResponsivePlayingBar = ({
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const audioPlayer = useRef();
     const player = audioPlayer.current;
-    const setupMediaSessions = (songInfo) => {
+
+    function updatePositionState() {
+        if ('setPositionState' in navigator.mediaSession) {
+          console.log('Updating position state...');
+          navigator.mediaSession.setPositionState({
+            duration: audioPlayer.current.duration,
+            playbackRate: audioPlayer.current.playbackRate,
+            position: audioPlayer.current.currentTime
+          });
+        }
+      }
+    const setupMediaSessions = (songInfo, playlist) => {//avoid using state varaible in media sessions
         if ('mediaSession' in navigator) {
             // console.log("navigator setupped");
 
@@ -81,29 +92,80 @@ const ResponsivePlayingBar = ({
             });
             navigator.mediaSession.setActionHandler('play', () => {
                 /* Code excerpted. */
-                playAudio(songInfo);
+                audioPlayer.current.play();
             });
             navigator.mediaSession.setActionHandler('pause', () => {
                 /* Code excerpted. */
                 audioPlayer.current.pause();
             });
-            navigator.mediaSession.setActionHandler('previoustrack', () => {
-                playPrevious();
+            navigator.mediaSession.setActionHandler('previoustrack', async () => {
+                if (playlist) {
+                  console.log("player", player)
+        
+                    if (audioPlayer.current.currentTime > 5) {
+                        audioPlayer.current.currentTime = 0;
+                    }
+                    else {
+                   
+                        const currentIndex = playlist.findIndex(
+                                 (id) => id === songInfo._id
+                        );
+                  
+                        if (currentIndex !== -1 && currentIndex !== 0) {
+                            const prevIndex = currentIndex - 1; 
+                            await getSongInfo({detail:{playlist: playlist, clickIndex: prevIndex}})
+                        } else {
+                            audioPlayer.current.currentTime = 0;
+                        }
+                    }
+                }
+
             });
-            navigator.mediaSession.setActionHandler('nexttrack', () => {
-                playNext();
+            navigator.mediaSession.setActionHandler('nexttrack', async () => {
+               
+                if (playlist) {
+                 
+                   
+                    const currentIndex = playlist.findIndex(
+                             (id) => id === songInfo._id
+                    );
+        
+                    console.log("the current index is", currentIndex);
+        
+                    const nextIndex = currentIndex === playlist.length - 1 ? 0 : currentIndex + 1; 
+        
+                    await getSongInfo({detail:{playlist: playlist, clickIndex: nextIndex}})
+        
+        
+        
+        
+                }
             });
+
+            try {
+                navigator.mediaSession.setActionHandler('seekto', function(event) {
+                  
+                  if (event.fastSeek && ('fastSeek' in audioPlayer.current)) {
+                    audioPlayer.current.fastSeek(event.seekTime);
+                    return;
+                  }
+                  audioPlayer.current.currentTime = event.seekTime;
+                  updatePositionState();
+                });
+              } catch(error) {
+                console.log('Warning! The "seekto" media session action is not supported.');
+              }
         }
     };
 
-    const playAudio = (songInfo) => {
+    const playAudio = (songInfo, playlist) => {
         audioPlayer.current
             .play()
             .then((_) => {
                 // Automatic playback started!
                 // Show playing UI.
                 // console.log("audio played auto");
-                setupMediaSessions(songInfo);
+                setupMediaSessions(songInfo, playlist);
             })
             .catch((error) => {
                 // Auto-play was prevented
@@ -132,7 +194,7 @@ const ResponsivePlayingBar = ({
         setCurrentlyPlaying(songInfo);
         audioPlayer.current.src =  signedUrl;
         // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
-        playAudio(songInfo);
+        playAudio(songInfo, playlist);
 
     
     };
@@ -155,6 +217,7 @@ const ResponsivePlayingBar = ({
 
 
     const playNext = async () => {
+        console.log("inside playnext", currentPlaylist);
         if (currentPlaylist) {
             //setIsItFromPlaylist(true);
             console.log("currentPlaylist and id", currentPlaylist, currentlyPlaying._id)
