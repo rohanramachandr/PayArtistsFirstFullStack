@@ -100,7 +100,7 @@ const ResponsivePlayingBar = ({
             });
             navigator.mediaSession.setActionHandler('previoustrack', async () => {
                 if (playlist) {
-                  console.log("player", player)
+                 
         
                     if (audioPlayer.current.currentTime > 5) {
                         audioPlayer.current.currentTime = 0;
@@ -159,6 +159,7 @@ const ResponsivePlayingBar = ({
     };
 
     const playAudio = (songInfo, playlist) => {
+        audioPlayer.current.currentTime = 0;
         audioPlayer.current
             .play()
             .then((_) => {
