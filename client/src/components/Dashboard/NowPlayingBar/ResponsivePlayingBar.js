@@ -81,7 +81,7 @@ const ResponsivePlayingBar = ({
                 //   },
                 // ],
                 title: songInfo.title,
-                artist: songInfo.artist,
+                artist: songInfo.artistName,
                 artwork: [
                     {
                         src: songInfo.thumbnail,
