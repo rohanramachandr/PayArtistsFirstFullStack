@@ -167,8 +167,7 @@ const ResponsivePlayingBar = ({
                 // Show playing UI.
                 // console.log("audio played auto");
                 setupMediaSessions(songInfo, playlist);
-                audioPlayer.current.currentTime = 0;
-                updatePositionState();
+                
             })
             .catch((error) => {
                 // Auto-play was prevented
@@ -176,6 +175,7 @@ const ResponsivePlayingBar = ({
                 // console.log("playback prevented");
                 setAudioState('paused');
             });
+        updatePositionState();
         
     };
 
