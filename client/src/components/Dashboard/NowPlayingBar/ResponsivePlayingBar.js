@@ -56,7 +56,7 @@ const ResponsivePlayingBar = ({
     const audioPlayer = useRef();
     const player = audioPlayer.current;
 
-    function updatePositionState() {
+    const updatePositionState = () => {
         if ('setPositionState' in navigator.mediaSession) {
         
           console.log('Updating position state...');
@@ -67,7 +67,21 @@ const ResponsivePlayingBar = ({
             position: audioPlayer.current.currentTime
           });
         }
-      }
+    };
+    // const resetPositionState = () => {
+    //     if ('setPositionState' in navigator.mediaSession) {
+        
+    //       console.log('Updating position state...');
+    //       console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
+    //       navigator.mediaSession.setPositionState({
+    //         duration:  audioPlayer.current.duration,
+    //         playbackRate: audioPlayer.current.playbackRate,
+    //         position: 0
+    //       });
+    //     }
+    // };
+
+
     const setupMediaSessions = useCallback((songInfo, playlist) => {//avoid using state varaible in media sessions
         if ('mediaSession' in navigator) {
             // console.log("navigator setupped");
@@ -207,7 +221,7 @@ const ResponsivePlayingBar = ({
         
         setCurrentlyPlaying(songInfo);
         audioPlayer.current.src =  signedUrl;
-     //   audioPlayer.current.currentTime = 0;
+        audioPlayer.current.currentTime = 0;
         // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
         playAudio(songInfo, playlist);
 
