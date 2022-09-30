@@ -228,6 +228,8 @@ const ResponsivePlayingBar = ({
         
         audioPlayer.current.src =  signedUrl;
         audioPlayer.current.load();
+        audioPlayer.current.pause();
+        audioPlayer.current.currentTime = 0;
         // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
         playAudio(songInfo, playlist);
 
