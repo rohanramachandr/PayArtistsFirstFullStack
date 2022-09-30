@@ -89,6 +89,7 @@ const ResponsivePlayingBar = ({
     const setupMediaSessions = useCallback((songInfo, playlist) => {//avoid using state varaible in media sessions
         if ('mediaSession' in navigator) {
             // console.log("navigator setupped");
+            audioPlayer.current.load();
             audioPlayer.current.currentTime = 0;
             navigator.mediaSession.metadata = new window.MediaMetadata({
                 // title: currentVideoSnippet.title,
