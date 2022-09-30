@@ -201,7 +201,7 @@ const ResponsivePlayingBar = ({
                 // Show playing UI.
                 // console.log("audio played auto");
                 setupMediaSessions(songInfo, playlist);
-                //resetPositionState();
+                updatePositionState();
             })
             .catch((error) => {
                 // Auto-play was prevented
@@ -231,8 +231,9 @@ const ResponsivePlayingBar = ({
         const songInfo = {audio: signedUrl, title: songTitle, artistName, artistUsername, thumbnail: process.env.REACT_APP_ARTWORK_BUCKET_URL + artworkPath, _id, _album};
         resetPositionState();
         setCurrentlyPlaying(songInfo);
-        audioPlayer.current.src =  signedUrl;
         audioPlayer.current.currentTime = 0;
+        audioPlayer.current.src =  signedUrl;
+        
         // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
         playAudio(songInfo, playlist);
 
