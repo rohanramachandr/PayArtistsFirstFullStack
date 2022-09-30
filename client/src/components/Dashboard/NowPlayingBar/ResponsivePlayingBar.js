@@ -58,7 +58,7 @@ const ResponsivePlayingBar = ({
 
     const updatePositionState = () => {
         if ('setPositionState' in navigator.mediaSession) {
-        
+            
           console.log('Updating position state...');
           console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
           navigator.mediaSession.setPositionState({
@@ -110,6 +110,8 @@ const ResponsivePlayingBar = ({
                     },
                 ],
             });
+            audioPlayer.current.pause();
+            audioPlayer.current.play();
             navigator.mediaSession.setActionHandler('play', () => {
                 /* Code excerpted. */
                 audioPlayer.current.play();
@@ -227,8 +229,6 @@ const ResponsivePlayingBar = ({
         setCurrentlyPlaying(songInfo);
         
         audioPlayer.current.src =  signedUrl;
-        audioPlayer.current.load();
-        audioPlayer.current.pause();
         audioPlayer.current.currentTime = 0;
         // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
         playAudio(songInfo, playlist);
