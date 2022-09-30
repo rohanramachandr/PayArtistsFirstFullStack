@@ -83,13 +83,6 @@ const ResponsivePlayingBar = ({
     // }, [audioPlayer?.current?.currentTime]);
 
 
-    const resetPositionState = () => {
-
-        if ('setPositionState' in navigator.mediaSession) {
-            navigator.mediaSession.setPositionState(null);
-        }
-    };
-
     
 
 
@@ -184,7 +177,7 @@ const ResponsivePlayingBar = ({
                     return;
                   }
                   audioPlayer.current.currentTime = event.seekTime;
-                  //updatePositionState();
+                  updatePositionState();
                 });
               } catch(error) {
                 console.log('Warning! The "seekto" media session action is not supported.');
@@ -201,7 +194,7 @@ const ResponsivePlayingBar = ({
                 // Show playing UI.
                 // console.log("audio played auto");
                 setupMediaSessions(songInfo, playlist);
-                updatePositionState();
+                //updatePositionState();
             })
             .catch((error) => {
                 // Auto-play was prevented
@@ -215,6 +208,7 @@ const ResponsivePlayingBar = ({
     }, [setupMediaSessions, setAudioState]);
 
     const getSongInfo = useCallback(async ({ detail }) => {
+        audioPlayer.current.pause();
         const { playlist, clickIndex } = detail;
         console.log("playlist and clickIndex", playlist, clickIndex)
         if (playerState === 'notPlaying') {
@@ -229,11 +223,11 @@ const ResponsivePlayingBar = ({
         res = await axios.get(`/api/songs/stream/${playlist[clickIndex]}`)
         const signedUrl = res.data;
         const songInfo = {audio: signedUrl, title: songTitle, artistName, artistUsername, thumbnail: process.env.REACT_APP_ARTWORK_BUCKET_URL + artworkPath, _id, _album};
-        resetPositionState();
+      
         setCurrentlyPlaying(songInfo);
-        audioPlayer.current.currentTime = 0;
-        audioPlayer.current.src =  signedUrl;
         
+        audioPlayer.current.src =  signedUrl;
+        audioPlayer.current.load();
         // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
         playAudio(songInfo, playlist);
 
