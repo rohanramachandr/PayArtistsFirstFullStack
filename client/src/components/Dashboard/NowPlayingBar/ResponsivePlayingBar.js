@@ -89,7 +89,8 @@ const ResponsivePlayingBar = ({
     const setupMediaSessions = useCallback((songInfo, playlist) => {//avoid using state varaible in media sessions
         if ('mediaSession' in navigator) {
             // console.log("navigator setupped");
-            audioPlayer.current.load();
+            audioPlayer.current.pause();
+            audioPlayer.current.play();
             audioPlayer.current.currentTime = 0;
             navigator.mediaSession.metadata = new window.MediaMetadata({
                 // title: currentVideoSnippet.title,
@@ -135,9 +136,7 @@ const ResponsivePlayingBar = ({
                         );
                   
                         if (currentIndex !== -1 && currentIndex !== 0) {
-                            audioPlayer.current.pause();
-                            audioPlayer.current.src = null;
-                            audioPlayer.current.time = 0;
+                         
                             const prevIndex = currentIndex - 1; 
                             //await getSongInfo({detail:{playlist: playlist, clickIndex: prevIndex}})
                             const customEvent = new CustomEvent('songClicked', {detail:{playlist: playlist, clickIndex: prevIndex}});
@@ -162,9 +161,7 @@ const ResponsivePlayingBar = ({
                     );
         
                     console.log("the current index is", currentIndex);
-                    audioPlayer.current.pause();
-                    audioPlayer.current.src = null;
-                    audioPlayer.current.time = 0;
+                    
                     const nextIndex = currentIndex === playlist.length - 1 ? 0 : currentIndex + 1; 
         
                  
@@ -195,22 +192,23 @@ const ResponsivePlayingBar = ({
 
     const playAudio = useCallback((songInfo, playlist) => {
        
-        audioPlayer.current
-            .play()//might change back to play
-            .then((_) => {
-                // Automatic playback started!
-                // Show playing UI.
-                // console.log("audio played auto");
-                setupMediaSessions(songInfo, playlist);
-                //updatePositionState();
-            })
-            .catch((error) => {
-                // Auto-play was prevented
-                // Show paused UI.
-                // console.log("playback prevented");
-                setAudioState('paused');
-            });
+        // audioPlayer.current
+        //     .play()//might change back to play
+        //     .then((_) => {
+        //         // Automatic playback started!
+        //         // Show playing UI.
+        //         // console.log("audio played auto");
+        //         setupMediaSessions(songInfo, playlist);
+        //         //updatePositionState();
+        //     })
+        //     .catch((error) => {
+        //         // Auto-play was prevented
+        //         // Show paused UI.
+        //         // console.log("playback prevented");
+        //         setAudioState('paused');
+        //     });
        
+        setupMediaSessions(songInfo, playlist);
    
         
     }, [setupMediaSessions, setAudioState]);
