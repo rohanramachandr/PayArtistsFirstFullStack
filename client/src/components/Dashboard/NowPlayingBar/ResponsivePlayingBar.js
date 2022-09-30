@@ -68,6 +68,21 @@ const ResponsivePlayingBar = ({
           });
         }
     };
+
+    useEffect(() => {
+        if (audioPlayer?.current?.currentTime && 'setPositionState' in navigator.mediaSession) {
+        
+          console.log('Updating position state...');
+          console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
+          navigator.mediaSession.setPositionState({
+            duration:  audioPlayer.current.duration,
+            playbackRate: audioPlayer.current.playbackRate,
+            position: audioPlayer.current.currentTime
+          });
+        }
+    }, [audioPlayer?.current?.currentTime]);
+
+
     const resetPositionState = () => {
         if ('setPositionState' in navigator.mediaSession) {
         
@@ -80,6 +95,8 @@ const ResponsivePlayingBar = ({
           });
         }
     };
+
+    
 
 
     const setupMediaSessions = useCallback((songInfo, playlist) => {//avoid using state varaible in media sessions
@@ -173,7 +190,7 @@ const ResponsivePlayingBar = ({
                     return;
                   }
                   audioPlayer.current.currentTime = event.seekTime;
-                  updatePositionState();
+                  //updatePositionState();
                 });
               } catch(error) {
                 console.log('Warning! The "seekto" media session action is not supported.');
