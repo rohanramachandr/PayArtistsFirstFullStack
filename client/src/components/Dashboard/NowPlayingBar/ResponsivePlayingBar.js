@@ -236,7 +236,6 @@ const ResponsivePlayingBar = ({
         audioPlayer.current.currentTime = 0;
         // TODO MAKE API REQUEST TO Transfer Money To Artist Here
 
-        await audioPlayer.current.load()
 
         playAudio(songInfo, playlist);
   
