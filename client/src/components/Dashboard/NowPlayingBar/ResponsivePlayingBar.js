@@ -62,7 +62,7 @@ const ResponsivePlayingBar = ({
           console.log('Updating position state...');
           console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
           navigator.mediaSession.setPositionState({
-            duration: audioPlayer.current.duration,
+            duration:  audioPlayer.current.duration,
             playbackRate: audioPlayer.current.playbackRate,
             position: audioPlayer.current.currentTime
           });
@@ -176,7 +176,7 @@ const ResponsivePlayingBar = ({
                 // Show playing UI.
                 // console.log("audio played auto");
                 setupMediaSessions(songInfo, playlist);
-                
+                updatePositionState();
             })
             .catch((error) => {
                 // Auto-play was prevented
@@ -184,6 +184,7 @@ const ResponsivePlayingBar = ({
                 // console.log("playback prevented");
                 setAudioState('paused');
             });
+       
    
         
     }, [setupMediaSessions, setAudioState]);
@@ -206,7 +207,7 @@ const ResponsivePlayingBar = ({
         
         setCurrentlyPlaying(songInfo);
         audioPlayer.current.src =  signedUrl;
-        audioPlayer.current.currentTime = 0;
+     //   audioPlayer.current.currentTime = 0;
         // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
         playAudio(songInfo, playlist);
 
