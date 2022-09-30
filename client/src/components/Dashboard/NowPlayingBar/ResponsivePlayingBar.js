@@ -69,30 +69,24 @@ const ResponsivePlayingBar = ({
         }
     };
 
-    useEffect(() => {
-        if (audioPlayer?.current?.currentTime && 'setPositionState' in navigator.mediaSession) {
+    // useEffect(() => {
+    //     if (audioPlayer?.current?.currentTime && 'setPositionState' in navigator.mediaSession) {
         
-          console.log('Updating position state...');
-          console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
-          navigator.mediaSession.setPositionState({
-            duration:  audioPlayer.current.duration,
-            playbackRate: audioPlayer.current.playbackRate,
-            position: audioPlayer.current.currentTime
-          });
-        }
-    }, [audioPlayer?.current?.currentTime]);
+    //       console.log('Updating position state...');
+    //       console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
+    //       navigator.mediaSession.setPositionState({
+    //         duration:  audioPlayer.current.duration,
+    //         playbackRate: audioPlayer.current.playbackRate,
+    //         position: audioPlayer.current.currentTime
+    //       });
+    //     }
+    // }, [audioPlayer?.current?.currentTime]);
 
 
     const resetPositionState = () => {
+
         if ('setPositionState' in navigator.mediaSession) {
-        
-          console.log('Updating position state...');
-          console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
-          navigator.mediaSession.setPositionState({
-            duration:  audioPlayer.current.duration,
-            playbackRate: audioPlayer.current.playbackRate,
-            position: 0
-          });
+            navigator.mediaSession.setPositionState(null);
         }
     };
 
@@ -207,7 +201,7 @@ const ResponsivePlayingBar = ({
                 // Show playing UI.
                 // console.log("audio played auto");
                 setupMediaSessions(songInfo, playlist);
-                resetPositionState();
+                //resetPositionState();
             })
             .catch((error) => {
                 // Auto-play was prevented
@@ -235,7 +229,7 @@ const ResponsivePlayingBar = ({
         res = await axios.get(`/api/songs/stream/${playlist[clickIndex]}`)
         const signedUrl = res.data;
         const songInfo = {audio: signedUrl, title: songTitle, artistName, artistUsername, thumbnail: process.env.REACT_APP_ARTWORK_BUCKET_URL + artworkPath, _id, _album};
-        
+        resetPositionState();
         setCurrentlyPlaying(songInfo);
         audioPlayer.current.src =  signedUrl;
         audioPlayer.current.currentTime = 0;
