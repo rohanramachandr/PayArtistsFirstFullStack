@@ -135,6 +135,7 @@ const ResponsivePlayingBar = ({
                   
                         if (currentIndex !== -1 && currentIndex !== 0) {
                             audioPlayer.current.pause();
+                            audioPlayer.current.src = null;
                             audioPlayer.current.time = 0;
                             const prevIndex = currentIndex - 1; 
                             //await getSongInfo({detail:{playlist: playlist, clickIndex: prevIndex}})
@@ -161,6 +162,7 @@ const ResponsivePlayingBar = ({
         
                     console.log("the current index is", currentIndex);
                     audioPlayer.current.pause();
+                    audioPlayer.current.src = null;
                     audioPlayer.current.time = 0;
                     const nextIndex = currentIndex === playlist.length - 1 ? 0 : currentIndex + 1; 
         
