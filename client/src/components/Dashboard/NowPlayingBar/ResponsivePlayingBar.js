@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Grid } from '@material-ui/core';
 import { useSwipeable } from 'react-swipeable';
 import PlayPauseButton from './PlayPauseButton';
@@ -58,7 +58,9 @@ const ResponsivePlayingBar = ({
 
     function updatePositionState() {
         if ('setPositionState' in navigator.mediaSession) {
+        
           console.log('Updating position state...');
+          console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
           navigator.mediaSession.setPositionState({
             duration: audioPlayer.current.duration,
             playbackRate: audioPlayer.current.playbackRate,
@@ -66,7 +68,7 @@ const ResponsivePlayingBar = ({
           });
         }
       }
-    const setupMediaSessions = (songInfo, playlist) => {//avoid using state varaible in media sessions
+    const setupMediaSessions = useCallback((songInfo, playlist) => {//avoid using state varaible in media sessions
         if ('mediaSession' in navigator) {
             // console.log("navigator setupped");
 
@@ -113,11 +115,16 @@ const ResponsivePlayingBar = ({
                   
                         if (currentIndex !== -1 && currentIndex !== 0) {
                             const prevIndex = currentIndex - 1; 
-                            await getSongInfo({detail:{playlist: playlist, clickIndex: prevIndex}})
+                            //await getSongInfo({detail:{playlist: playlist, clickIndex: prevIndex}})
+                            const customEvent = new CustomEvent('songClicked', {detail:{playlist: playlist, clickIndex: prevIndex}});
+                            document.dispatchEvent(customEvent);
+
                         } else {
                             audioPlayer.current.currentTime = 0;
                         }
+                        
                     }
+                  
                 }
 
             });
@@ -134,8 +141,10 @@ const ResponsivePlayingBar = ({
         
                     const nextIndex = currentIndex === playlist.length - 1 ? 0 : currentIndex + 1; 
         
-                    await getSongInfo({detail:{playlist: playlist, clickIndex: nextIndex}})
-        
+                 
+                    const customEvent = new CustomEvent('songClicked', {detail:{playlist: playlist, clickIndex: nextIndex}});
+                    document.dispatchEvent(customEvent);
+                  
         
         
         
@@ -156,9 +165,9 @@ const ResponsivePlayingBar = ({
                 console.log('Warning! The "seekto" media session action is not supported.');
               }
         }
-    };
+    }, []);
 
-    const playAudio = (songInfo, playlist) => {
+    const playAudio = useCallback((songInfo, playlist) => {
        
         audioPlayer.current
             .play()
@@ -175,11 +184,11 @@ const ResponsivePlayingBar = ({
                 // console.log("playback prevented");
                 setAudioState('paused');
             });
-        updatePositionState();
+   
         
-    };
+    }, [setupMediaSessions, setAudioState]);
 
-    const getSongInfo = async ({ detail }) => {
+    const getSongInfo = useCallback(async ({ detail }) => {
         const { playlist, clickIndex } = detail;
         console.log("playlist and clickIndex", playlist, clickIndex)
         if (playerState === 'notPlaying') {
@@ -197,11 +206,12 @@ const ResponsivePlayingBar = ({
         
         setCurrentlyPlaying(songInfo);
         audioPlayer.current.src =  signedUrl;
+        audioPlayer.current.currentTime = 0;
         // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
         playAudio(songInfo, playlist);
 
     
-    };
+    }, [playAudio, playerState, setCurrentSongID, setAudioState, setCurrentPlaylist, setCurrentlyPlaying]);
 
     useEffect(() => {
 
@@ -215,7 +225,7 @@ const ResponsivePlayingBar = ({
         
         
 
-    }, []);
+    }, [getSongInfo]);
 
     
 
