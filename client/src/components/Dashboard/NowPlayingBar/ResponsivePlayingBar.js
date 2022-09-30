@@ -68,18 +68,18 @@ const ResponsivePlayingBar = ({
           });
         }
     };
-    // const resetPositionState = () => {
-    //     if ('setPositionState' in navigator.mediaSession) {
+    const resetPositionState = () => {
+        if ('setPositionState' in navigator.mediaSession) {
         
-    //       console.log('Updating position state...');
-    //       console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
-    //       navigator.mediaSession.setPositionState({
-    //         duration:  audioPlayer.current.duration,
-    //         playbackRate: audioPlayer.current.playbackRate,
-    //         position: 0
-    //       });
-    //     }
-    // };
+          console.log('Updating position state...');
+          console.log("audioPlayer,currrent", {duration: audioPlayer.current.duration, playbackRate: audioPlayer.current.playbackRate, currentTime: audioPlayer.current.currentTime})
+          navigator.mediaSession.setPositionState({
+            duration:  audioPlayer.current.duration,
+            playbackRate: audioPlayer.current.playbackRate,
+            position: 0
+          });
+        }
+    };
 
 
     const setupMediaSessions = useCallback((songInfo, playlist) => {//avoid using state varaible in media sessions
@@ -190,7 +190,7 @@ const ResponsivePlayingBar = ({
                 // Show playing UI.
                 // console.log("audio played auto");
                 setupMediaSessions(songInfo, playlist);
-                updatePositionState();
+                resetPositionState();
             })
             .catch((error) => {
                 // Auto-play was prevented
