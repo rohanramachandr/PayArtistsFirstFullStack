@@ -110,8 +110,8 @@ const ResponsivePlayingBar = ({
                     },
                 ],
             });
-            audioPlayer.current.pause();
-            audioPlayer.current.play();
+            
+            
             navigator.mediaSession.setActionHandler('play', () => {
                 /* Code excerpted. */
                 audioPlayer.current.play();
@@ -190,7 +190,7 @@ const ResponsivePlayingBar = ({
     const playAudio = useCallback((songInfo, playlist) => {
        
         audioPlayer.current
-            .play()
+            .play()//might change back to play
             .then((_) => {
                 // Automatic playback started!
                 // Show playing UI.
@@ -230,8 +230,14 @@ const ResponsivePlayingBar = ({
         
         audioPlayer.current.src =  signedUrl;
         audioPlayer.current.currentTime = 0;
-        // TODO MAKE API REQUEST TO Transfer Money To Artist Here;
+        // TODO MAKE API REQUEST TO Transfer Money To Artist Here
+
+        await audioPlayer.current.load()
+
         playAudio(songInfo, playlist);
+  
+
+      
 
     
     }, [playAudio, playerState, setCurrentSongID, setAudioState, setCurrentPlaylist, setCurrentlyPlaying]);
