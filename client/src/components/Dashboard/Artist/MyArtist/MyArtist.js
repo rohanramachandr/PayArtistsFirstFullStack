@@ -72,7 +72,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
 
     return (
         <>
-        {info ? <UploadMusicModal artistName={info.artistName} artistUsername={info.artistUsername} artistId={info._id}/> : null}
+            {info ? <UploadMusicModal artistName={info.artistName} artistUsername={info.artistUsername} artistId={info._id} /> : null}
             <div id="mainViewContainer">
                 <div id="mainContent">
                     <div className="entityInfo borderBottom">
@@ -93,11 +93,11 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
 
                     <div className="trackListContainer borderBottom">
                         <h2>Songs</h2>
-                        <SongsSection songs={songs} artistName={info?.artistName}/>
+                        <SongsSection songs={songs} artistName={info?.artistName} />
                     </div>
                     <h2 id="albumHeader">Albums</h2>
                     <div className="gridViewContainer">
-                      
+
                         {albums.length > 0 && renderAlbums()}
 
                     </div>
@@ -116,7 +116,7 @@ const MyArtist = ({ fetchArtistInfo, fetchArtistSongs, fetchArtistAlbums, resetA
 };
 
 function mapStateToProps({ artist: { albums, info, songs } }) {
-    return {albums, info, songs};
+    return { albums, info, songs };
 }
 
 
