@@ -140,7 +140,7 @@ const SwipeableNavBar = ({ isArtist}) => {
 
                     {renderMyMusicOrBecomeArtist()}
 
-                    <ListItem button key="Settings">
+                    <ListItem button key="MyBalance">
                         <ListItemIcon>
                             <AttachMoneyIcon fontSize="large" style={styles.icon} />
                         </ListItemIcon>

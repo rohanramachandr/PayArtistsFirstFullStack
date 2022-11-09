@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import { DashboardContext } from '../DashboardContext';
 import SearchBox from './SearchBox';
 import { Link } from 'react-router-dom';
@@ -10,8 +10,7 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  IconButton,
-  Button
+  IconButton
 } from '@material-ui/core/';
 
 
