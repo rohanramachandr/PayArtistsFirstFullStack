@@ -65,7 +65,7 @@ module.exports = (app) => {
               "query": `${req.query.term}`,
               "path": "artistName",
               "fuzzy": {
-                "maxEdits": 2
+                "maxEdits": 1
               }
              
             }

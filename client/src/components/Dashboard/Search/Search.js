@@ -66,7 +66,7 @@ const Search = () => {
 
             const { artistName, artistUsername } = result;
             return (
-                <>
+                <div key={index}>
 
                     <ListItem
                         alignItems="flex-start"
@@ -102,7 +102,7 @@ const Search = () => {
 
 
                     }} />}
-                </>
+                </div>
 
 
             );

@@ -191,27 +191,10 @@ const ResponsivePlayingBar = ({
     }, []);
 
     const playAudio = useCallback((songInfo, playlist) => {
-       
-        // audioPlayer.current
-        //     .play()//might change back to play
-        //     .then((_) => {
-        //         // Automatic playback started!
-        //         // Show playing UI.
-        //         // console.log("audio played auto");
-        //         setupMediaSessions(songInfo, playlist);
-        //         //updatePositionState();
-        //     })
-        //     .catch((error) => {
-        //         // Auto-play was prevented
-        //         // Show paused UI.
-        //         // console.log("playback prevented");
-        //         setAudioState('paused');
-        //     });
-       
+              
         setupMediaSessions(songInfo, playlist);
-   
-        
-    }, [setupMediaSessions, setAudioState]);
+         
+    }, [setupMediaSessions]);
 
     const getSongInfo = useCallback(async ({ detail }) => {
         audioPlayer.current.pause();
